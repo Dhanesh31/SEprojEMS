@@ -10,7 +10,6 @@ const session=require('express-session');
 const popup=require('popups');
 const app=express();
 
-//Check git
 //Google auth
 const {OAuth2Client} = require('google-auth-library');
 const CLIENT_ID = '183043165157-m5ul62le4e9n124kmkaekj7mu29ee1k9.apps.googleusercontent.com'
