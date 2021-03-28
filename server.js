@@ -330,17 +330,31 @@ app.post('/addelective', (request, response) => {
 	var credits = request.body.credits;
 	var capacity = request.body.capacity;
 
-	var sql = "INSERT INTO elective(elective_name,elective_sem,elective_dept,credits,capacity) VALUES ('" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + ")";
+	var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
 	db.query(sql, (err, result, field) => {
 		if (err) {
 			console.log(err);
 			return;
 		}
-		console.log('Elective added successfully');
-		// popup.alert({
-		//   content: 'Elective added!'
-		// });
+		else {
+			if (result.length != 0) {
+				response.send('Elective already inserted cannot insert');
+			}
+			else {
+				var sql = "INSERT INTO elective(elective_name,elective_sem,elective_dept,credits,capacity) VALUES ('" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + ")";
+				db.query(sql, (err, result, field) => {
+					if (err) {
+						console.log(err);
+						return;
+					}
+					console.log('Elective added successfully');
+				});
+
+			}
+		}
 	});
+
+
 })
 
 app.get('/coord_remove', (req, res) => {
@@ -362,20 +376,37 @@ app.post('/remelective', (request, response) => {
 			console.log(err);
 			return;
 		}
-		//console.log(result[0].elective_id);
-		var sql = "delete from elective where elective_id=" + result[0].elective_id + ";";
-		db.query(sql, (err, result, field) => {
-			if (err) {
-				console.log(err);
-				return;
+		else {
+			if (result.length == 0) {
+				response.send('No such elective exists');
 			}
-			console.log('Elective removed successfully');
+			else {
+				var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
+				db.query(sql, (err, result, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var sql = "delete from elective where elective_id=" + result[0].elective_id + ";";
+						db.query(sql, (err, result, field) => {
+							if (err) {
+								console.log(err);
+								return;
+							}
+							console.log('Elective removed successfully');
+						});
+					}
 
-			// popup.alert({
-			//   content: 'Elective added!'
-			// });
-		});
+				});
+
+			}
+		}
 	});
+
+
 });
 
 app.get('/coord_group', (req, res) => {
