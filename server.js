@@ -362,7 +362,7 @@ app.post('/remelective', (request, response) => {
 			console.log(err);
 			return;
 		}
-		console.log(result[0].elective_id);
+		//console.log(result[0].elective_id);
 		var sql = "delete from elective where elective_id=" + result[0].elective_id + ";";
 		db.query(sql, (err, result, field) => {
 			if (err) {
