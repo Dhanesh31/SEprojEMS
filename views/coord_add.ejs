@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="main.css">
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <style type="text/css">
+    a,
+    a:hover,
+    a:focus {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .navbar {
+      margin-bottom: 0px;
+
+    }
+
+    .btn-info {
+      color: #fff;
+      background-color: #212431;
+      border-color: #212431;
+    }
+
+    .btn-info:hover {
+      color: #fff;
+      background-color: #2e3346;
+      border-color: #2e3346;
+    }
+
+    .navbar-brand {
+      padding: 0px;
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        width: 1471px;
+      }
+
+      .col-md-4 {
+        width: 22.33333333%;
+      }
+
+    }
+
+    @media (max-width: 1200px) {
+
+      .col-md-4 {
+        width: 100%;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+
+      <a class="navbar-brand" href="student page.html">
+        <img src="24.jfif" alt="logo" style="width:180px;">
+      </a>
+
+      <div class="container">
+        <!-- <button class='btn btn-info pull-right' onclick="/logout">
+          Logout
+        </button> -->
+        <form action="/logout">
+          <button class='btn btn-info pull-right'>Logout</button>
+        </form>
+
+      </div>
+
+
+    </div>
+
+  </nav>
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <button type="button" id="sidebarCollapse" class="btn btn-info">
+          <i class="fas fa-align-left"></i>
+          <span></span>
+        </button>
+      </div>
+
+      <ul class="list-unstyled components">
+        <li>
+
+          <a href="profile.html">
+            <i class="fas fa-user"></i>
+            Profile
+          </a>
+
+        </li>
+        <li>
+          <a href="coord_add">
+            <i class="fas fa-pencil-alt"></i>
+            Add Elective
+          </a>
+
+        </li>
+        <li>
+          <a href="coord_remove">
+            <i class="fas fa-pencil-alt"></i>
+            Remove Elective
+          </a>
+        </li>
+        <li>
+          <a href="coord_group">
+            <i class="fas fa-copy"></i>
+            Group Elective
+          </a>
+        </li>
+
+      </ul>
+
+
+    </nav>
+
+    <!-- Page Content  -->
+
+    <div id="content">
+      <h2><b>ADD ELECTIVES</b></h2>
+      <form method='POST' action='/addelective'>
+        <div class="center">
+
+          <label class="col-md-4 control-label h5 required">Elective name:</label>
+          <div class="col-md-4">
+            <input name='elective_name'>
+          </div>
+          <br><br>
+          <label class="col-md-4 control-label h5 required">Semester:</label>
+          <div class="col-md-4">
+            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name='elective_sem'>
+              <option value="0" selected="">Select</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+
+            </select>
+          </div>
+          <br><br>
+
+
+          <label class="col-md-4 control-label h5 required"> Department:</label>
+          <div class="col-md-4">
+            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_dept">
+              <option value="0" selected="">Select</option>
+              <option value="CSE">CSE</option>
+              <option value="ECE">ECE</option>
+              <option value="EEE">EEE</option>
+              <option value="MECH">MECH</option>
+              <option value="CIVIL">CIVIL</option>
+              <option value="AERO">AERO</option>
+            </select>
+          </div>
+          <br><br>
+          <label class="col-md-4 control-label h5 required">Credits:</label>
+          <div class="col-md-4">
+            <input name='credits'>
+          </div>
+          <br><br>
+          <label class="col-md-4 control-label h5 required">Capacity:</label>
+          <div class="col-md-4">
+            <input name='capacity'>
+          </div>
+          <br><br>
+
+          <div style="margin-left:120px;">
+            <!-- <button type="button"  formaction="/addelective">ADD</button></p> -->
+            <button type="submit" class="btn btn-primary">ADD</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <!-- Popper.JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#sidebarCollapse').on('click', function() {
+        $('#sidebar').toggleClass('active');
+      });
+    });
+  </script>
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+
+</html>

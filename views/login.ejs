@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="183043165157-m5ul62le4e9n124kmkaekj7mu29ee1k9.apps.googleusercontent.com">
+<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+</style>
+</head>
+<body>
+
+
+<div id="main">
+  <div class="header">
+    <a href="#default" class="logo"><img src="24.jfif" alt="logo" style="width:150px;"></a>
+    <div class="header-right">
+      <a href="/signupform">
+        <button class="active">Signup</button>
+      </a>
+
+    </div>
+  </div>
+</div>
+<br><br><br><br>
+
+
+
+<div class="container" id="container">
+    <div class="form-container sign-in-container">
+
+    <form action="/login_others" method="POST">
+			<h1>Sign in!</h1>
+      <br>
+            <div class="row">
+
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <select class="stu btn" name="role">
+                        <option value="faculty" selected="selected">Faculty</option>
+                        <option value="coordinator" >Coordinator</option>
+                </select>
+
+                  <br><br>
+                <a href="/pwdchange">Forgot Password?</a>
+                <br><br>
+                <button type="submit" value="Login">Login</button>
+
+            </div>
+		</form>
+    </div>
+
+    <div class="form-container sign-up-container">
+      <form action="/login_student" method="POST">
+        <h1>Student</h1>
+
+      <div class="col">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+
+          <br><br>
+        <a href="/pwdchange">Forgot Password?</a>
+        <br><br>
+        <button type="submit" value="Login">Login</button>
+
+      </div>
+
+      <br>
+      <span>or </span>
+
+			<div class="social-container">
+				<!-- <a href="#" class="social"><i class="fa fa-facebook fa-fw"></i></a>
+				<a href="#" class="social"><i class="fa fa-twitter fa-fw"></i></a>
+				<a href="#" class="social"><i class="fa fa-linkedin fa-fw"></i></a><br> -->
+        <form  action="/googlesignin">
+          <div class="g-signin2" data-width="200" data-longtitle="true" data-onsuccess="onSignIn"></div>
+        </form>
+
+			</div>
+      </form>
+    </div>
+
+
+  <div class="overlay-container">
+    <div class="overlay">
+        <div class="overlay-panel overlay-left">
+            <h1>Hello, Student!</h1>
+            <p>To keep connected with us please login with your info</p>
+            <button class="ghost" id="signIn">For Faculty and Coordinator<---</button>
+        </div>
+        <div class="overlay-panel overlay-right">
+            <h1>Welcome Back!</h1>
+            <p>To keep connected with us please login with your info</p>
+            <button class="ghost" id="signUp">For Students--></button>
+        </div>
+    </div>
+   </div>
+
+
+<!--
+<div id="id01" class="modal" >
+    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+    <form class="modal-content" action="/signup" method="POST" onsubmit="document.getElementById('id02').style.display='block'">
+      <div class="container1">
+        <h1 style="text-align:center">Sign Up</h1>
+        <p>Please fill in this form to create an account.</p>
+        <hr>
+        <label for="email"><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" name="email" id="t3" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="pwd" id="t11" required>
+
+        <label for="psw-repeat"><b>Repeat Password</b></label>
+        <input type="password" placeholder="Repeat Password" name="pwdrpt" id="t12" required>
+        <label for="ty"><b>Type</b></label>
+        <select class="stu btn" name="role">
+          <option value="student" selected="selected">Student</option>
+          <option value=faculty >Faculty</option>
+          <option value="coordinator" >Coordinator</option>
+        </select>
+        <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+        <div class="clearfix">
+          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+          <button type="submit" class="signupbtn" onclick="registration()">Sign Up</button>
+          <button type="submit" class="signupbtn" >Sign Up</button>
+
+        </div>
+       </div>
+    </form>
+</div>
+-->
+<!-- <div id="id02" class="modal" >
+  <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+  <div id="wrapper">
+    <div id="dialog">
+      <h2>Check your mail!</h2>
+      <span>(We’ve sent a six-digit confirmation code to faisalkhan.chat@gmail.com. Enter it below to confirm your email address.)</span>
+      <div id="form1">
+        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+        <button class="btn btn-primary btn-embossed">Verify</button>
+      </div>
+
+      <div>
+        Didn't receive the code?<br />
+        <a href="#">Send code again</a><br />
+      </div>
+
+    </div>
+  </div>
+
+</div> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"> </script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+    // Get the modal
+    var modal = document.getElementById('id01');
+    document.style.backgroundColor = "red";
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+
+</script>
+
+<script>
+  function onSignIn(googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/googlesignin');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+      console.log('Signed in as: ' + xhr.responseText);
+      if (xhr.responseText == 'success') {
+        signOut();
+        location.assign('/gdash')
+      }
+    };
+    xhr.send(JSON.stringify({
+      token: id_token
+    }));
+  }
+</script>
+
+<script>
+function signOut() {
+     var auth2 = gapi.auth2.getAuthInstance();
+     auth2.signOut().then(function () {
+         console.log('User signed out.');
+     });
+     }
+</script>
+
+
+<script>
+    const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('container');
+
+signUpButton.addEventListener('click', () => {
+	container.classList.add("right-panel-active");
+});
+
+signInButton.addEventListener('click', () => {
+	container.classList.remove("right-panel-active");
+});
+</script>
+<script>
+
+  function registration()
+    {
+     //
+     //  var email= document.getElementById("t3").value;
+     //  var pwd= document.getElementById("t11").value;
+     //  var cpwd= document.getElementById("t12").value;
+     //
+     //  //email id expression code
+     //  var pwd_expression = /^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-])/;
+     //  var letters = /^[A-Za-z]+$/;
+     //  var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+     // if (!filter.test(email))
+     //  {
+     //    alert('Invalid email');
+     //  }
+     //  else if(!pwd_expression.test(pwd))
+     //  {
+     //    alert ('Upper case, Lower case, Special character and Numeric letter are required in Password feild');
+     //  }
+     //  else if(pwd != cpwd)
+     //  {
+     //    alert ('Password not Matched');
+     //  }
+     //  else if(document.getElementById("t11").value.length < 6)
+     //  {
+     //    alert ('Password minimum length is 6');
+     //  }
+     //  else if(document.getElementById("t11").value.length > 12)
+     //  {
+     //    alert ('Password max length is 12');
+     //  }
+     //  else
+     //  {
+     //    alert('You have been successfully registered');
+     //  }
+    }
+</script>
+
+
+</body>
+</html>

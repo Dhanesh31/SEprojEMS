@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<style>
+
+
+</style>
+
+</head>
+<body>
+<nav class="navbar ">
+    <a class="navbar-brand" href="#">
+           <img src="11.png" alt="logo" style="width:175px;">
+    </a>
+</nav>
+
+
+  <!--
+  <div class="img">
+     <img src="offer.png">
+  </div>
+ -->
+    <!--<form class="modal-content" action="" >-->
+    <div class="modal2" style="font-family: 'Montserrat', sans-serif;">
+      <br><br>
+      <br><br>
+      <form  action="/fpwd" method="POST">
+        <div class="container3">
+          <h1 style="text-align:center">Forgot password!</h1>
+          <p>Please fill in this form to change password</p>
+          <hr>
+
+          <label for="email"><b>Email</b></label>
+          <input type="email" placeholder="Enter Email" name="email" id="t11" required>
+
+          <label for="psw"><b>Password</b></label>
+          <input type="password" placeholder="Enter Password" name="pwd" id="t11" required>
+
+          <label for="psw-repeat"><b>Repeat Password</b></label>
+          <input type="password" placeholder="Repeat Password" name="pwdrpt" id="t12" required>
+
+          <button type="submit"  name="button">Generate OTP</button>
+        </div>
+
+      </form>
+      <br><br>
+      <form  action="/otppwd" method="POST">
+        <div class="container4">
+            <label for="otp"><b>OTP</b></label>
+            <input type="text" placeholder="Enter OTP" name="otp" id="t3" required>
+
+            <button type="submit"  name="button">Change Password</button>
+        </div>
+      </form>
+    </div>
+
+
+
+
+
+
+
+
+
+
+<!--
+        <div class="clearfix">
+          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+          <button type="submit" class="signupbtn" onclick="registration()">Sign Up</button>
+          <button type="submit" class="signupbtn" onclick="">Change password</button>
+        </div> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"> </script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+    // Get the modal
+    var modal = document.getElementById('id01');
+    document.style.backgroundColor = "red";
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+
+</script>
+
+</body>
+</html>
