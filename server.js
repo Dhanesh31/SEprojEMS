@@ -6,9 +6,12 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
+//const session = require('express-session');
 //const popup=require('popups');
 const app = express();
+
+const sessiion = require('express-session')
+const flush = require('connect-flash')
 
 //Google auth
 //check lokesh
@@ -23,6 +26,13 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'css')));
+app.use(sessiion({
+	secret: 'secret',
+	cookie: {maxage: 60000},
+	resave: false,
+	saveUninitialized: false
+}))
+app.use(flush());
 
 //to send mail
 var transporter = nodemailer.createTransport({
@@ -320,7 +330,7 @@ app.post('/login_others', (request, response) => {
 })
 
 app.get('/coord_add', (req, res) => {
-	res.render('coord_add');
+	res.render('coord_add', {message : req.flash('message')});
 })
 
 app.post('/addelective', (request, response) => {
@@ -348,6 +358,8 @@ app.post('/addelective', (request, response) => {
 						return;
 					}
 					console.log('Elective added successfully');
+					request.flash('message', 'Saved succesfully');
+					response.redirect('/coord_add');
 				});
 
 			}
