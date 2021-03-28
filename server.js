@@ -7,7 +7,6 @@ const bodyParser=require('body-parser');
 const nodemailer=require('nodemailer');
 const cookieParser=require('cookie-parser');
 const session=require('express-session');
-const popup=require('popups');
 const app=express();
 
 //Google auth
@@ -375,9 +374,6 @@ app.post('/addelective',(request,response)=>{
       return;
     }
     console.log('Elective added successfully');
-    popup.alert({
-      content: 'Elective added!'
-    });
   });
 })
 
