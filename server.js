@@ -7,6 +7,10 @@ const bodyParser=require('body-parser');
 const nodemailer=require('nodemailer');
 const cookieParser=require('cookie-parser');
 const session=require('express-session');
+<<<<<<< HEAD
+=======
+//const popup=require('popups');
+>>>>>>> 7dd0ce2c976d9f47b5ad61b368d8f5a6aa345b12
 const app=express();
 
 //Google auth
@@ -353,6 +357,7 @@ app.get('/coord_add',(req,res)=>{
   res.render('coord_add');
 })
 
+//------------------------------------------------------------------------------------------------
 app.post('/addelective',(request,response)=>{
   var elective_name=request.body.elective_name;
   var elective_sem=request.body.elective_sem;
@@ -374,6 +379,12 @@ app.post('/addelective',(request,response)=>{
       return;
     }
     console.log('Elective added successfully');
+<<<<<<< HEAD
+=======
+    // popup.alert({
+    //   content: 'Elective added!'
+    // });
+>>>>>>> 7dd0ce2c976d9f47b5ad61b368d8f5a6aa345b12
   });
 })
 
