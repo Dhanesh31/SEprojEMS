@@ -54,6 +54,37 @@
         width: 100%;
       }
     }
+
+    #customers {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #f1f1f1;
+  padding: 8px;
+width:4px
+}
+
+#customers tr:nth-child(even){background-color: #f1f1f1;}
+		   #customers tr:nth-child(odd){background-color: #ffffff;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #534666;
+  color: white;
+  width:4px
+
+		   }
+		   .flashup{
+			   display:None;
+		   }
+
   </style>
 
 </head>
@@ -129,12 +160,12 @@
 
     <div id="content">
       <h2><b>GROUP ELECTIVES</b></h2>
-      <form>
+      <form method='POST' action="/groupelective">
         <div class="center">
           <center>
             <label class="col-md-4 control-label h5 required">Semester:</label>
             <div class="col-md-4">
-              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="sem">
                 <option value="0" selected="">Select</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
@@ -146,7 +177,7 @@
 
             <label class="col-md-4 control-label h5 required"> Department:</label>
             <div class="col-md-4">
-              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="dept">
                 <option value="0" selected="">Select</option>
                 <option value="CSE">CSE</option>
                 <option value="ECE">ECE</option>
@@ -157,14 +188,52 @@
               </select>
             </div>
             <br><br>
-            <button type="button" class="btn btn-primary" href="#">Group</button></p>
+
+            <button type="submit" class="btn btn-primary" formaction="/groupelective">Group</button></p>
 
             <button type="button" class="btn btn-primary" href="#">Send to Students</button>
             <button type="button" class="btn btn-primary" href="#">Send to Faculty</button>
             <button type="button" class="btn btn-primary" href="#">Download as pdf</button>
           </center>
+          <div class="row">
+            <div class="col-lg-2">
+              
+            </div>
+
+            <% if(results.length > 0) { %>
+
+            <div class="col-lg-7 " style="margin-left:90px">
+              <table id="customers" style="margin-top:20px">
+        <tr>
+          <th>Elective_id</th>
+          <th>Elective_name</th>
+          <th>Semester</th>
+          <th>Department</th>
+          <th>Credits</th>
+          <th>Capacity</th>
+        
+        </tr>
+        <% results.forEach(function(k){ %>
+      
+        <tr>
+          <td ><%= k.elective_id %></td>
+          <td><%= k.elective_name %></td>
+          <td><%= k.elective_sem %></td>
+          <td ><%= k.elective_dept %></td>
+          <td><%= k.credits %></td>
+          <td><%= k.capacity %></td>
+        </tr>
+      
+        <% }) %>
+
+        <% } %>
+
+
         </div>
       </form>
+
+ 
+
     </div>
   </div>
 

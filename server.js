@@ -428,8 +428,50 @@ app.post('/remelective', (request, response) => {
 });
 
 app.get('/coord_group', (req, res) => {
-	res.render('coord_group');
+	var sem=0;
+	var dept='CSE';
+	var sql = "SELECT * FROM elective WHERE elective_sem="+sem+" AND elective_dept='"+dept+"';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			res.render("coord_group.ejs",{results:results});
+		}
+
+	});
+
+	//res.render("coord_group.ejs");
+	
 })
+
+app.post('/groupelective', (req, res) => {
+
+	var sem=req.body.sem;
+	var dept=req.body.dept;
+
+	// var sem=5;
+	// var dept='CSE';
+	
+	var sql = "SELECT * FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			res.render("coord_group.ejs",{results:results});
+		}
+
+	});
+})
+
+
 
 app.get('/gdash', checkAuthenticated, (req, res) => {
 	let user = req.user;
