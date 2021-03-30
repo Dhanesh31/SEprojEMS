@@ -332,7 +332,7 @@ app.post('/login_others', (request, response) => {
 app.get('/coord_add', (req, res) => {
 	res.render('coord_add', {message : req.flash('message')});
 })
-
+ 
 app.post('/addelective', (request, response) => {
 	var elective_name = request.body.elective_name;
 	var elective_sem = request.body.elective_sem;
@@ -348,7 +348,9 @@ app.post('/addelective', (request, response) => {
 		}
 		else {
 			if (result.length != 0) {
-				response.send('Elective already inserted cannot insert');
+				console.log('Elective already inserted cannot insert');
+				request.flash('message', 'Elective already inserted, try adding a new one');
+				response.redirect('/coord_add');
 			}
 			else {
 				var sql = "INSERT INTO elective(elective_name,elective_sem,elective_dept,credits,capacity) VALUES ('" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + ")";
@@ -370,7 +372,7 @@ app.post('/addelective', (request, response) => {
 })
 
 app.get('/coord_remove', (req, res) => {
-	res.render('coord_remove');
+	res.render('coord_remove', {message : req.flash('message')});
 })
 
 app.post('/remelective', (request, response) => {
@@ -390,7 +392,9 @@ app.post('/remelective', (request, response) => {
 		}
 		else {
 			if (result.length == 0) {
-				response.send('No such elective exists');
+				console.log('No such elective exists');
+				request.flash('message', 'No such elective exists');
+				response.redirect('/coord_remove');
 			}
 			else {
 				var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
@@ -409,6 +413,8 @@ app.post('/remelective', (request, response) => {
 								return;
 							}
 							console.log('Elective removed successfully');
+							request.flash('message', 'Elective removed successfully');
+							response.redirect('/coord_remove');
 						});
 					}
 

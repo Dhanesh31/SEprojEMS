@@ -129,8 +129,8 @@
 
     <div id="content">
       
-      <% if(message.length > 0) { %>
-        <div class="alert alert-success">
+      <% if(message.length > 0 && message !== "Elective already inserted, try adding a new one") { %>
+        <div class="alert alert-warning">
           <%= message%>
         </div>
       <% } %>
