@@ -5,8 +5,10 @@
   <link rel="stylesheet" type="text/css" href="main.css">
 
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <style type="text/css">
     a,
     a:hover,
@@ -56,35 +58,42 @@
     }
 
     #customers {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
 
-#customers td, #customers th {
-  border: 1px solid #f1f1f1;
-  padding: 8px;
-width:4px
-}
+    #customers td,
+    #customers th {
+      border: 1px solid #f1f1f1;
+      padding: 8px;
+      width: 4px
+    }
 
-#customers tr:nth-child(even){background-color: #f1f1f1;}
-		   #customers tr:nth-child(odd){background-color: #ffffff;}
+    #customers tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
 
-#customers tr:hover {background-color: #ddd;}
+    #customers tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
 
-#customers th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #534666;
-  color: white;
-  width:4px
+    #customers tr:hover {
+      background-color: #ddd;
+    }
 
-		   }
-		   .flashup{
-			   display:None;
-		   }
+    #customers th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #534666;
+      color: white;
+      width: 4px
+    }
 
+    .flashup {
+      display: None;
+    }
   </style>
 
 </head>
@@ -193,68 +202,111 @@ width:4px
 
             <button type="button" class="btn btn-primary" href="#">Send to Students</button>
             <button type="button" class="btn btn-primary" href="#">Send to Faculty</button>
-            <button type="button" class="btn btn-primary" href="#">Download as pdf</button>
+            <button onclick="exportTableToExcel('customers', 'elective-data')" class="btn btn-primary" href="#">Export as Excel</button>
           </center>
           <div class="row">
             <div class="col-lg-2">
-              
+
             </div>
 
-            <% if(results.length > 0) { %>
+            <% if(results.length> 0) { %>
 
-            <div class="col-lg-7 " style="margin-left:90px">
-              <table id="customers" style="margin-top:20px">
-        <tr>
-          <th>Elective_id</th>
-          <th>Elective_name</th>
-          <th>Semester</th>
-          <th>Department</th>
-          <th>Credits</th>
-          <th>Capacity</th>
-        
-        </tr>
-        <% results.forEach(function(k){ %>
-      
-        <tr>
-          <td ><%= k.elective_id %></td>
-          <td><%= k.elective_name %></td>
-          <td><%= k.elective_sem %></td>
-          <td ><%= k.elective_dept %></td>
-          <td><%= k.credits %></td>
-          <td><%= k.capacity %></td>
-        </tr>
-      
-        <% }) %>
+              <div class="col-lg-7 " style="margin-left:90px">
+                <table id="customers" style="margin-top:20px">
+                  <tr>
+                    <th>Elective_id</th>
+                    <th>Elective_name</th>
+                    <th>Semester</th>
+                    <th>Department</th>
+                    <th>Credits</th>
+                    <th>Capacity</th>
 
-        <% } %>
+                  </tr>
+                  <% results.forEach(function(k){ %>
 
+                    <tr>
+                      <td>
+                        <%= k.elective_id %>
+                      </td>
+                      <td>
+                        <%= k.elective_name %>
+                      </td>
+                      <td>
+                        <%= k.elective_sem %>
+                      </td>
+                      <td>
+                        <%= k.elective_dept %>
+                      </td>
+                      <td>
+                        <%= k.credits %>
+                      </td>
+                      <td>
+                        <%= k.capacity %>
+                      </td>
+                    </tr>
 
-        </div>
+                    <% }) %>
+
+                      <% } %>
+
+              </div>
       </form>
-
- 
-
     </div>
   </div>
 
-
-
-
-
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
   <!-- Popper.JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+    integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    crossorigin="anonymous"></script>
   <!-- Bootstrap JS -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+    integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    crossorigin="anonymous"></script>
 
   <script type="text/javascript">
-    $(document).ready(function() {
-      $('#sidebarCollapse').on('click', function() {
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
       });
     });
   </script>
+
+  <script>
+    function exportTableToExcel(tableID, filename = '') {
+      var downloadLink;
+      var dataType = 'application/vnd.ms-excel';
+      var tableSelect = document.getElementById(tableID);
+      var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+      // Specify file name
+      filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+      // Create download link element
+      downloadLink = document.createElement("a");
+
+      document.body.appendChild(downloadLink);
+
+      if (navigator.msSaveOrOpenBlob) {
+        var blob = new Blob(['\ufeff', tableHTML], {
+          type: dataType
+        });
+        navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+        // Setting the file name
+        downloadLink.download = filename;
+
+        //triggering the function
+        downloadLink.click();
+      }
+    }
+  </script>
+
   <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
