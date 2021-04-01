@@ -339,6 +339,8 @@ app.post('/addelective', (request, response) => {
 	var elective_dept = request.body.elective_dept;
 	var credits = request.body.credits;
 	var capacity = request.body.capacity;
+	var sent_students=0;
+	var sent_faculties=0;
 
 	var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
 	db.query(sql, (err, result, field) => {
@@ -353,7 +355,7 @@ app.post('/addelective', (request, response) => {
 				response.redirect('/coord_add');
 			}
 			else {
-				var sql = "INSERT INTO elective(elective_name,elective_sem,elective_dept,credits,capacity) VALUES ('" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + ")";
+				var sql = "INSERT INTO elective(elective_name,elective_sem,elective_dept,credits,capacity,sent_students,sent_faculties) VALUES ('" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + "," + sent_students + "," + sent_faculties + ")";
 				db.query(sql, (err, result, field) => {
 					if (err) {
 						console.log(err);
@@ -428,24 +430,11 @@ app.post('/remelective', (request, response) => {
 });
 
 app.get('/coord_group', (req, res) => {
+	var results=0;
 	var sem=0;
-	var dept='CSE';
-	var sql = "SELECT * FROM elective WHERE elective_sem="+sem+" AND elective_dept='"+dept+"';";
-	db.query(sql, (err, results, field) => {
-		if (err) 
-		{
-			console.log(err);
-			return;
-		}
-		else
-		{
-			res.render("coord_group.ejs",{results:results});
-		}
-
-	});
-
-	//res.render("coord_group.ejs");
-	
+	var dept="NOTHING"
+	res.render("coord_group.ejs",{results:results, sem : sem, dept : dept, message : req.flash('message')});
+	//res.render("coord_group.ejs",{results:results,  message : req.flash('message')});
 })
 
 app.post('/groupelective', (req, res) => {
@@ -453,9 +442,6 @@ app.post('/groupelective', (req, res) => {
 	var sem=req.body.sem;
 	var dept=req.body.dept;
 
-	// var sem=5;
-	// var dept='CSE';
-	
 	var sql = "SELECT * FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
 	db.query(sql, (err, results, field) => {
 		if (err) 
@@ -465,12 +451,127 @@ app.post('/groupelective', (req, res) => {
 		}
 		else
 		{
-			res.render("coord_group.ejs",{results:results});
+			res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message')});
 		}
 
 	});
 })
 
+
+app.post('/sendstudents' , (req, res) => {
+
+
+	var sem=req.body.sem;
+	var dept=req.body.dept;
+
+	var sql = "SELECT sent_students FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';"; 
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			var i;
+			for (i = 0; i < results.length; i++) 
+			{
+			  	if (results[i].sent_students==0)
+			  	{
+					var sql = "UPDATE elective SET sent_students = 1 WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+					db.query(sql, (err, results, field) => {
+						if (err) 
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							console.log('Updated Successfully');
+							req.flash('message', 'Electives are displayed in Student Portal');
+							req.flash('sem', sem)
+							req.flash('dept', dept)
+							res.redirect(307, '/groupelective');
+							//res.render("coord_group.ejs",{results:results, temp_sem:results[0].elective_sem, temp_dept:results[0].elective_dept});
+						}
+				
+					});	
+					break;
+			  	}
+			}
+			if (i==results.length)
+			{
+				req.flash('message', 'Electives are already displayed in Student Portal');
+				req.flash('sem', sem)
+				req.flash('dept', dept)
+				res.redirect(307, '/groupelective');
+			}
+		}
+
+	});
+
+})
+
+
+app.post('/sendfaculties' , (req, res) => {
+
+
+	var sem=req.body.sem;
+	var dept=req.body.dept;
+
+
+
+	console.log("sem="+sem);
+	console.log("dept="+dept);
+	console.log("MSG="+req.body.message);
+
+	var sql = "SELECT sent_faculties FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';"; 
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			var i;
+			for (i = 0; i < results.length; i++) 
+			{
+			  	if (results[i].sent_faculties==0)
+			  	{
+					var sql = "UPDATE elective SET sent_faculties = 1 WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+					db.query(sql, (err, results, field) => {
+						if (err) 
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							console.log('Updated Successfully');
+							req.flash('message', 'Electives are displayed in Faculty Portal');
+							req.flash('sem', sem)
+							req.flash('dept', dept)
+							res.redirect(307, '/groupelective');
+							//res.render("coord_group.ejs",{results:results, temp_sem:results[0].elective_sem, temp_dept:results[0].elective_dept});
+						}
+				
+					});	
+					break;
+			  	}
+			}
+			if (i==results.length)
+			{
+				req.flash('message', 'Electives are already displayed in Faculty Portal');
+				req.flash('sem', sem)
+				req.flash('dept', dept)
+				res.redirect(307, '/groupelective');
+			}
+		}
+
+	});
+
+})
 
 
 app.get('/gdash', checkAuthenticated, (req, res) => {

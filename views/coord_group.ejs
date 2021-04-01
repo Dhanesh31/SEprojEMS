@@ -169,13 +169,55 @@
 
     <div id="content">
       <h2><b>GROUP ELECTIVES</b></h2>
-      <form method='POST' action="/groupelective">
+      <form method='POST'>
+
+        <!-- <% if(message === "Electives are displayed in Student Portal".trim()) { %>
+          <div class="alert alert-success">
+            <%= message %>
+          </div>
+        <% } %> -->
+
+
+        <% if(message == "Electives are already displayed in Student Portal".trim() ) { %>  
+          <div class="alert alert-danger">
+            <%= message%>
+          </div>
+        <% } %>  
+
+        <% if(message == "Electives are displayed in Student Portal".trim() ) { %>  
+          <div class="alert alert-success">
+            <%= message%>
+          </div>
+        <% } %>  
+
+        <% if(message == "Electives are already displayed in Faculty Portal".trim() ) { %>  
+          <div class="alert alert-danger">
+            <%= message%>
+          </div>
+        <% } %>  
+
+        <% if(message == "Electives are displayed in Faculty Portal".trim() ) { %>  
+          <div class="alert alert-success">
+            <%= message%>
+          </div>
+        <% } %>  
+
+
+
+        <!-- <% if(message.length>0) { %>
+          <div class="alert alert-success">
+            <%= message %>
+          </div>
+        <% } %> -->
+
+ 
+
         <div class="center">
           <center>
             <label class="col-md-4 control-label h5 required">Semester:</label>
             <div class="col-md-4">
-              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="sem">
-                <option value="0" selected="">Select</option>
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="sem"  value="<%= sem %>selected">
+                <option value="<%= sem %>" selected>Select</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
                 <option value="6">6</option>
@@ -186,8 +228,8 @@
 
             <label class="col-md-4 control-label h5 required"> Department:</label>
             <div class="col-md-4">
-              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="dept">
-                <option value="0" selected="">Select</option>
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="dept" value="<%= dept %>">
+                <option value="<%= dept %>"selected>Select</option>
                 <option value="CSE">CSE</option>
                 <option value="ECE">ECE</option>
                 <option value="EEE">EEE</option>
@@ -200,8 +242,8 @@
 
             <button type="submit" class="btn btn-primary" formaction="/groupelective">Group</button></p>
 
-            <button type="button" class="btn btn-primary" href="#">Send to Students</button>
-            <button type="button" class="btn btn-primary" href="#">Send to Faculty</button>
+            <button type="submit" class="btn btn-primary" formaction="/sendstudents">Send to Students</button>
+            <button type="submit" class="btn btn-primary" formaction="/sendfaculties">Send to Faculty</button>
             <button onclick="exportTableToExcel('customers', 'elective-data')" class="btn btn-primary" href="#">Export as Excel</button>
           </center>
           <div class="row">
@@ -209,9 +251,11 @@
 
             </div>
 
+
             <% if(results.length> 0) { %>
 
               <div class="col-lg-7 " style="margin-left:90px">
+                
                 <table id="customers" style="margin-top:20px">
                   <tr>
                     <th>Elective_id</th>
@@ -220,6 +264,8 @@
                     <th>Department</th>
                     <th>Credits</th>
                     <th>Capacity</th>
+                    <th>To Stduents</th>
+                    <th>To Faculty</th>
 
                   </tr>
                   <% results.forEach(function(k){ %>
@@ -243,14 +289,30 @@
                       <td>
                         <%= k.capacity %>
                       </td>
+                      
+                      <% if(k.sent_students == 1) { %>
+                        <td>Sent</td>
+                      <% } else { %>
+                        <td>Not Sent</td>
+                      <% } %>
+
+
+                      <% if(k.sent_faculties == 1) { %>
+                        <td>Sent</td>
+                      <% } else { %>
+                        <td>Not Sent</td>
+                      <% } %>
+
+
                     </tr>
 
                     <% }) %>
 
-                      <% } %>
-
+                  <% } %>
+                    
               </div>
       </form>
+
     </div>
   </div>
 

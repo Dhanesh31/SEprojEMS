@@ -128,11 +128,17 @@
 
     <div id="content">
 
-      <% if(message.length > 0) { %>
+      <% if(message == "No such elective exists".trim() ) { %>  
         <div class="alert alert-danger">
           <%= message%>
         </div>
-      <% } %>
+      <% } %> 
+
+      <% if(message == "Elective removed successfully".trim() ) { %>  
+        <div class="alert alert-success">
+          <%= message%>
+        </div>
+      <% } %> 
 
       <h2><b>REMOVE ELECTIVES</b></h2>
       <form method='POST' action='/remelective'>

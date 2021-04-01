@@ -129,11 +129,17 @@
 
     <div id="content">
       
-      <% if(message.length > 0 && message !== "Elective already inserted, try adding a new one") { %>
-        <div class="alert alert-warning">
+      <% if(message == "Elective already inserted, try adding a new one".trim() ) { %>  
+        <div class="alert alert-danger">
           <%= message%>
         </div>
-      <% } %>
+      <% } %> 
+
+      <% if(message == "Saved succesfully".trim() ) { %>  
+        <div class="alert alert-success">
+          <%= message%>
+        </div>
+      <% } %> 
       
       <h2><b>ADD ELECTIVES</b></h2>
       <form method='POST' action='/addelective'>
