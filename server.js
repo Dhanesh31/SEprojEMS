@@ -70,10 +70,6 @@ app.post('/otp', (req, res) => {
 	var role = req.body.role;
 	var inotp = req.body.inotp;
 	var otp = req.body.otp;
-	console.log(role);
-	console.log(inotp);
-	console.log(otp);
-	console.log(pwd);
 
 	if (inotp == otp) {
 		console.log('Signup successful');
@@ -167,7 +163,6 @@ app.post('/otp', (req, res) => {
 
 app.post('/googlesignin', (req, res) => {
 	let token = req.body.token;
-	//console.log(token);
 	async function verify() {
 		const ticket = await client.verifyIdToken({
 			idToken: token,
@@ -175,7 +170,6 @@ app.post('/googlesignin', (req, res) => {
 		});
 		const payload = ticket.getPayload();
 		const userid = payload['sub'];
-		console.log(payload)
 	}
 	verify()
 		.then(() => {
@@ -201,8 +195,6 @@ app.post('/fpwd', (request, response) => {
 	);
 
 	num = num.toString();
-	console.log(num);
-	console.log(mail);
 
 	var mailOptions = {
 		from: 'noreplyems1@gmail.com',
@@ -219,9 +211,6 @@ app.post('/fpwd', (request, response) => {
 			console.log('email sent' + info.response);
 		}
 	})
-	//response.send("Hello");
-	//response.render('forgotpwd',{role:role,otp:num,mail:mail,pwd:pwd});
-	//console.log("Hello");
 })
 
 app.post('/otppwd', (request, response) => {
@@ -297,7 +286,6 @@ app.post('/login_others', (request, response) => {
 
 			if (flag == 1) {
 				response.send("Congrats Buddy");
-				console.log(role);
 			}
 			else {
 				response.render("login");
@@ -323,8 +311,6 @@ app.post('/login_others', (request, response) => {
 			if (flag == 1) {
 				response.render("coord_dash");
 				temp_coord_email=mail;
-				console.log(temp_coord_email);
-				console.log(role);
 			}
 			else {
 				response.render("login");
@@ -336,7 +322,6 @@ app.post('/login_others', (request, response) => {
 
 
 app.get('/coord_edit', (req, res) => {
-	console.log('Sivabalan');
 
 	var sql = "SELECT edit_profile FROM coord WHERE coord_email = '" + temp_coord_email + "';";
 	db.query(sql, (err, results, field) => {
@@ -389,7 +374,6 @@ app.get('/coord_edit', (req, res) => {
 						{
 							k='3';
 						}
-						console.log('Ingadhaana?');
 						res.render('profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State});
 					}
 			
@@ -411,7 +395,6 @@ app.post('/coord_save', (req, res) => {
 	var mail = temp_coord_email;
 	var gender;
 	var edit_profile=1
-	console.log()
 
 	if(k == '1')
 	{
@@ -498,10 +481,6 @@ app.post('/remelective', (request, response) => {
 	var elective_name = request.body.elective_name;
 	var elective_sem = request.body.elective_sem;
 	var elective_dept = request.body.elective_dept;
-
-	console.log(elective_name);
-	console.log(elective_sem);
-	console.log(elective_dept);
 
 	var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
 	db.query(sql, (err, result, field) => {
@@ -636,12 +615,6 @@ app.post('/sendfaculties' , (req, res) => {
 	var sem=req.body.sem;
 	var dept=req.body.dept;
 
-
-
-	console.log("sem="+sem);
-	console.log("dept="+dept);
-	console.log("MSG="+req.body.message);
-
 	var sql = "SELECT sent_faculties FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';"; 
 	db.query(sql, (err, results, field) => {
 		if (err) 
@@ -718,46 +691,8 @@ app.get('/stud_view', (req, res) => {
 	});
 })
 
-// app.post('/viewelective', (req, res) => {
-	
-// 	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
-// 	db.query(sql, (err, results, field) => {
-// 		if (err) 
-// 		{
-// 			console.log(err);
-// 			return;
-// 		}
-// 		else
-// 		{
-// 			var sem=results[0].student_sem;
-// 			var dept=results[0].student_dept;
-// 			var sql = "SELECT elective_name FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
-// 			db.query(sql, (err, results, field) => {
-// 				if (err) 
-// 				{
-// 					console.log(err);
-// 					return;
-// 				}
-// 				else
-// 				{
-// 					var i;
-// 					var elec;
-// 					for (i = 0; i < results.length; i++) {
-// 						// var elec=results[i].elective_name
-// 						console.log(results[i].elective_name)
-// 						elec=results[i].elective_name
-// 						var pref=req.body[elec]
-// 						console.log(pref)
-// 					}	
-// 				}
-// 			});
-// 		}
-// 	});
-// })
-
 app.get('/stud_choose', (req, res) => {
-	
-	console.log('Please help');
+
 	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err) 
@@ -798,7 +733,6 @@ app.post('/chooseelective', (req, res) => {
 		else
 		{
 			roll_no=results[0].roll_no;
-			console.log(roll_no);	
 		}
 	});
 	
@@ -825,17 +759,9 @@ app.post('/chooseelective', (req, res) => {
 					var i;
 					let pref=[]
 					for (i = 0; i < results.length; i++) {
-						console.log(results[i].elective_id)
-						var elec=results[i].elective_id
-						pref[i]=req.body[elec]
-						// var j;
-						// for (j = 0; j < i; i++) {
-						// 	if(pref[j] == pref[i]) {
-						// 		console.log("Two electives with same values not accepted");
-						// 		res.redirect('/stud_choose');
-						// 	}
-						// }
-						console.log(pref)
+						var elec=results[i].elective_id;
+						pref[i]=req.body[elec];
+
 						var sql = "INSERT INTO elec_pref VALUES('" + roll_no + "'," + elec + "," + pref[i] + ");";
 						db.query(sql, (err, results, field) => {
 							if (err) 
@@ -846,8 +772,6 @@ app.post('/chooseelective', (req, res) => {
 							else
 							{
 								console.log("inserted successfully");
-								// req.flash('message', 'Your preferences are successfully saved');
-								// res.redirect(307, '/groupelective');	
 							}
 						});
 
@@ -871,7 +795,6 @@ app.post('/chooseelective', (req, res) => {
 								{
 									if(results[i].pref==results[j].pref)
 									{
-										console.log("Venam pa");
 										flag=1;
 										break;
 									}
@@ -980,10 +903,6 @@ app.post('/signup', (request, response) => {
 		Math.random() * (9999 - 1000) + 1000
 	);
 	var num = num.toString();
-	console.log(pwd + "here");
-	console.log(num);
-	console.log(role);
-	console.log(mail);
 
 	var mailOptions = {
 		from: 'noreplyems1@gmail.com',
