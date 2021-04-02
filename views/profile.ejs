@@ -111,10 +111,16 @@
 <div id="content">
 
 <div  style="margin-top: 13px;">
+    <% if(message.length > 0 ) { %>  
+        <div class="alert alert-success">
+          <%= message%>
+        </div>
+    <% } %>  
     <h1 class="page-header" style="margin-top: 13px;">Edit Profile</h1>
     
       <!-- edit form column -->
       <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+
     
         <h3>Personal info</h3>
         <form class="form-horizontal" role="form" method="POST">

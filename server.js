@@ -334,11 +334,11 @@ app.get('/coord_edit', (req, res) => {
 		{
 			if (results.length==0)
 			{
-				res.render('profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' '});
+				res.render('profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', message : req.flash('message')});
 			}
 			else if(results[0].edit_profile==0)
 			{
-				res.render('profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' '});
+				res.render('profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', message : req.flash('message')});
 			}
 			else
 			{
@@ -353,6 +353,14 @@ app.get('/coord_edit', (req, res) => {
 					{
 						var name = results[0].coord_name;
 						var dob = results[0].coord_dob;
+						// dob = dob + ' ';
+
+						// for (var i=0; i<dob.length; i++)
+						// {
+						// 	console.log(dob.charAt(i));
+						// }
+
+						
 						var mobile = results[0].coord_mobileno;
 						var k;
 						var Age = results[0].coord_age;
@@ -374,7 +382,7 @@ app.get('/coord_edit', (req, res) => {
 						{
 							k='3';
 						}
-						res.render('profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State});
+						res.render('profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, message : req.flash('message')});
 					}
 			
 				});
@@ -409,7 +417,7 @@ app.post('/coord_save', (req, res) => {
 		gender = 'Others';
 	}
 
-	var sql="insert into coord values('"+ name +"','"+ dob +"',"+ Age +",'"+ mail +"','"+ mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + edit_profile + ");";
+	var sql="Select * from coord where coord_email='"+temp_coord_email+"';";
 	db.query(sql, (err, results, field) => {
 		if (err) 
 		{
@@ -418,13 +426,49 @@ app.post('/coord_save', (req, res) => {
 		}
 		else
 		{
-			console.log('Inserted Successfully');
-			//req.flash('name', name);
-			res.redirect('/coord_edit');
-			//res.redirect('/?valid=' + string)
+			if(results.length > 0)
+			{
+				var sql="update coord set coord_name = '"+ name +"',"+"coord_dob = '"+ dob + "'," + "coord_age = '" + Age + "', coord_mobileno = '" + mobile + "'," + "coord_gender = '" + gender + "'," + "coord_city ='"+ City + "'," + "coord_state ='"+ State + "';";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						console.log('Elective added successfully');
+						req.flash('message', 'Profile Details Updated Successfully');
+						res.redirect('/coord_edit');
+					}
+			
+				});
+			}
+			else
+			{
+				var sql="insert into coord values('"+ name +"','"+ dob +"',"+ Age +",'"+ mail +"','"+ mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + edit_profile + ");";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						console.log('Inserted Successfully');
+						//req.flash('name', name);
+						req.flash('message', 'Profile Details Saved Successfully');
+						res.redirect('/coord_edit');
+						//res.redirect('/?valid=' + string)
+					}
+			
+				});
+			}
 		}
 
 	});
+
+
 })
 
 
@@ -693,7 +737,7 @@ app.get('/stud_view', (req, res) => {
 
 app.get('/stud_choose', (req, res) => {
 
-	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
+	var sql = "SELECT preference_given FROM student WHERE student_email = '" + temp_studmail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err) 
 		{
@@ -702,20 +746,36 @@ app.get('/stud_choose', (req, res) => {
 		}
 		else
 		{
-			var sem=results[0].student_sem;
-			var dept=results[0].student_dept;
-			var sql = "SELECT elective_id,elective_name FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
-			db.query(sql, (err, results, field) => {
-				if (err) 
-				{
-					console.log(err);
-					return;
-				}
-				else
-				{
-					res.render("choose_pref.ejs",{results:results});
-				}
-			});
+			if(results[0].preference_given==1){
+				res.render("choosepref_done.ejs");
+			}
+			else{
+				var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var sem=results[0].student_sem;
+						var dept=results[0].student_dept;
+						var sql = "SELECT elective_id,elective_name FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+						db.query(sql, (err, results, field) => {
+							if (err) 
+							{
+								console.log(err);
+								return;
+							}
+							else
+							{
+								res.render("choose_pref.ejs",{results:results});
+							}
+						});
+					}
+				});
+			}
 		}
 	});
 })
@@ -822,7 +882,18 @@ app.post('/chooseelective', (req, res) => {
 							}
 							else
 							{
-								res.send('Successfully Inserted');
+								var sql = "UPDATE student SET preference_given=1 where roll_no = '"+roll_no+"';";
+								db.query(sql, (err, results, field) => {
+									if (err) 
+									{
+										console.log(err);
+										return;
+									}
+									else
+									{
+										res.render("choosepref_done.ejs");
+									}
+								});
 							}
 						}
 					});

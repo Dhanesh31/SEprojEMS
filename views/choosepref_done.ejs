@@ -39,44 +39,6 @@
         width: 1471px;
     }
     }
-
-    #customers {
-      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    #customers td,
-    #customers th {
-      border: 1px solid #f1f1f1;
-      padding: 8px;
-      width: 4px
-    }
-
-    #customers tr:nth-child(even) {
-      background-color: #f1f1f1;
-    }
-
-    #customers tr:nth-child(odd) {
-      background-color: #ffffff;
-    }
-
-    #customers tr:hover {
-      background-color: #ddd;
-    }
-
-    #customers th {
-      padding-top: 12px;
-      padding-bottom: 12px;
-      text-align: left;
-      background-color: #534666;
-      color: white;
-      width: 4px
-    }
-
-    .flashup {
-      display: None;
-    }
   </style>
 
 </head>
@@ -132,8 +94,7 @@
                         View Preferences 
                     </a>
                     
-                </li>
-                
+                </li>                
                
             </ul>
 
@@ -141,43 +102,10 @@
         </nav>
 
         <!-- Page Content  -->
-        
+
         <div id="content">
-            <% if(results.length> 0) { %> 
-                <table id="customers" style="margin-top:20px">
-                    <tr>
-                    <th>Elective_id</th>
-                    <th>Elective_name</th>
-                    <th>Semester</th>
-                    <th>Department</th>
-                    <th>Credits</th>
-        
-                    </tr>
-                    <% results.forEach(function(k){ %>
-        
-                    <tr>
-                        <td>
-                        <%= k.elective_id %>
-                        </td>
-                        <td>
-                        <%= k.elective_name %>
-                        </td>
-                        <td>
-                        <%= k.elective_sem %>
-                        </td>
-                        <td>
-                        <%= k.elective_dept %>
-                        </td>
-                        <td>
-                        <%= k.credits %>
-                        </td>
-        
-                    </tr>
-        
-                    <% }) %>
-        
-                    <% } %>
-        
+            <h1 class="page-header" style="margin-top: 13px;">Your preferences have been collected</h1>
+           
         </div>
     </div>       
 
