@@ -62,6 +62,7 @@ db.connect(err => {
 	console.log('Database Connected');
 })
 
+var temp_studmail = '';
 
 app.post('/otp', (req, res) => {
 	var mail = req.body.mail;
@@ -239,6 +240,7 @@ app.get('/signupform', (request, response) => {
 
 app.post('/login_student', (request, response) => {
 	var mail = request.body.email;
+	temp_studmail = mail;
 	var pwd = request.body.password;
 
 	var flag = 0;
@@ -258,7 +260,7 @@ app.post('/login_student', (request, response) => {
 		}
 
 		if (flag == 1) {
-			response.send("Congrats Buddy");
+			response.render("stud_dash", {mailid : mail});
 		}
 		else {
 			response.render("login");
@@ -573,6 +575,76 @@ app.post('/sendfaculties' , (req, res) => {
 
 })
 
+app.get('/stud_choose', (req, res) => {
+	
+	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			var sem=results[0].student_sem;
+			var dept=results[0].student_dept;
+			var sql = "SELECT elective_name FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+			db.query(sql, (err, results, field) => {
+				if (err) 
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+					res.render("choose_pref.ejs",{results:results});
+				}
+			});
+		}
+	});
+})
+
+app.post('/viewelective', (req, res) => {
+	
+	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			var sem=results[0].student_sem;
+			var dept=results[0].student_dept;
+			var sql = "SELECT elective_name FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+			db.query(sql, (err, results, field) => {
+				if (err) 
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+					var i;
+					var elec;
+					for (i = 0; i < results.length; i++) {
+						// var elec=results[i].elective_name
+						console.log(results[i].elective_name)
+						elec=results[i].elective_name
+						var pref=req.body[elec]
+						console.log(pref)
+					}	
+				}
+			});
+		}
+	});
+})
+
+app.get('/stud_profile', (req, res) => {
+	res.send("GET method");
+})
+
 
 app.get('/gdash', checkAuthenticated, (req, res) => {
 	let user = req.user;
@@ -609,7 +681,6 @@ function checkAuthenticated(req, res, next) {
 		});
 
 		//res.render('login');
-
 	}
 	verify()
 		.then(() => {
