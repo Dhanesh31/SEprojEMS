@@ -106,22 +106,22 @@
 
         <div id="content">
             <h2><b>GROUP ELECTIVES</b></h2>
-            <form method='POST' action="/viewelective">
+            <form method='POST' action="/chooseelective">
             <div class="center">
                 <center>
                 <% if(results.length> 0) { %>
                     <% results.forEach(function(k){ %>
                         <label class="col-md-4 control-label h5 required"><%= k.elective_name %></label>
                         <div class="col-md-4">
-                            <input type="radio" id="1" name="<%= k.elective_name %>" value="1">
+                            <input type="radio" id="1" name="<%= k.elective_id %>" value="1">
                             <label for="1">1</label><br>
-                            <input type="radio" id="2" name="<%= k.elective_name %>" value="2">
+                            <input type="radio" id="2" name="<%= k.elective_id %>" value="2">
                             <label for="2">2</label><br>
-                            <input type="radio" id="3" name="<%= k.elective_name %>" value="3">
+                            <input type="radio" id="3" name="<%= k.elective_id %>" value="3">
                             <label for="3">3</label><br>
-                            <input type="radio" id="4" name="<%= k.elective_name %>" value="4">
+                            <input type="radio" id="4" name="<%= k.elective_id %>" value="4">
                             <label for="4">4</label><br>
-                            <input type="radio" id="5" name="<%= k.elective_name %>" value="5">
+                            <input type="radio" id="5" name="<%= k.elective_id %>" value="5">
                             <label for="5">5</label><br>
                         </div>
                     <% }) %>
@@ -129,7 +129,7 @@
                 <% } %>
                 <br></br>
     
-                <button type="submit" class="btn btn-primary" formaction="/viewelective">Submit</button>
+                <button type="submit" class="btn btn-primary" formaction="/chooseelective">Submit</button>
                 </center>
     
             </div>
