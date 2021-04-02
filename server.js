@@ -648,8 +648,9 @@ app.get('/stud_profile', (req, res) => {
 
 app.get('/gdash', checkAuthenticated, (req, res) => {
 	let user = req.user;
+	temp_studmail = user.email;
 	console.log('check');
-	res.render('gdash', { user });
+	res.render('stud_dash', {mailid : user.email});
 })
 
 app.get('/logout', (req, res) => {
@@ -671,15 +672,28 @@ function checkAuthenticated(req, res, next) {
 		user.name = payload.name;
 		user.email = payload.email;
 		user.picture = payload.picture;
-		var sql = "INSERT INTO student_login VALUES ('" + user.email + "','" + payload.sub + "')";
+		var sql = "SELECT * FROM student_login WHERE student_email='" + user.email + "' AND student_password='" + payload.sub + "';";
 		db.query(sql, (err, result, field) => {
 			if (err) {
 				console.log('Error in changing database', err);
 				return;
 			}
-			console.log('Google sign in success');
+			if(result.length == 0){
+				var sql = "INSERT INTO student_login VALUES ('" + user.email + "','" + payload.sub + "')";
+				db.query(sql, (err, result, field) => {
+				if (err) {
+					console.log('Error in changing database', err);
+					return;
+				}
+				console.log('Google sign in success');
+				});
+			}
+			else{
+				console.log('Google sign in success');
+			}		
+			
 		});
-
+		
 		//res.render('login');
 	}
 	verify()
@@ -709,7 +723,7 @@ app.post('/signup', (request, response) => {
 	console.log(mail);
 
 	var mailOptions = {
-		from: 'sivabalan212k@gmail.com',
+		from: 'noreplyems1@gmail.com',
 		to: mail + '',
 		subject: 'OTP for Signup',
 		text: num + ''
