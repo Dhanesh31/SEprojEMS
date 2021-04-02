@@ -76,27 +76,27 @@
             <ul class="list-unstyled components">
                 <li >
 
-                    <a href="profile.html" >
+                    <a href="coord_edit" >
                         <i class="fas fa-user"></i>
                        Edit Profile
                     </a>
                     
                 </li>
                 <li>
-                    <a href="add.html" >
+                    <a href="coord_add" >
                         <i class="fas fa-pencil-alt"></i>
                         Add Elective
                     </a>
                     
                 </li>
                 <li>
-                    <a href="remove.html">
+                    <a href="coord_remove">
                         <i class="fas fa-pencil-alt"></i>
                     Remove Elective
                     </a>
                 </li>
                 <li>
-                    <a href="group.html">
+                    <a href="coord_group">
                         <i class="fas fa-copy"></i>
                     Group Elective
                     </a>
@@ -117,66 +117,90 @@
       <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
     
         <h3>Personal info</h3>
-        <form class="form-horizontal" role="form">
+        <form class="form-horizontal" role="form" method="POST">
           <div class="form-group">
             <label class="col-lg-3 control-label">Name:</label>
             <div class="col-lg-8">
-              <input class="form-control" value="Jane Bishop" type="text">
+              <input class="form-control" value="<%= name %>" type="text" name="name">
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">DOB:</label>
             <div class="col-lg-8">
-              <input class="form-control" value="19-10-2000" type="date">
+              <input class="form-control" value="<%= dob %>" name = "dob" type="date">
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Mobile Number:</label>
             <div class="col-lg-8">
-              <input class="form-control" value="6096782345" type="text">
+              <input class="form-control" value="<%= mobile %>" name = "mobile" type="text">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-md-3 control-label" for="Gender">Gender:</label>
+            <label class="col-md-3 control-label" for="Gender" name="Gender" >Gender:</label>
             <div class="col-md-4"> 
-              <label class="radio-inline" for="Gender-0">
-                <input type="radio" name="Gender" id="Gender-0" value="1" checked="checked">
-                Male
-              </label> 
-              <label class="radio-inline" for="Gender-1">
-                <input type="radio" name="Gender" id="Gender-1" value="2">
-                Female
-              </label> 
-              <label class="radio-inline" for="Gender-2">
-                <input type="radio" name="Gender" id="Gender-2" value="3">
-                Other
-              </label>
+
+                <% if(k == '1'.trim()) { %>
+                    <label class="radio-inline" for="Gender-0">
+                        <input type="radio" name="Gender" id="Gender-0" value="1" checked>
+                        Male
+                    </label>
+                <% } else { %>
+                    <label class="radio-inline" for="Gender-0">
+                        <input type="radio" name="Gender" id="Gender-0" value="1" >
+                        Male
+                    </label>
+                <% } %>
+
+                <% if(k == '2'.trim()) { %>
+                    <label class="radio-inline" for="Gender-1">
+                        <input type="radio" name="Gender" id="Gender-1" value="2" checked>
+                        Female
+                    </label> 
+                <% } else { %>
+                    <label class="radio-inline" for="Gender-1">
+                        <input type="radio" name="Gender" id="Gender-1" value="2" >
+                        Female
+                    </label> 
+                <% } %>
+
+                <% if(k == '3'.trim()) { %>
+                    <label class="radio-inline" for="Gender-2">
+                        <input type="radio"  name="Gender" id="Gender-2" value="3" checked>
+                        Other
+                    </label>
+                <% } else { %>
+                    <label class="radio-inline" for="Gender-2">
+                        <input type="radio"  name="Gender" id="Gender-2" value="3" >
+                        Other
+                    </label>
+                <% } %>
             </div>
           </div>
 
           <div class="form-group">
             <label class="col-md-3 control-label">Age:</label>
             <div class="col-md-8">
-              <input class="form-control" value="20" type="text">
+              <input class="form-control" value="<%= Age %>" type="text" name="Age">
             </div>
           </div>
           <h3>Address</h3>
           <div class="form-group">
             <label class="col-md-3 control-label">City:</label>
             <div class="col-md-8">
-              <input class="form-control" value="Coimbatore" type="text">
+              <input class="form-control" value="<%= City %>" type="text" name="City">
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label">State:</label>
             <div class="col-md-8">
-              <input class="form-control" value="Tamil nadu" type="text">
+              <input class="form-control" value="<%= State %>" type="text" name="State">
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"></label>
             <div class="col-md-8">
-              <input class="btn btn-primary" value="Save Changes" type="button" style="background-color: black;">
+              <button type="submit" class="btn btn-primary" formaction="/coord_save" style="background-color: black;">Save Changes</button>
               <span></span>
               <input class="btn btn-default" value="Cancel" type="reset">
             </div>

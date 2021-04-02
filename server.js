@@ -270,10 +270,11 @@ app.post('/login_student', (request, response) => {
 
 	});
 })
-
+var temp_coord_email;
 
 app.post('/login_others', (request, response) => {
 	var mail = request.body.email;
+	
 	var pwd = request.body.password;
 	var role = request.body.role;
 
@@ -321,6 +322,8 @@ app.post('/login_others', (request, response) => {
 
 			if (flag == 1) {
 				response.render("coord_dash");
+				temp_coord_email=mail;
+				console.log(temp_coord_email);
 				console.log(role);
 			}
 			else {
@@ -330,6 +333,118 @@ app.post('/login_others', (request, response) => {
 		});
 	}
 })
+
+
+app.get('/coord_edit', (req, res) => {
+	console.log('Sivabalan');
+
+	var sql = "SELECT edit_profile FROM coord WHERE coord_email = '" + temp_coord_email + "';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if (results.length==0)
+			{
+				res.render('profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' '});
+			}
+			else if(results[0].edit_profile==0)
+			{
+				res.render('profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' '});
+			}
+			else
+			{
+				var sql = "SELECT * FROM coord WHERE coord_email = '" + temp_coord_email +"';";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var name = results[0].coord_name;
+						var dob = results[0].coord_dob;
+						var mobile = results[0].coord_mobileno;
+						var k;
+						var Age = results[0].coord_age;
+						var City = results[0].coord_city;
+						var State = results[0].coord_state;
+						var mail = results[0].coord_email;
+						var gender = results[0].coord_gender;
+						var edit_profile=results[0].edit_profile;
+
+						if(gender == 'Male')
+						{
+							k='1';
+						}
+						else if(gender=='Female')
+						{
+							k='2';
+						}
+						else
+						{
+							k='3';
+						}
+						console.log('Ingadhaana?');
+						res.render('profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State});
+					}
+			
+				});
+			}
+		}
+
+	});
+})
+
+app.post('/coord_save', (req, res) => {
+	var name = req.body.name;
+	var dob = req.body.dob;
+	var mobile = req.body.mobile;
+	var k = req.body.Gender;
+	var Age = req.body.Age;
+	var City = req.body.City;
+	var State = req.body.State;
+	var mail = temp_coord_email;
+	var gender;
+	var edit_profile=1
+	console.log()
+
+	if(k == '1')
+	{
+		gender = 'Male';
+	}
+	else if (k == '2')
+	{
+		gender = 'Female';
+	}
+	else
+	{
+		gender = 'Others';
+	}
+
+	var sql="insert into coord values('"+ name +"','"+ dob +"',"+ Age +",'"+ mail +"','"+ mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + edit_profile + ");";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			console.log('Inserted Successfully');
+			//req.flash('name', name);
+			res.redirect('/coord_edit');
+			//res.redirect('/?valid=' + string)
+		}
+
+	});
+})
+
+
 
 app.get('/coord_add', (req, res) => {
 	res.render('coord_add', {message : req.flash('message')});
@@ -643,6 +758,7 @@ app.post('/viewelective', (req, res) => {
 
 app.get('/stud_choose', (req, res) => {
 	
+	console.log('Please help');
 	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err) 
@@ -671,6 +787,21 @@ app.get('/stud_choose', (req, res) => {
 })
 
 app.post('/chooseelective', (req, res) => {
+
+	var roll_no=''
+	var sql = "SELECT roll_no FROM student WHERE student_email = '" + temp_studmail + "';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			roll_no=results[0].roll_no;
+			console.log(roll_no);	
+		}
+	});
 	
 	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
 	db.query(sql, (err, results, field) => {
@@ -693,14 +824,87 @@ app.post('/chooseelective', (req, res) => {
 				else
 				{
 					var i;
-					var elec;
+					let pref=[]
 					for (i = 0; i < results.length; i++) {
-						// var elec=results[i].elective_name
 						console.log(results[i].elective_id)
-						elec=results[i].elective_id
-						var pref=req.body[elec]
+						var elec=results[i].elective_id
+						pref[i]=req.body[elec]
+						// var j;
+						// for (j = 0; j < i; i++) {
+						// 	if(pref[j] == pref[i]) {
+						// 		console.log("Two electives with same values not accepted");
+						// 		res.redirect('/stud_choose');
+						// 	}
+						// }
 						console.log(pref)
+						var sql = "INSERT INTO elec_pref VALUES('" + roll_no + "'," + elec + "," + pref[i] + ");";
+						db.query(sql, (err, results, field) => {
+							if (err) 
+							{
+								console.log(err);
+								return;
+							}
+							else
+							{
+								console.log("inserted successfully");
+								// req.flash('message', 'Your preferences are successfully saved');
+								// res.redirect(307, '/groupelective');	
+							}
+						});
+
 					}	
+
+					var sql = "Select pref from elec_pref where roll_no = '"+ roll_no + "';";
+					db.query(sql, (err, results, field) => {
+						if (err) 
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							var flag=0;
+							var i;
+							var j;
+							for (i=0;i<results.length;i++)
+							{
+								for(j=i+1;j<results.length;j++)
+								{
+									if(results[i].pref==results[j].pref)
+									{
+										console.log("Venam pa");
+										flag=1;
+										break;
+									}
+								}
+								if(flag==1)
+								{
+									break;
+								}
+							}
+
+							if(flag==1)
+							{
+								var sql = "DELETE FROM elec_pref where roll_no = '"+roll_no+"';";
+								db.query(sql, (err, results, field) => {
+									if (err) 
+									{
+										console.log(err);
+										return;
+									}
+									else
+									{
+										res.redirect('/stud_choose');
+									}
+								});
+							}
+							else
+							{
+								res.send('Successfully Inserted');
+							}
+						}
+					});
+
 				}
 			});
 		}
