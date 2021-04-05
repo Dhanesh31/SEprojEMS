@@ -178,29 +178,29 @@
         <% } %> -->
 
 
-        <% if(message == "Electives are already displayed in Student Portal".trim() ) { %>  
+        <% if(message == "Electives are already displayed in Student Portal".trim() ) { %>
           <div class="alert alert-danger">
             <%= message%>
           </div>
-        <% } %>  
+        <% } %>
 
-        <% if(message == "Electives are displayed in Student Portal".trim() ) { %>  
+        <% if(message == "Electives are displayed in Student Portal".trim() ) { %>
           <div class="alert alert-success">
             <%= message%>
           </div>
-        <% } %>  
+        <% } %>
 
-        <% if(message == "Electives are already displayed in Faculty Portal".trim() ) { %>  
+        <% if(message == "Electives are already displayed in Faculty Portal".trim() ) { %>
           <div class="alert alert-danger">
             <%= message%>
           </div>
-        <% } %>  
+        <% } %>
 
-        <% if(message == "Electives are displayed in Faculty Portal".trim() ) { %>  
+        <% if(message == "Electives are displayed in Faculty Portal".trim() ) { %>
           <div class="alert alert-success">
             <%= message%>
           </div>
-        <% } %>  
+        <% } %>
 
 
 
@@ -210,7 +210,7 @@
           </div>
         <% } %> -->
 
- 
+
 
         <div class="center">
           <center>
@@ -240,7 +240,7 @@
             </div>
             <br><br>
 
-            <button type="submit" class="btn btn-primary" formaction="/groupelective">Group</button></p>
+            <button type="submit" id='group' class="btn btn-primary" formaction="/groupelective">Group</button></p>
 
             <button type="submit" class="btn btn-primary" formaction="/sendstudents">Send to Students</button>
             <button type="submit" class="btn btn-primary" formaction="/sendfaculties">Send to Faculty</button>
@@ -255,7 +255,7 @@
             <% if(results.length> 0) { %>
 
               <div class="col-lg-7 " style="margin-left:90px">
-                
+
                 <table id="customers" style="margin-top:20px">
                   <tr>
                     <th>Elective_id</th>
@@ -289,7 +289,7 @@
                       <td>
                         <%= k.capacity %>
                       </td>
-                      
+
                       <% if(k.sent_students == 1) { %>
                         <td>Sent</td>
                       <% } else { %>
@@ -309,7 +309,7 @@
                     <% }) %>
 
                   <% } %>
-                    
+
               </div>
       </form>
 
