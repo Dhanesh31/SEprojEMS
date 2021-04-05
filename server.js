@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser');
 //const session = require('express-session');
 //const popup=require('popups');
-const app = express();
+const app = express(); 
 
 const sessiion = require('express-session')
 const flush = require('connect-flash')
@@ -459,6 +459,167 @@ app.post('/coord_save', (req, res) => {
 						//req.flash('name', name);
 						req.flash('message', 'Profile Details Saved Successfully');
 						res.redirect('/coord_edit');
+						//res.redirect('/?valid=' + string)
+					}
+			
+				});
+			}
+		}
+
+	});
+
+
+})
+
+//var temp_stud_mail;
+app.get('/stud_edit', (req, res) => {
+
+	var sql = "SELECT edit_profile FROM student WHERE student_email = '" + temp_studmail + "';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if (results.length==0)
+			{
+				res.render('stud_profile',{roll_no : ' ', name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', sem : 'Select', dept : 'Select', message : req.flash('message')});
+			}
+			else if(results[0].edit_profile==0)
+			{
+				res.render('stud_profile',{roll_no : ' ', name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', sem : 'Select', dept : 'Select', message : req.flash('message')});
+			}
+			else
+			{
+				var sql = "SELECT * FROM student WHERE student_email = '" + temp_studmail +"';";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var name = results[0].student_name;
+						var dob = results[0].student_dob;
+						// dob = dob + ' ';
+
+						// for (var i=0; i<dob.length; i++)
+						// {
+						// 	console.log(dob.charAt(i));
+						// }
+
+						
+						var mobile = results[0].student_mobileno;
+						var k;
+						var Age = results[0].student_age;
+						var City = results[0].student_city;
+						var State = results[0].student_state;
+						var mail = results[0].student_email;
+						var gender = results[0].gender;
+						var edit_profile=results[0].edit_profile;
+						var sem = results[0].student_sem;
+						var dept = results[0].student_dept;
+						var roll_no = results[0].roll_no;
+
+
+						if(gender == 'Male')
+						{
+							k='1';
+						}
+						else if(gender=='Female')
+						{
+							k='2';
+						}
+						else
+						{
+							k='3';
+						}
+						res.render('stud_profile',{roll_no : roll_no, name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, sem : sem, dept : dept, message : req.flash('message')});
+					}
+			
+				});
+			}
+		}
+
+	});
+})
+
+app.post('/stud_save', (req, res) => {
+	var name = req.body.name;
+	var dob = req.body.dob;
+	var mobile = req.body.mobile;
+	var k = req.body.Gender;
+	var Age = req.body.Age;
+	var City = req.body.City;
+	var State = req.body.State;
+	var mail = temp_studmail;
+	var gender;
+	var edit_profile=1
+	var sem = req.body.sem;
+	var dept = req.body.dept;
+	var roll_no = req.body.rollno;
+	var preference_given = 0;
+
+	if(k == '1')
+	{
+		gender = 'Male';
+	}
+	else if (k == '2')
+	{
+		gender = 'Female';
+	}
+	else
+	{
+		gender = 'Others';
+	}
+
+	var sql="Select * from student where student_email='"+temp_studmail+"';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if(results.length > 0)
+			{
+				console.log('update');
+				var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +  "'," +"student_sem ="+ sem + "," + "student_dept ='" + dept +"';";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						console.log('Elective added successfully');
+						req.flash('message', 'Profile Details Updated Successfully');
+						res.redirect('/stud_edit');
+					}
+			
+				});
+			}
+			else
+			{
+				console.log('INSERT');
+				var sql="insert into student values('"+ roll_no + "','" + name +"','"+ dob +"',"+ Age +",'"+ mail +"','" + dept + "'," + sem + ",'" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + preference_given + "," + edit_profile + ");";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						console.log('Inserted Successfully');
+						//req.flash('name', name);
+						req.flash('message', 'Profile Details Saved Successfully');
+						res.redirect('/stud_edit');
 						//res.redirect('/?valid=' + string)
 					}
 			
