@@ -259,7 +259,7 @@ app.post('/login_student', (request, response) => {
 
 	});
 })
-var temp_coord_email;
+var temp_coord_email, temp_faculty_email;
 
 app.post('/login_others', (request, response) => {
 	var mail = request.body.email;
@@ -285,7 +285,8 @@ app.post('/login_others', (request, response) => {
 			}
 
 			if (flag == 1) {
-				response.send("Congrats Buddy");
+				temp_faculty_email=mail;
+				response.render("faculty_dash" , {mailid : mail});
 			}
 			else {
 				response.render("login");
@@ -471,7 +472,6 @@ app.post('/coord_save', (req, res) => {
 
 })
 
-//var temp_stud_mail;
 app.get('/stud_edit', (req, res) => {
 
 	var sql = "SELECT edit_profile FROM student WHERE student_email = '" + temp_studmail + "';";
@@ -620,6 +620,162 @@ app.post('/stud_save', (req, res) => {
 						//req.flash('name', name);
 						req.flash('message', 'Profile Details Saved Successfully');
 						res.redirect('/stud_edit');
+						//res.redirect('/?valid=' + string)
+					}
+			
+				});
+			}
+		}
+
+	});
+
+
+})
+
+
+app.get('/faculty_edit', (req, res) => {
+
+	var sql = "SELECT edit_profile FROM faculty WHERE faculty_email = '" + temp_faculty_email + "';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if (results.length==0)
+			{
+				res.render('faculty_profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', dept : 'Select', message : req.flash('message')});
+			}
+			else if(results[0].edit_profile==0)
+			{
+				res.render('faculty_profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', dept : 'Select', message : req.flash('message')});
+			}
+			else
+			{
+				var sql = "SELECT * FROM faculty WHERE faculty_email = '" + temp_faculty_email +"';";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var name = results[0].faculty_name;
+						var dob = results[0].faculty_dob;
+						// dob = dob + ' ';
+
+						// for (var i=0; i<dob.length; i++)
+						// {
+						// 	console.log(dob.charAt(i));
+						// }
+
+						
+						var mobile = results[0].faculty_mobileno;
+						var k;
+						var Age = results[0].faculty_age;
+						var City = results[0].faculty_city;
+						var State = results[0].faculty_state;
+						var mail = results[0].faculty_email;
+						var gender = results[0].gender;
+						var edit_profile=results[0].edit_profile;
+						var dept = results[0].faculty_dept;
+
+						if(gender == 'Male')
+						{
+							k='1';
+						}
+						else if(gender=='Female')
+						{
+							k='2';
+						}
+						else
+						{
+							k='3';
+						}
+						res.render('faculty_profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, dept : dept, message : req.flash('message')});
+					}
+			
+				});
+			}
+		}
+
+	});
+})
+
+app.post('/faculty_save', (req, res) => {
+	var name = req.body.name;
+	var dob = req.body.dob;
+	var mobile = req.body.mobile;
+	var k = req.body.Gender;
+	var Age = req.body.Age;
+	var City = req.body.City;
+	var State = req.body.State;
+	var mail = temp_faculty_email;
+	var gender;
+	var edit_profile=1
+	var dept = req.body.dept;
+	var preference_given = 0;
+
+	if(k == '1')
+	{
+		gender = 'Male';
+	}
+	else if (k == '2')
+	{
+		gender = 'Female';
+	}
+	else
+	{
+		gender = 'Others';
+	}
+
+	var sql="Select * from faculty where faculty_email='"+temp_faculty_email+"';";
+	db.query(sql, (err, results, field) => {
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if(results.length > 0)
+			{
+				console.log('update');
+				var sql="update faculty set faculty_name = '"+ name +"',"+"faculty_dob = '"+ dob + "'," + "faculty_age = '" + Age + "', faculty_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "faculty_city ='"+ City + "'," + "faculty_state ='"+ State +  "'," +"faculty_dept ='"+ dept + "';";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						console.log('Elective added successfully');
+						req.flash('message', 'Profile Details Updated Successfully');
+						res.redirect('/faculty_edit');
+					}
+			
+				});
+			}
+			else
+			{
+				console.log('INSERT');
+				var sql="insert into faculty values('" + name +"','"+ dob +"',"+ Age +",'"+ mail + "','" + dept + "','" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + preference_given + "," + edit_profile + ");";
+				db.query(sql, (err, results, field) => {
+					if (err) 
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						console.log('Inserted Successfully');
+						//req.flash('name', name);
+						req.flash('message', 'Profile Details Saved Successfully');
+						res.redirect('/faculty_edit');
 						//res.redirect('/?valid=' + string)
 					}
 			
