@@ -39,6 +39,13 @@
       padding: 0px;
     }
 
+
+    #customers th {
+
+    background-color: #2e3346;
+
+    }
+
     @media (min-width: 1200px) {
       .container {
         width: 1471px;
@@ -67,7 +74,8 @@
     #customers th {
       border: 1px solid #f1f1f1;
       padding: 8px;
-      width: 4px
+      width: 4px;
+
     }
 
     #customers tr:nth-child(even) {
@@ -86,9 +94,9 @@
       padding-top: 12px;
       padding-bottom: 12px;
       text-align: left;
-      background-color: #534666;
       color: white;
-      width: 4px
+      width: 4px;
+      background-color: #6d7fcc;
     }
 
     .flashup {
@@ -245,16 +253,8 @@
             <button type="submit" class="btn btn-primary" formaction="/sendstudents">Send to Students</button>
             <button type="submit" class="btn btn-primary" formaction="/sendfaculties">Send to Faculty</button>
             <button onclick="exportTableToExcel('customers', 'elective-data')" class="btn btn-primary" href="#">Export as Excel</button>
-          </center>
-          <div class="row">
-            <div class="col-lg-2">
-
-            </div>
-
 
             <% if(results.length> 0) { %>
-
-              <div class="col-lg-7 " style="margin-left:90px">
 
                 <table id="customers" style="margin-top:20px">
                   <tr>
@@ -309,7 +309,7 @@
                     <% }) %>
 
                   <% } %>
-
+                </center>
               </div>
       </form>
 

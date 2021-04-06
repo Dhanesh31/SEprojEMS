@@ -606,7 +606,6 @@ app.post('/stud_save', (req, res) => {
 			}
 			else
 			{
-				console.log('INSERT');
 				var sql="insert into student values('"+ roll_no + "','" + name +"','"+ dob +"',"+ Age +",'"+ mail +"','" + dept + "'," + sem + ",'" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + preference_given + "," + edit_profile + ");";
 				db.query(sql, (err, results, field) => {
 					if (err)
@@ -1146,10 +1145,10 @@ app.post('/chooseelective', (req, res) => {
 								console.log(err);
 								return;
 							}
-							else
-							{
-								console.log("inserted successfully");
-							}
+							// else
+							// {
+							// 	console.log("inserted successfully");
+							// }
 						});
 
 					}
