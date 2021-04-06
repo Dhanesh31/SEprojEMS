@@ -588,7 +588,7 @@ app.post('/stud_save', (req, res) => {
 			if(results.length > 0)
 			{
 				console.log('update');
-				var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +  "'," +"student_sem ="+ sem + "," + "student_dept ='" + dept +"';";
+				var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +  "'," +"student_sem ="+ sem + "," + "student_dept ='" + dept +"' where student_email='"+temp_studmail+"';" ;
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
