@@ -1035,8 +1035,8 @@ app.get('/stud_view', (req, res) => {
 		else
 		{
 			var roll_no=results[0].roll_no;
-			var sql = "SELECT * FROM elective WHERE elective_id IN (SELECT elective_id FROM elec_pref WHERE roll_no = '" + roll_no + "');";
-			db.query(sql, (err, results, field) => {
+			var sql = "SELECT * FROM elec_pref WHERE roll_no = '" + roll_no + "';";
+			db.query(sql, (err, result1, field) => {
 				if (err)
 				{
 					console.log(err);
@@ -1044,9 +1044,22 @@ app.get('/stud_view', (req, res) => {
 				}
 				else
 				{
-					res.render("view_pref.ejs",{results:results});
+					var sql = "SELECT * FROM elective WHERE elective_id IN (SELECT elective_id FROM elec_pref WHERE roll_no = '" + roll_no + "');";
+					db.query(sql, (err, result2, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							res.render("view_pref.ejs",{elec:result2, elecpref:result1});
+						}
+					});	
 				}
-			});
+			});	
+			
+			
 		}
 	});
 })

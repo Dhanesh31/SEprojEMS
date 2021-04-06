@@ -143,40 +143,35 @@
         <!-- Page Content  -->
 
         <div id="content">
-            <% if(results.length> 0) { %>
+            <% if(elec.length > 0 && elecpref.length > 0) { %>
                 <table id="customers" style="margin-top:20px">
                     <tr>
                     <th>Elective_id</th>
                     <th>Elective_name</th>
-                    <th>Semester</th>
-                    <th>Department</th>
                     <th>Credits</th>
+                    <th>Preference</th>
 
                     </tr>
-                    <% results.forEach(function(k){ %>
+                    <% for (var i = 0; i < elec.length; i++){ %>
 
                     <tr>
                         <td>
-                        <%= k.elective_id %>
+                            <%= elec[i].elective_id %>
                         </td>
                         <td>
-                        <%= k.elective_name %>
+                            <%= elec[i].elective_name %>
                         </td>
                         <td>
-                        <%= k.elective_sem %>
+                            <%= elec[i].credits %>
                         </td>
                         <td>
-                        <%= k.elective_dept %>
+                            <%= elecpref[i].pref %>
                         </td>
-                        <td>
-                        <%= k.credits %>
-                        </td>
-
                     </tr>
 
-                    <% }) %>
-
                     <% } %>
+
+            <% } %>
 
         </div>
     </div>

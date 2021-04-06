@@ -39,6 +39,32 @@
         width: 1471px;
     }
     }
+    th, td {
+        width: 14%;
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+        text-align: center;
+        vertical-align: unset;
+        line-height: 18px;
+        font-weight: 400;
+        word-break: break-all;
+        }
+        .first-col {
+        width: 30%;
+        text-align: left;
+        }
+        small {
+        display: block;
+        line-height: 18px;
+        opacity: 0.5;
+        }
+        .btn-block {
+        text-align: center;
+        }
+        table{
+            width:100%;
+        }
+
   </style>
 
 </head>
@@ -109,39 +135,46 @@
             <form method='POST' action="/chooseelective">
             <div class="center">
                 <center>
-                <% if(results.length> 0) { %>
-                    <% results.forEach(function(k){ %>
-                        <br><br>
-                        <label class="col-md-4 control-label h5 required"><%= k.elective_name %></label>
-                        <div class="col-md-4">
-                            <input type="radio" id="1" name="<%= k.elective_id %>" value="1">
-                            <label for="1">1</label>
-                            <input type="radio" id="2" name="<%= k.elective_id %>" value="2">
-                            <label for="2">2</label>
-                            <input type="radio" id="3" name="<%= k.elective_id %>" value="3">
-                            <label for="3">3</label>
-                            <input type="radio" id="4" name="<%= k.elective_id %>" value="4">
-                            <label for="4">4</label>
-                            <input type="radio" id="5" name="<%= k.elective_id %>" value="5">
-                            <label for="5">5</label>
-                            
-                        </div>
-                    <% }) %>  
-                <% } %>
-                </center>
-                <center>
-                    <br><br>
-                    <button type="submit" class="btn btn-primary" formaction="/chooseelective">Submit</button>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th class="first-col"></th>
+                            <% if(results.length> 0) { %>
+                                <% for (var i = 0; i < results.length; i++){%>
+                                    <th><%= i+1 %></th>
+                                <% } %>
+                            <% } %>
+
+                            <!-- <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th> -->
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% if(results.length> 0) { %>
+                                <% results.forEach(function(k){ %>
+                                    <tr>
+                                        <td class="first-col"><%= k.elective_name %></td>
+                                        <div class="col-md-4">
+                                            <% for (var i = 0; i < results.length; i++){%>
+                                                <td><input type="radio" id="<%= i+1 %>" name="<%= k.elective_id %>" value="<%= i+1 %>"></td>
+                                            <% } %>                                        
+                                        </div>
+                                    </tr>
+                                <% }) %>  
+                            <% } %>
+                        </tbody>
+                      </table>
+                <br><br>
+    
+                <button type="submit" class="btn btn-primary" formaction="/chooseelective">Submit</button>
                 </center>
             </div>
             </form>
         </div>
     </div>
-
-
-
-
-
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <!-- Popper.JS -->
