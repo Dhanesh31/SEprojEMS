@@ -335,11 +335,11 @@ app.get('/coord_edit', (req, res) => {
 		{
 			if (results.length==0)
 			{
-				res.render('profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', message : req.flash('message')});
+				res.render('profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', message : req.flash('message')});
 			}
 			else if(results[0].edit_profile==0)
 			{
-				res.render('profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', message : req.flash('message')});
+				res.render('profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', message : req.flash('message')});
 			}
 			else
 			{
@@ -354,7 +354,7 @@ app.get('/coord_edit', (req, res) => {
 					{
 						var name = results[0].coord_name;
 						var dob = results[0].coord_dob;
-						// dob = dob + ' ';
+						// dob = dob +'';
 
 						// for (var i=0; i<dob.length; i++)
 						// {
@@ -485,11 +485,11 @@ app.get('/stud_edit', (req, res) => {
 		{
 			if (results.length==0)
 			{
-				res.render('stud_profile',{roll_no : ' ', name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', sem : 'Select', dept : 'Select', message : req.flash('message')});
+				res.render('stud_profile',{roll_no : '', name : '', dob : '', mobile : '', k:'0', Age:'' , City:'' , State : '', sem : 'Select', dept : 'Select', message : req.flash('message')});
 			}
 			else if(results[0].edit_profile==0)
 			{
-				res.render('stud_profile',{roll_no : ' ', name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', sem : 'Select', dept : 'Select', message : req.flash('message')});
+				res.render('stud_profile',{roll_no : '', name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', sem : 'Select', dept : 'Select', message : req.flash('message')});
 			}
 			else
 			{
@@ -504,7 +504,7 @@ app.get('/stud_edit', (req, res) => {
 					{
 						var name = results[0].student_name;
 						var dob = results[0].student_dob;
-						// dob = dob + ' ';
+						// dob = dob +'';
 
 						// for (var i=0; i<dob.length; i++)
 						// {
@@ -645,11 +645,11 @@ app.get('/faculty_edit', (req, res) => {
 		{
 			if (results.length==0)
 			{
-				res.render('faculty_profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', dept : 'Select', message : req.flash('message')});
+				res.render('faculty_profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', dept : 'Select', message : req.flash('message')});
 			}
 			else if(results[0].edit_profile==0)
 			{
-				res.render('faculty_profile',{name : ' ', dob : ' ', mobile : ' ', k:'0', Age:' ' , City:' ' , State : ' ', dept : 'Select', message : req.flash('message')});
+				res.render('faculty_profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', dept : 'Select', message : req.flash('message')});
 			}
 			else
 			{
@@ -664,7 +664,7 @@ app.get('/faculty_edit', (req, res) => {
 					{
 						var name = results[0].faculty_name;
 						var dob = results[0].faculty_dob;
-						// dob = dob + ' ';
+						// dob = dob +'';
 
 						// for (var i=0; i<dob.length; i++)
 						// {
@@ -1099,7 +1099,7 @@ app.get('/stud_choose', (req, res) => {
 							}
 							else
 							{
-								res.render("choose_pref.ejs",{results:results});
+								res.render("choose_pref.ejs",{results:results, message : req.flash('message')});
 							}
 						});
 					}
@@ -1205,6 +1205,7 @@ app.post('/chooseelective', (req, res) => {
 									}
 									else
 									{
+										req.flash('message', 'Same preference given for more than one elective');
 										res.redirect('/stud_choose');
 									}
 								});
