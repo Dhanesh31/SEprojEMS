@@ -34,87 +34,128 @@ describe('Testing /pwdchange Get function', () => {
     },30000);
 });
 
+describe('Testing / Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
 
 
-// describe('Testing /otp Post method', () => {
-//     it('Has returned 200 OK', function(done){
-//         chai
-//             .request('http://localhost:5050')
-//             .post('/otp')
-//             .then(function(res){
-//                 expect(res).to.have.status(200);
-//                 done();
-//             })
-//             .catch(function(err){
-//                 throw(err);
-//             });
-//     },30000);
-// });
-
-// describe('Testing /fpw Post method', () => {
-//     it('Has returned 200 OK', function(done){
-//         chai
-//             .request('http://localhost:5050')
-//             .post('/fpw')
-//             .then(function(res){
-//                 expect(res).to.have.status(200);
-//                 done();
-//             })
-//             .catch(function(err){
-//                 throw(err);
-//             });
-//     },30000);
-// });
+describe('Testing /coord_edit Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/coord_edit')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
 
 
+describe('Testing /stud_edit Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/stud_edit')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
 
 
-// describe('Testing my Post method', () => {
-//     it('should be return status 200 for /', function(done){
-//         chai
-//             .request('http://localhost:5050')
-//             .post('/login_student')
-//             .then(function(res){
-//                 expect(res).to.have.status(200);
-//                 done();
-//             })
-//             .catch(function(err){
-//                 throw(err);
-//             });
-//     },30000);
-// });
+describe('Testing /faculty_edit Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/faculty_edit')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
 
 
-// describe('Testing my Post method', () => {
-//     it('should be return status 200 for /', function(done){
-//         chai
-//             .request('http://localhost:5050')
-//             .post('/login_student')
-//             .then(function(res){
-//                 expect(res).to.have.status(200);
-//                 done();
-//             })
-//             .catch(function(err){
-//                 throw(err);
-//             });
-//     },30000);
-// });
+describe('Testing /coord_add Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/coord_add')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
 
 
+describe('Testing /coord_remove Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/coord_remove')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
 
-// describe('Testing my Divisions', () => {
-//     it('should be division ', function(done){
-//         chai
-//             .request('http://localhost:5050')
-//             .post('/login_student')
-//             .then(function(res){
-//                 expect(res).to.have.status(200);
-//                 done();
-//             })
-//             .catch(function(err){
-//                 throw(err);
-//             });
-//     },30000);
 
-// });
+describe('Testing /coord_group Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/coord_group')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
 
+describe('Testing /logout Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/logout')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
