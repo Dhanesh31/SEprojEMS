@@ -181,14 +181,15 @@ app.post('/googlesignin', (req, res) => {
 })
 
 app.get('/pwdchange', (request, response) => {
-	response.render("forgotpwd");
+	response.render("forgotpwd", {message : request.flash('message')});
 })
 
 let num = 0; //forgotpwd otp
 app.post('/fpwd', (request, response) => {
 	var mail = request.body.email;
-	var password = request.body.pwd;
+	var pwd = request.body.pwd;
 	var pwdrpt = request.body.pwdrpt;
+	var role = request.body.role;
 
 	num = Math.floor(
 		Math.random() * (9999 - 1000) + 1000
@@ -203,20 +204,160 @@ app.post('/fpwd', (request, response) => {
 		text: num + ''
 	}
 
-	transporter.sendMail(mailOptions, function (err, info) {
-		if (err) {
-			console.log(err);
-		}
-		else {
-			console.log('email sent' + info.response);
-		}
-	})
+	if(pwd == pwdrpt)
+	{
+		transporter.sendMail(mailOptions, function (err, info) {
+			if (err) {
+				console.log(err);
+			}
+			else {
+				console.log('email sent' + info.response);
+			}
+		})
+	
+		response.render('otp_forgot.ejs', {email : mail, pwd : pwd, pwdrpt : pwdrpt, role : role , otp : num})
+	}
+	else
+	{
+		request.flash('message', 'Password and Repeat Password Fields should be same');
+		response.redirect('/pwdchange');
+	}
+
+
 })
 
 app.post('/otppwd', (request, response) => {
 	var otp = request.body.otp;
-	if (otp == num) {
-		response.send('Password changed successfully');
+	console.log(otp);
+	console.log(num);
+	var email = request.body.email;
+	var pwd = request.body.pwd;
+	var pwdrpt = request.body.pwdrpt;
+	var role = request.body.role;
+	var inotp = request.body.inotp;
+	
+	if (inotp == otp) {
+		//response.send('Password changed successfully');
+
+		
+		if(role == 'coordinator')
+		{
+			var sql = "SELECT * FROM coord_login";
+			db.query(sql, (err, result, field) => {
+				if (err) {
+					console.log('Error in accessing database', err);
+					return;
+				}
+				for (i = 0; i < result.length; i++) {
+					if (result[i].coord_email == email) {
+						flag = 1;
+						break;
+					}
+				}
+	
+				if (flag == 1) {
+					var sql = "Update coord_login set coord_password = '" + pwd + "' where coord_email = '"+ email + "';";
+					db.query(sql, (err, result, field) => {
+						if (err) {
+							console.log('Error in accessing database', err);
+
+							return;
+						}
+						else{
+							console.log('Password Changed Successfully', err);
+							response.render('login');
+						}
+				
+					});
+				}
+				else 
+				{
+					response.send('Cannot find email');
+				}
+		
+			});
+		}
+		else if(role == 'student')
+		{
+			var sql = "SELECT * FROM student_login";
+			db.query(sql, (err, result, field) => {
+				if (err) {
+					console.log('Error in accessing database', err);
+					return;
+				}
+				for (i = 0; i < result.length; i++) {
+					if (result[i].student_email == email) {
+						flag = 1;
+						break;
+					}
+				}
+	
+				if (flag == 1) {
+					var sql = "Update student_login set student_pass = '" + pwd + "' where student_email = '"+ email + "';";
+					db.query(sql, (err, result, field) => {
+						if (err) {
+							console.log('Error in accessing database', err);
+
+							return;
+						}
+						else{
+							console.log('Password Changed Successfully', err);
+							response.render('login');
+						}
+				
+					});
+				}
+				else 
+				{
+					response.send('Cannot find email');
+				}
+		
+			});
+
+		}
+		else
+		{
+			var sql = "SELECT * FROM faculty_login";
+			db.query(sql, (err, result, field) => {
+				if (err) {
+					console.log('Error in accessing database', err);
+					return;
+				}
+				for (i = 0; i < result.length; i++) {
+					if (result[i].faculty_email == email) {
+						flag = 1;
+						break;
+					}
+				}
+	
+				if (flag == 1) {
+					var sql = "Update faculty_login set faculty_password = '" + pwd + "' where faculty_email = '"+ email + "';";
+					db.query(sql, (err, result, field) => {
+						if (err) {
+							console.log('Error in accessing database', err);
+
+							return;
+						}
+						else{
+							console.log('Password Changed Successfully', err);
+							response.render('login');
+						}
+				
+					});
+				}
+				else 
+				{
+					response.send('Cannot find email');
+				}
+		
+			});
+
+
+		}
+
+
+
+
 	}
 	else {
 		response.send('Sorry OTP is Wrong');
@@ -242,7 +383,7 @@ app.post('/login_student', (request, response) => {
 		}
 
 		for (i = 0; i < result.length; i++) {
-			if (result[i].student_email == mail && result[i].student_password == pwd) {
+			if (result[i].student_email == mail && result[i].student_pass == pwd) {
 				flag = 1;
 				break;
 			}
@@ -252,13 +393,23 @@ app.post('/login_student', (request, response) => {
 			response.render("stud_dash", {mailid : mail});
 		}
 		else {
-			response.render("login");
 			console.log("Login Failed");
+			request.flash('message', 'Give your credentials correctly');
+			response.redirect('/');
+			//response.render("login");
+			
 			return;
 		}
 
 	});
 })
+app.get('/', (req, res) => {
+
+	res.render('login', {message : req.flash('message')});
+	//res.send("Hi");
+})
+
+
 var temp_coord_email, temp_faculty_email;
 
 app.post('/login_others', (request, response) => {
@@ -289,8 +440,11 @@ app.post('/login_others', (request, response) => {
 				response.render("faculty_dash" , {mailid : mail});
 			}
 			else {
-				response.render("login");
 				console.log("Login Failed");
+				request.flash('message', 'Give your credentials correctly');
+				response.redirect('/');
+				//response.render("login");
+
 			}
 		});
 	}
@@ -314,8 +468,9 @@ app.post('/login_others', (request, response) => {
 				temp_coord_email=mail;
 			}
 			else {
-				response.render("login");
 				console.log("Login Failed");
+				request.flash('message', 'Give your credentials correctly');
+				response.redirect('/');
 			}
 		});
 	}
@@ -354,13 +509,6 @@ app.get('/coord_edit', (req, res) => {
 					{
 						var name = results[0].coord_name;
 						var dob = results[0].coord_dob;
-						// dob = dob +'';
-
-						// for (var i=0; i<dob.length; i++)
-						// {
-						// 	console.log(dob.charAt(i));
-						// }
-
 
 						var mobile = results[0].coord_mobileno;
 						var k;
@@ -429,7 +577,7 @@ app.post('/coord_save', (req, res) => {
 		{
 			if(results.length > 0)
 			{
-				var sql="update coord set coord_name = '"+ name +"',"+"coord_dob = '"+ dob + "'," + "coord_age = '" + Age + "', coord_mobileno = '" + mobile + "'," + "coord_gender = '" + gender + "'," + "coord_city ='"+ City + "'," + "coord_state ='"+ State + "';";
+				var sql="update coord set coord_name = '"+ name +"',"+"coord_dob = '"+ dob + "'," + "coord_age = '" + Age + "', coord_mobileno = '" + mobile + "'," + "coord_gender = '" + gender + "'," + "coord_city ='"+ City + "'," + "coord_state ='"+ State + "' where coord_email='"+temp_coord_email+"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -438,7 +586,7 @@ app.post('/coord_save', (req, res) => {
 					}
 					else
 					{
-						console.log('Elective added successfully');
+						console.log('Details Updated Successfully');
 						req.flash('message', 'Profile Details Updated Successfully');
 						res.redirect('/coord_edit');
 					}
@@ -588,7 +736,7 @@ app.post('/stud_save', (req, res) => {
 			if(results.length > 0)
 			{
 				console.log('update');
-				var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +  "'," +"student_sem ="+ sem + "," + "student_dept ='" + dept +"' where student_email='"+temp_studmail+"';" ;
+				var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +"' where student_email='"+temp_studmail+"';" ;
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -597,7 +745,7 @@ app.post('/stud_save', (req, res) => {
 					}
 					else
 					{
-						console.log('Elective added successfully');
+						console.log('Student details updated successfully');
 						req.flash('message', 'Profile Details Updated Successfully');
 						res.redirect('/stud_edit');
 					}
@@ -664,13 +812,6 @@ app.get('/faculty_edit', (req, res) => {
 					{
 						var name = results[0].faculty_name;
 						var dob = results[0].faculty_dob;
-						// dob = dob +'';
-
-						// for (var i=0; i<dob.length; i++)
-						// {
-						// 	console.log(dob.charAt(i));
-						// }
-
 
 						var mobile = results[0].faculty_mobileno;
 						var k;
@@ -743,7 +884,7 @@ app.post('/faculty_save', (req, res) => {
 			if(results.length > 0)
 			{
 				console.log('update');
-				var sql="update faculty set faculty_name = '"+ name +"',"+"faculty_dob = '"+ dob + "'," + "faculty_age = '" + Age + "', faculty_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "faculty_city ='"+ City + "'," + "faculty_state ='"+ State +  "'," +"faculty_dept ='"+ dept + "';";
+				var sql="update faculty set faculty_name = '"+ name +"',"+"faculty_dob = '"+ dob + "'," + "faculty_age = '" + Age + "', faculty_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "faculty_city ='"+ City + "'," + "faculty_state ='"+ State +"' where faculty_email='" + temp_faculty_email + "';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -752,7 +893,7 @@ app.post('/faculty_save', (req, res) => {
 					}
 					else
 					{
-						console.log('Elective added successfully');
+						console.log('Faculty Details updated successfully');
 						req.flash('message', 'Profile Details Updated Successfully');
 						res.redirect('/faculty_edit');
 					}
@@ -1264,7 +1405,7 @@ function checkAuthenticated(req, res, next) {
 		user.name = payload.name;
 		user.email = payload.email;
 		user.picture = payload.picture;
-		var sql = "SELECT * FROM student_login WHERE student_email='" + user.email + "' AND student_password='" + payload.sub + "';";
+		var sql = "SELECT * FROM student_login WHERE student_email='" + user.email + "' AND student_pass='" + payload.sub + "';";
 		db.query(sql, (err, result, field) => {
 			if (err) {
 				console.log('Error in changing database', err);
@@ -1325,10 +1466,7 @@ app.post('/signup', (request, response) => {
 })
 
 
-app.get('/', (req, res) => {
-	res.render('login');
-	//res.send("Hi");
-})
+
 
 app.listen(5050, () => {
 	console.log("Server listening");

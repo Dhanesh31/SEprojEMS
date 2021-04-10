@@ -37,6 +37,13 @@
     <div class="form-container sign-in-container">
 
     <form action="/login_others" method="POST">
+
+      <% if(message == "Give your credentials correctly".trim() ) { %>
+        <div class="alert alert-danger">
+          <%= message%>
+        </div>
+      <% } %>
+
 			<h1>Sign in!</h1>
       <br>
             <div class="row">
@@ -58,6 +65,7 @@
     </div>
 
     <div class="form-container sign-up-container">
+
       <form action="/login_student" method="POST">
         <h1>Student</h1>
 
