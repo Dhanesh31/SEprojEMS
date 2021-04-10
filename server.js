@@ -1388,7 +1388,7 @@ app.get('/gdash', checkAuthenticated, (req, res) => {
 
 app.get('/logout', (req, res) => {
 	res.clearCookie('session-token');
-	res.render('login');
+	res.render('login', {message : ''});
 })
 
 function checkAuthenticated(req, res, next) {
