@@ -73,7 +73,7 @@ app.post('/otp', (req, res) => {
 
 	if (inotp == otp) {
 		console.log('Signup successful');
-		if (role.toString() == "student") {
+		if (role == "student") {
 			var sql = "INSERT INTO student_login VALUES ('" + mail + "','" + pwd + "')";
 			db.query(sql, (err, result, field) => {
 				if (err) {
@@ -98,9 +98,9 @@ app.post('/otp', (req, res) => {
 				})
 
 			});
-			res.render('login');
+			res.render('login', {message : ' '});
 		}
-		else if (role.toString() == "faculty") {
+		else if (role == "faculty") {
 			var sql = "INSERT INTO faculty_login VALUES ('" + mail + "','" + pwd + "')";
 			db.query(sql, (err, result, field) => {
 				if (err) {
@@ -125,7 +125,7 @@ app.post('/otp', (req, res) => {
 					}
 				})
 			});
-			res.render('login');
+			res.render('login' , {message : ''});
 		}
 		else {
 			var sql = "INSERT INTO coord_login VALUES ('" + mail + "','" + pwd + "')";
@@ -152,12 +152,12 @@ app.post('/otp', (req, res) => {
 					}
 				})
 			});
-			res.render('login');
+			res.render('login', {message : ''});
 		}
 	}
 	else {
 		console.log('Signup Failed');
-		res.render('login');
+		res.render('login', {message : ''});
 	}
 })
 
@@ -265,7 +265,7 @@ app.post('/otppwd', (request, response) => {
 						}
 						else{
 							console.log('Password Changed Successfully', err);
-							response.render('login');
+							response.render('login',{message : ''});
 						}
 				
 					});
@@ -302,7 +302,7 @@ app.post('/otppwd', (request, response) => {
 						}
 						else{
 							console.log('Password Changed Successfully', err);
-							response.render('login');
+							response.render('login',{message : ''});
 						}
 				
 					});
@@ -340,7 +340,7 @@ app.post('/otppwd', (request, response) => {
 						}
 						else{
 							console.log('Password Changed Successfully', err);
-							response.render('login');
+							response.render('login',{messsage : ''});
 						}
 				
 					});
@@ -1422,7 +1422,6 @@ function checkAuthenticated(req, res, next) {
 			}
 		});
 
-		//res.render('login');
 	}
 	verify()
 		.then(() => {
