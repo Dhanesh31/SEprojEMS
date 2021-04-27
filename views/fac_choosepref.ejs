@@ -55,7 +55,7 @@
                   Logout
                 </button> -->
                 <form action="/logout">
-                    <input type="text" name="mailid"  class="input-text" value="<%=mailid %>">
+                    <input type="text" name="mailid"  class="input-text" value="<%=mailid %>" style="display:None">
                     <button class='btn btn-info pull-right'>Logout</button>
                 </form>
             </div>
@@ -83,19 +83,19 @@
                     
                 </li>
                 <li>
-                    <a href="fac_choose" >
+                    <a href="stud_choose" >
                         <i class="fas fa-pencil-alt"></i>
                         Choose Elective 
                     </a>
                     
                 </li>
-                <!-- <li>
+                <li>
                     <a href="stud_view" >
                         <i class="fas fa-pencil-alt"></i>
                         View Preferences 
                     </a>
                     
-                </li>                 -->
+                </li>                
                
             </ul>
 
@@ -105,7 +105,34 @@
         <!-- Page Content  -->
 
         <div id="content">
-            <h1 class="page-header" style="margin-top: 13px;">Faculty Dashboard</h1>           
+            <% if(message.length > 0 ) { %>
+                <div class="alert alert-danger">
+                  <%= message%>
+                </div>
+            <% } %>
+
+            <h2><b>Give Preference</b></h2>
+            <form method='POST' action="/chooseelective">
+                <div class="center">
+                    <center>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Elective:</label>
+                            <div class="col-lg-8">
+                                <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="dept"  value="<%= dept %>">
+                                    <option value=0 selected>Select</option>
+                                    <% if(results.length>0) { %>
+                                        <% for (var i = 0; i < results.length; i++){%>
+                                            <% if(results[i].sent_faculties==1) { %>
+                                                <option name="elec_pref" value="<%= results[i].elective_id %>"><%= results[i].elective_name %></option>
+                                            <% } %>
+                                        <% } %>
+                                    <% } %>        
+                                </select>
+                            </div>
+                        </div>
+                    </center>
+                </div>
+            </form>
         </div>
     </div>       
 

@@ -46,7 +46,7 @@ var transporter = nodemailer.createTransport({
 
 //connecting to database
 const db = mysql.createConnection({
-	host: 'se-database.cyraaxcsws1y.us-east-1.rds.amazonaws.com',
+	host: 'se-database.cxhblp2ifoeq.us-east-1.rds.amazonaws.com',
 	user: 'admin',
 	password: 'rootroot',
 	insecureAuth: true,
@@ -61,8 +61,6 @@ db.connect(err => {
 	}
 	console.log('Database Connected');
 })
-
-var temp_studmail = '';
 
 app.post('/otp', (req, res) => {
 	var mail = req.body.mail;
@@ -342,7 +340,6 @@ app.post('/otppwd', (request, response) => {
 							console.log('Password Changed Successfully', err);
 							response.render('login',{messsage : ''});
 						}
-				
 					});
 				}
 				else 
@@ -354,10 +351,6 @@ app.post('/otppwd', (request, response) => {
 
 
 		}
-
-
-
-
 	}
 	else {
 		response.send('Sorry OTP is Wrong');
@@ -370,7 +363,7 @@ app.get('/signupform', (request, response) => {
 
 app.post('/login_student', (request, response) => {
 	var mail = request.body.email;
-	temp_studmail = mail;
+	request.session.mail = mail;
 	var pwd = request.body.password;
 
 	var flag = 0;
@@ -390,7 +383,7 @@ app.post('/login_student', (request, response) => {
 		}
 
 		if (flag == 1) {
-			response.render("stud_dash", {mailid : mail});
+			response.render("stud_dash", {mailid : request.session.mail});
 		}
 		else {
 			console.log("Login Failed");
@@ -410,11 +403,11 @@ app.get('/', (req, res) => {
 })
 
 
-var temp_coord_email, temp_faculty_email;
+// var req.session.mailcoord_email, req.session.mailfaculty_email;
 
 app.post('/login_others', (request, response) => {
 	var mail = request.body.email;
-
+	request.session.mail = mail;
 	var pwd = request.body.password;
 	var role = request.body.role;
 
@@ -436,8 +429,7 @@ app.post('/login_others', (request, response) => {
 			}
 
 			if (flag == 1) {
-				temp_faculty_email=mail;
-				response.render("faculty_dash" , {mailid : mail});
+				response.render("faculty_dash" , {mailid : request.session.mail});
 			}
 			else {
 				console.log("Login Failed");
@@ -464,8 +456,7 @@ app.post('/login_others', (request, response) => {
 			}
 
 			if (flag == 1) {
-				response.render("coord_dash");
-				temp_coord_email=mail;
+				response.render("coord_dash", {mailid : request.session.mail});
 			}
 			else {
 				console.log("Login Failed");
@@ -479,7 +470,7 @@ app.post('/login_others', (request, response) => {
 
 app.get('/coord_edit', (req, res) => {
 
-	var sql = "SELECT edit_profile FROM coord WHERE coord_email = '" + temp_coord_email + "';";
+	var sql = "SELECT edit_profile FROM coord WHERE coord_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -498,7 +489,7 @@ app.get('/coord_edit', (req, res) => {
 			}
 			else
 			{
-				var sql = "SELECT * FROM coord WHERE coord_email = '" + temp_coord_email +"';";
+				var sql = "SELECT * FROM coord WHERE coord_email = '" + req.session.mail +"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -549,7 +540,7 @@ app.post('/coord_save', (req, res) => {
 	var Age = req.body.Age;
 	var City = req.body.City;
 	var State = req.body.State;
-	var mail = temp_coord_email;
+	var mail = req.session.mail;
 	var gender;
 	var edit_profile=1
 
@@ -566,7 +557,7 @@ app.post('/coord_save', (req, res) => {
 		gender = 'Others';
 	}
 
-	var sql="Select * from coord where coord_email='"+temp_coord_email+"';";
+	var sql="Select * from coord where coord_email='"+req.session.mail+"';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -577,7 +568,7 @@ app.post('/coord_save', (req, res) => {
 		{
 			if(results.length > 0)
 			{
-				var sql="update coord set coord_name = '"+ name +"',"+"coord_dob = '"+ dob + "'," + "coord_age = '" + Age + "', coord_mobileno = '" + mobile + "'," + "coord_gender = '" + gender + "'," + "coord_city ='"+ City + "'," + "coord_state ='"+ State + "' where coord_email='"+temp_coord_email+"';";
+				var sql="update coord set coord_name = '"+ name +"',"+"coord_dob = '"+ dob + "'," + "coord_age = '" + Age + "', coord_mobileno = '" + mobile + "'," + "coord_gender = '" + gender + "'," + "coord_city ='"+ City + "'," + "coord_state ='"+ State + "' where coord_email='"+req.session.mail+"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -622,7 +613,7 @@ app.post('/coord_save', (req, res) => {
 
 app.get('/stud_edit', (req, res) => {
 
-	var sql = "SELECT edit_profile FROM student WHERE student_email = '" + temp_studmail + "';";
+	var sql = "SELECT edit_profile FROM student WHERE student_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -641,7 +632,7 @@ app.get('/stud_edit', (req, res) => {
 			}
 			else
 			{
-				var sql = "SELECT * FROM student WHERE student_email = '" + temp_studmail +"';";
+				var sql = "SELECT * FROM student WHERE student_email = '" + req.session.mail +"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -703,7 +694,7 @@ app.post('/stud_save', (req, res) => {
 	var Age = req.body.Age;
 	var City = req.body.City;
 	var State = req.body.State;
-	var mail = temp_studmail;
+	var mail = req.session.mail;
 	var gender;
 	var edit_profile=1
 	var sem = req.body.sem;
@@ -724,7 +715,7 @@ app.post('/stud_save', (req, res) => {
 		gender = 'Others';
 	}
 
-	var sql="Select * from student where student_email='"+temp_studmail+"';";
+	var sql="Select * from student where student_email='"+req.session.mail+"';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -736,7 +727,7 @@ app.post('/stud_save', (req, res) => {
 			if(results.length > 0)
 			{
 				console.log('update');
-				var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +"' where student_email='"+temp_studmail+"';" ;
+				var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +"' where student_email='"+req.session.mail+"';" ;
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -782,7 +773,7 @@ app.post('/stud_save', (req, res) => {
 
 app.get('/faculty_edit', (req, res) => {
 
-	var sql = "SELECT edit_profile FROM faculty WHERE faculty_email = '" + temp_faculty_email + "';";
+	var sql = "SELECT edit_profile FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -790,7 +781,8 @@ app.get('/faculty_edit', (req, res) => {
 			return;
 		}
 		else
-		{
+		{	
+			console.log(results.length);
 			if (results.length==0)
 			{
 				res.render('faculty_profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', dept : 'Select', message : req.flash('message')});
@@ -801,7 +793,7 @@ app.get('/faculty_edit', (req, res) => {
 			}
 			else
 			{
-				var sql = "SELECT * FROM faculty WHERE faculty_email = '" + temp_faculty_email +"';";
+				var sql = "SELECT * FROM faculty WHERE faculty_email = '" + req.session.mail +"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -812,7 +804,7 @@ app.get('/faculty_edit', (req, res) => {
 					{
 						var name = results[0].faculty_name;
 						var dob = results[0].faculty_dob;
-
+						console.log(results[0].faculty_name);
 						var mobile = results[0].faculty_mobileno;
 						var k;
 						var Age = results[0].faculty_age;
@@ -853,7 +845,7 @@ app.post('/faculty_save', (req, res) => {
 	var Age = req.body.Age;
 	var City = req.body.City;
 	var State = req.body.State;
-	var mail = temp_faculty_email;
+	var mail = req.session.mail;
 	var gender;
 	var edit_profile=1
 	var dept = req.body.dept;
@@ -872,7 +864,7 @@ app.post('/faculty_save', (req, res) => {
 		gender = 'Others';
 	}
 
-	var sql="Select * from faculty where faculty_email='"+temp_faculty_email+"';";
+	var sql="Select * from faculty where faculty_email='"+req.session.mail+"';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -884,7 +876,7 @@ app.post('/faculty_save', (req, res) => {
 			if(results.length > 0)
 			{
 				console.log('update');
-				var sql="update faculty set faculty_name = '"+ name +"',"+"faculty_dob = '"+ dob + "'," + "faculty_age = '" + Age + "', faculty_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "faculty_city ='"+ City + "'," + "faculty_state ='"+ State +"' where faculty_email='" + temp_faculty_email + "';";
+				var sql="update faculty set faculty_name = '"+ name +"',"+"faculty_dob = '"+ dob + "'," + "faculty_age = '" + Age + "', faculty_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "faculty_city ='"+ City + "'," + "faculty_state ='"+ State +"' where faculty_email='" + req.session.mail + "';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -903,7 +895,7 @@ app.post('/faculty_save', (req, res) => {
 			else
 			{
 				console.log('INSERT');
-				var sql="insert into faculty values('" + name +"','"+ dob +"',"+ Age +",'"+ mail + "','" + dept + "','" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + preference_given + "," + edit_profile + ");";
+				var sql="insert into faculty (faculty_name,faculty_dob,faculty_age,faculty_email,faculty_dept,faculty_mobileno,gender,faculty_city,faculty_state, preference_given, edit_profile) values('" + name +"','"+ dob +"',"+ Age +",'"+ mail + "','" + dept + "','" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + preference_given + "," + edit_profile + ");";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -918,17 +910,122 @@ app.post('/faculty_save', (req, res) => {
 						res.redirect('/faculty_edit');
 						//res.redirect('/?valid=' + string)
 					}
-
 				});
 			}
 		}
-
 	});
-
-
 })
 
+app.get('/fac_choose', (req, res) => {
 
+	var sql = "SELECT preference_given FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if(results[0].preference_given==1){
+				res.render("choosepref_done.ejs");
+			}
+			else{
+				var sql = "SELECT faculty_dept FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
+				db.query(sql, (err, results, field) => {
+					if (err)
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						// var sem=results[0].student_sem;
+						var dept=results[0].student_dept;
+						var sql = "SELECT elective_name,sent_faculties FROM elective WHERE elective_dept='" + dept + "';";
+						db.query(sql, (err, results, field) => {
+							if (err)
+							{
+								console.log(err);
+								return;
+							}
+							else
+							{
+								var flag=0;
+								for(var i=0;i<results.length;i++){
+									if(results[i].sent_faculties==1){
+										flag=1;
+										break;
+									}
+								}
+								if(flag==1){
+									res.render("fac_choosepref.ejs",{results:results, message : req.flash('message')});
+								}
+								else{
+									res.render("choosepref_done.ejs");
+								}
+							}
+						});
+					}
+				});
+			}
+		}
+	});
+})
+
+app.post('/fac_chooseelective', (req, res) => {
+	
+	var sql = "SELECT faculty_id FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			f_id=results[0].faculty_id;
+		}
+	});
+
+	var sql = "SELECT faculty_dept FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			// var sem=results[0].student_sem;
+			var dept=results[0].student_dept;
+			var sql = "SELECT elective_id,elective_name FROM elective WHERE elective_dept='" + dept + "';";
+			db.query(sql, (err, results, field) => {
+				if (err)
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{	
+					var elec_id=req.body.elec_pref;
+					var sql = "INSERT INTO facelec_pref VALUES('" + f_id + "','" + elec_id + "');";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						// else
+						// {
+						// 	console.log("inserted successfully");
+						// }
+					});
+				}
+			});
+		}
+	});
+})
 
 app.get('/coord_add', (req, res) => {
 	res.render('coord_add', {message : req.flash('message')});
@@ -1089,7 +1186,7 @@ app.post('/sendstudents' , (req, res) => {
 							req.flash('sem', sem)
 							req.flash('dept', dept)
 							res.redirect(307, '/groupelective');
-							//res.render("coord_group.ejs",{results:results, temp_sem:results[0].elective_sem, temp_dept:results[0].elective_dept});
+							//res.render("coord_group.ejs",{results:results, req.session.mailsem:results[0].elective_sem, req.session.maildept:results[0].elective_dept});
 						}
 
 					});
@@ -1144,7 +1241,7 @@ app.post('/sendfaculties' , (req, res) => {
 							req.flash('sem', sem)
 							req.flash('dept', dept)
 							res.redirect(307, '/groupelective');
-							//res.render("coord_group.ejs",{results:results, temp_sem:results[0].elective_sem, temp_dept:results[0].elective_dept});
+							//res.render("coord_group.ejs",{results:results, req.session.mailsem:results[0].elective_sem, req.session.maildept:results[0].elective_dept});
 						}
 
 					});
@@ -1166,7 +1263,7 @@ app.post('/sendfaculties' , (req, res) => {
 
 app.get('/stud_view', (req, res) => {
 
-	var sql = "SELECT roll_no FROM student WHERE student_email = '" + temp_studmail + "';";
+	var sql = "SELECT roll_no FROM student WHERE student_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -1207,7 +1304,7 @@ app.get('/stud_view', (req, res) => {
 
 app.get('/stud_choose', (req, res) => {
 
-	var sql = "SELECT preference_given FROM student WHERE student_email = '" + temp_studmail + "';";
+	var sql = "SELECT preference_given FROM student WHERE student_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -1220,7 +1317,7 @@ app.get('/stud_choose', (req, res) => {
 				res.render("choosepref_done.ejs");
 			}
 			else{
-				var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
+				var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + req.session.mail + "';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -1231,7 +1328,7 @@ app.get('/stud_choose', (req, res) => {
 					{
 						var sem=results[0].student_sem;
 						var dept=results[0].student_dept;
-						var sql = "SELECT elective_id,elective_name FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+						var sql = "SELECT elective_id,elective_name,sent_students FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
 						db.query(sql, (err, results, field) => {
 							if (err)
 							{
@@ -1240,7 +1337,20 @@ app.get('/stud_choose', (req, res) => {
 							}
 							else
 							{
-								res.render("choose_pref.ejs",{results:results, message : req.flash('message')});
+								var flag=0;
+								for(var i=0;i<results.length;i++){
+									if(results[i].sent_faculties==1){
+										flag=1;
+										break;
+									}
+								}
+								if(flag==1){
+									res.render("choose_pref.ejs",{results:results, message : req.flash('message')});
+								}
+								else{
+									res.render("choosepref_done.ejs");
+								}
+								
 							}
 						});
 					}
@@ -1251,9 +1361,8 @@ app.get('/stud_choose', (req, res) => {
 })
 
 app.post('/chooseelective', (req, res) => {
-
-	var roll_no=''
-	var sql = "SELECT roll_no FROM student WHERE student_email = '" + temp_studmail + "';";
+	
+	var sql = "SELECT roll_no FROM student WHERE student_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -1266,7 +1375,7 @@ app.post('/chooseelective', (req, res) => {
 		}
 	});
 
-	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + temp_studmail + "';";
+	var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -1382,7 +1491,7 @@ app.get('/stud_profile', (req, res) => {
 
 app.get('/gdash', checkAuthenticated, (req, res) => {
 	let user = req.user;
-	temp_studmail = user.email;
+	req.session.mail = user.email;
 	res.render('stud_dash', {mailid : user.email});
 })
 
@@ -1463,8 +1572,6 @@ app.post('/signup', (request, response) => {
 
 	response.render('otp', { role: role, otp: num, mail: mail, pwd: pwd });
 })
-
-
 
 
 app.listen(5050, () => {
