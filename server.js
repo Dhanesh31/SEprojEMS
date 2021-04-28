@@ -9,6 +9,8 @@ const cookieParser = require('cookie-parser');
 //const session = require('express-session');
 //const popup=require('popups');
 const app = express();
+const csv = require("csv-parser");
+const fs = require("fs");
 
 const sessiion = require('express-session')
 const flush = require('connect-flash')
@@ -18,6 +20,17 @@ const flush = require('connect-flash')
 const { OAuth2Client } = require('google-auth-library');
 const CLIENT_ID = '183043165157-m5ul62le4e9n124kmkaekj7mu29ee1k9.apps.googleusercontent.com'
 const client = new OAuth2Client(CLIENT_ID);
+
+
+var excel_results = [];
+fs.createReadStream('F:\\Sem 6\\Software Engineering\\Elective Data.csv')
+.pipe(csv({}))
+.on('data', (data) => excel_results.push(data))
+.on('end', () => {
+	console.log(excel_results);
+});
+
+
 
 //middleware
 app.set('view engine', 'ejs');
@@ -38,8 +51,8 @@ app.use(flush());
 var transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-		user: 'noreplyems1@gmail.com',
-		pass: 'iamgroot'
+		user: 'noreplyems3@gmail.com',
+		pass: 'i@am&groot'
 	}
 });
 
@@ -48,7 +61,7 @@ var transporter = nodemailer.createTransport({
 const db = mysql.createConnection({
 	host: 'se-database.cxhblp2ifoeq.us-east-1.rds.amazonaws.com',
 	user: 'admin',
-	password: 'rootroot',
+	password: 'noreply123',
 	insecureAuth: true,
 	database: 'mydb',
 	multipleStatements: true
@@ -1028,10 +1041,11 @@ app.post('/fac_chooseelective', (req, res) => {
 })
 
 app.get('/coord_add', (req, res) => {
-	res.render('coord_add', {message : req.flash('message')});
+	res.render('coord_add', {message : req.flash('message'), results : JSON.stringify(excel_results)});
 })
 
 app.post('/addelective', (request, response) => {
+	var elective_id = request.body.elective_id;
 	var elective_name = request.body.elective_name;
 	var elective_sem = request.body.elective_sem;
 	var elective_dept = request.body.elective_dept;
@@ -1039,6 +1053,7 @@ app.post('/addelective', (request, response) => {
 	var capacity = request.body.capacity;
 	var sent_students=0;
 	var sent_faculties=0;
+	var faculty_limit = capacity/70;
 
 	var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
 	db.query(sql, (err, result, field) => {
@@ -1053,7 +1068,7 @@ app.post('/addelective', (request, response) => {
 				response.redirect('/coord_add');
 			}
 			else {
-				var sql = "INSERT INTO elective(elective_name,elective_sem,elective_dept,credits,capacity,sent_students,sent_faculties) VALUES ('" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + "," + sent_students + "," + sent_faculties + ")";
+				var sql = "INSERT INTO elective VALUES ('" + elective_id + "', '" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + "," + faculty_limit + "," + sent_students + "," + sent_faculties + ")";
 				db.query(sql, (err, result, field) => {
 					if (err) {
 						console.log(err);

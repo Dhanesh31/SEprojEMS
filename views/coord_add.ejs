@@ -145,11 +145,14 @@
       <form method='POST' action='/addelective'>
         <div class="center">
 
-          <label class="col-md-4 control-label h5 required">Elective name:</label>
+          <input type = "text" name="results" id ="results" class="input-text" value="<%=results %>" style = "display:None">
+          
+
+          <!-- <label class="col-md-4 control-label h5 required">Elective name:</label>
           <div class="col-md-4">
             <input name='elective_name'>
           </div>
-          <br><br>
+          <br><br> -->
           <label class="col-md-4 control-label h5 required">Semester:</label>
           <div class="col-md-4">
             <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name='elective_sem' id='elective_sem'>
@@ -162,24 +165,31 @@
             </select>
           </div>
           <br><br>
-
-
           <label class="col-md-4 control-label h5 required"> Department:</label>
           <div class="col-md-4">
-            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_dept">
+            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_dept" id = "elective_dept" onchange="populate('elective_dept', 'elective_name')">
               <option value="0" selected="">Select</option>
               <option value="CSE">CSE</option>
               <option value="ECE">ECE</option>
               <option value="EEE">EEE</option>
-              <option value="MECH">MECH</option>
-              <option value="CIVIL">CIVIL</option>
-              <option value="AERO">AERO</option>
+              <option value="MEC">MECH</option>
+              <option value="CIE">CIVIL</option>
             </select>
           </div>
           <br><br>
+
+          <label class="col-md-4 control-label h5 required"> Elective:</label>
+          <div class="col-md-4">
+            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_name" id = "elective_name" onchange="populateblanks('elective_dept', 'elective_name')">
+              <option value="0">--Select Elective--</option>
+
+            </select>
+          </div>
+          <br><br>
+
           <label class="col-md-4 control-label h5 required">Credits:</label>
           <div class="col-md-4">
-            <input name='credits'>
+            <input name='credits' id = "credits">
           </div>
           <br><br>
           <label class="col-md-4 control-label h5 required">Capacity:</label>
@@ -187,7 +197,7 @@
             <input name='capacity'>
           </div>
           <br><br>
-
+          <input type = "text" name="elective_id" id ="elective_id" class="input-text" value="" style = "display:none">
           <div style="margin-left:120px;">
             <!-- <button type="button"  formaction="/addelective">ADD</button></p> -->
             <button type="submit" class="btn btn-primary">ADD</button>
@@ -197,6 +207,119 @@
       </form>
     </div>
   </div>
+
+
+  <script>
+
+    function populate(s1, s2)
+    {
+        var results = JSON.parse(document.getElementById("results").value);
+        var s1 = document.getElementById(s1);
+        var s2 = document.getElementById(s2);
+
+
+        s2.innerHTML = "";
+
+        var CSE = [];
+        var ECE = [];
+        var EEE = [];
+        var MEC = [];
+        var CIE = [];
+        
+        for (var i = 0; i<results.length;i++)
+        {
+            if(results[i].Department == 'CSE')
+            {
+                CSE.push(results[i].Elective_Name)
+            }
+
+            else if(results[i].Department == 'ECE')
+            {
+                ECE.push(results[i].Elective_Name)
+            }
+
+            else if(results[i].Department == 'EEE')
+            {
+                EEE.push(results[i].Elective_Name)
+            }
+
+            else if(results[i].Department == 'MEC')
+            {
+                MEC.push(results[i].Elective_Name)
+            }
+
+            else if(results[i].Department == 'CIE')
+            {
+                CIE.push(results[i].Elective_Name)
+            }
+        }
+
+        
+
+        if(s1.value == "CSE")
+        {
+            var optionArray = CSE;
+        }
+
+        else if(s1.value == "ECE")
+        {
+            var optionArray = ECE;
+        }
+
+        else if(s1.value == "EEE")
+        {
+            var optionArray = EEE;
+        }
+
+        else if(s1.value == "MEC")
+        {
+            var optionArray = MEC;
+        }
+
+        else if(s1.value == "CIE")
+        {
+            var optionArray = CIE;
+        }
+
+        var newoption = document.createElement("option");
+        newoption.value = "0";
+        newoption.innerHTML = "--Select Elective--";
+        s2.options.add(newoption);
+
+        for(var i = 0;i<optionArray.length;i++)
+        {
+            newoption = document.createElement("option");
+            newoption.value = optionArray[i];
+            newoption.innerHTML = optionArray[i];
+            s2.options.add(newoption);
+        }
+
+    }
+
+    function populateblanks(s1, s2)
+    {
+        var s1 = document.getElementById(s1);
+        var s2 = document.getElementById(s2);
+        var credits = document.getElementById("credits");
+        var elective_id = document.getElementById("elective_id");
+
+        var results = JSON.parse(document.getElementById("results").value);
+        for (var i = 0; i<results.length - 1;i++)
+        {
+            
+            if(results[i].Department == s1.value && results[i].Elective_Name == s2.value)
+            {
+                elective_id.value = results[i].Course_ID
+                credits.value = results[i].Credits;
+                break;
+            }
+        }
+
+
+
+    }
+
+</script>
 
 
 
