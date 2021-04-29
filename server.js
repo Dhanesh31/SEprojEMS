@@ -27,7 +27,7 @@ fs.createReadStream('F:\\Sem 6\\Software Engineering\\Elective Data.csv')
 .pipe(csv({}))
 .on('data', (data) => excel_results.push(data))
 .on('end', () => {
-	console.log(excel_results);
+	//console.log(excel_results);
 });
 
 
@@ -1087,7 +1087,18 @@ app.post('/addelective', (request, response) => {
 })
 
 app.get('/coord_remove', (req, res) => {
-	res.render('coord_remove', {message : req.flash('message')});
+
+	var sql = "Select * from elective;";
+	db.query(sql, (err, results, field) => {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		else {
+			res.render('coord_remove', {message : req.flash('message') , results : JSON.stringify(results)});
+		}
+	});
+	
 })
 
 app.post('/remelective', (request, response) => {
@@ -1117,7 +1128,7 @@ app.post('/remelective', (request, response) => {
 					}
 					else
 					{
-						var sql = "delete from elective where elective_id=" + result[0].elective_id + ";";
+						var sql = "delete from elective where elective_id='" + result[0].elective_id + "';";
 						db.query(sql, (err, result, field) => {
 							if (err) {
 								console.log(err);

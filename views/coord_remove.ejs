@@ -144,15 +144,18 @@
       <form method='POST' action='/remelective'>
         <div class="center">
 
-          <label class="col-md-4 control-label h5 required">Elective name:</label>
+          <input type = "text" name="results" id ="results" class="input-text" value="<%=results %>" style="display: none">
+          <h2 id ="siva" style="display: none">Hello</h2>
+
+          <!-- <label class="col-md-4 control-label h5 required">Elective name:</label>
           <div class="col-md-4">
             <input name='elective_name'>
           </div>
-          <br><br>
+          <br><br> -->
           <label class="col-md-4 control-label h5 required">Semester:</label>
           <div class="col-md-4">
-            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_sem">
-              <option value="0" selected="">Select</option>
+            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_sem" id = "elective_sem" onchange="populate('elective_dept', 'elective_name')">
+              <option value="0" selected="">--Select Semester--</option>
               <option value="4">4</option>
               <option value="5">5</option>
               <option value="6">6</option>
@@ -164,13 +167,22 @@
 
           <label class="col-md-4 control-label h5 required"> Department:</label>
           <div class="col-md-4">
-            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_dept">
-              <option value="0" selected="">Select</option>
+            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_dept" id = "elective_dept" id = "elective_dept" onchange="populate('elective_dept', 'elective_name')">
+              <option value="0" selected="">--Select Department--</option>
               <option value="CSE">CSE</option>
               <option value="ECE">ECE</option>
               <option value="EEE">EEE</option>
               <option value="MEC">MECH</option>
               <option value="CIE">CIVIL</option>
+            </select>
+          </div>
+          <br><br>
+
+          <label class="col-md-4 control-label h5 required"> Elective:</label>
+          <div class="col-md-4">
+            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_name" id = "elective_name" >
+              <option value="0">--Select Elective--</option>
+
             </select>
           </div>
           <br><br>
@@ -185,7 +197,99 @@
   </div>
 
 
+  <script>
 
+    function populate(s1, s2)
+    {
+        var results = JSON.parse(document.getElementById("results").value);
+        var s1 = document.getElementById(s1);
+        var s2 = document.getElementById(s2);
+        var h2 = document.getElementById("siva");
+        var elective_sem = document.getElementById("elective_sem");
+
+
+        s2.innerHTML = "";
+
+        var CSE = [];
+        var ECE = [];
+        var EEE = [];
+        var MEC = [];
+        var CIE = [];
+        
+        for (var i = 0; i<results.length;i++)
+        {
+            if(results[i].elective_dept == 'CSE' && results[i].elective_sem ==  elective_sem.value)
+            {
+                CSE.push(results[i].elective_name)
+            }
+
+            else if(results[i].elective_dept == 'ECE')
+            {
+                ECE.push(results[i].elective_name)
+            }
+
+            else if(results[i].elective_dept == 'EEE')
+            {
+                EEE.push(results[i].elective_name)
+            }
+
+            else if(results[i].elective_dept == 'MEC')
+            {
+                MEC.push(results[i].elective_name)
+            }
+
+            else if(results[i].elective_dept == 'CIE')
+            {
+                CIE.push(results[i].elective_name)
+            }
+        }
+
+        
+
+        if(s1.value == "CSE")
+        {
+            var optionArray = CSE;
+        }
+
+        else if(s1.value == "ECE")
+        {
+            var optionArray = ECE;
+        }
+
+        else if(s1.value == "EEE")
+        {
+            var optionArray = EEE;
+        }
+
+        else if(s1.value == "MEC")
+        {
+            var optionArray = MEC;
+        }
+
+        else if(s1.value == "CIE")
+        {
+            var optionArray = CIE;
+        }
+
+        
+
+        var newoption = document.createElement("option");
+        newoption.value = "0";
+        newoption.innerHTML = "--Select Elective--";
+        s2.options.add(newoption);
+
+        for(var i = 0;i<optionArray.length;i++)
+        {
+            
+            newoption = document.createElement("option");
+            newoption.value = optionArray[i];
+            newoption.innerHTML = optionArray[i];
+            s2.options.add(newoption);
+        }
+
+    }
+
+</script>
 
 
 
