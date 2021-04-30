@@ -27,7 +27,7 @@ fs.createReadStream('F:\\Sem 6\\Software Engineering\\Elective Data.csv')
 .pipe(csv({}))
 .on('data', (data) => excel_results.push(data))
 .on('end', () => {
-	console.log(excel_results);
+	//console.log(excel_results);
 });
 
 
@@ -1153,6 +1153,7 @@ app.get('/coord_group', (req, res) => {
 	var results=0;
 	var sem=0;
 	var dept="NOTHING"
+	console.log(dept);
 
 	var sql = "Select * from timer where role = 'faculty';";
 	db.query(sql, (err, results, field) => {
@@ -1169,7 +1170,48 @@ app.get('/coord_group', (req, res) => {
 			}
 			else
 			{
-				res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 1});
+				var currentTime = new Date();
+				currentTime = currentTime.toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
+				var arr =  currentTime.split(",");
+				var arr1 = arr[0].split("/");
+				var arr2 = arr[1].split(":");
+				var day = results[0].day;
+				var month = results[0].month;
+				var year = results[0].year;
+				var hours = results[0].hours;
+				var mins = results[0].mins;
+
+				var date1 = new Date(year, month, day, hours, mins);
+				date1.setMonth(date1.getMonth() - 1);
+				date1.setMinutes( date1.getMinutes() + 30 );
+				date1.setHours( date1.getHours() + 5 );
+				var date2 = new Date();
+				date2.setMinutes( date2.getMinutes() + 30 );
+				date2.setHours( date2.getHours() + 5 );
+				console.log(date1);
+				console.log(date2);
+				var diffTime = (date1 - date2);
+				console.log(diffTime);
+
+				if(diffTime < 0)
+				{
+					res.send("Print Faculty Preference Table");
+				}
+				else
+				{
+					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+					diffTime = diffTime % (1000 * 60 * 60 * 24);
+					hours = Math.floor(day / (1000 * 60 * 60));
+					diffTime = diffTime % (1000 * 60 * 60);
+					mins = Math.floor(diffTime / (1000 * 60));
+
+					var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
+					console.log(rem_time);
+	
+					res.render("coord_group.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time});
+
+				}
+
 			}
 			
 		}
@@ -1193,7 +1235,7 @@ app.post('/groupelective', (req, res) => {
 		}
 		else
 		{
-			res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message')});
+			res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
 		}
 
 	});

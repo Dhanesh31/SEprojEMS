@@ -182,8 +182,15 @@
         <% if(message == "Timer has been set and once it is over, you can send the electives to the students".trim() ) { %>
           <div class="alert alert-success">
             <%= message%>
-          </div>
         <% } %>
+          </div>
+        <form method="GET">
+          <input class="combo form-control input-sm select-hidden-accessible"value="<%= rem_time %>" name = "rem_time" type="text">
+          <button type="submit" id='refresh' class="btn btn-primary" formaction="/coord_group">Refresh Timer</button>
+
+
+        </form>
+
 
       <% } %>
 
@@ -299,7 +306,7 @@
             <label class="col-md-4 control-label h5 required"> Minutes:</label>
             <div class="col-md-4">
               <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="mins" value="" id ="mins">
-                
+                <option value="0">--Select Minutes--</option>
               </select>
             </div>
             <br><br><br>
@@ -384,6 +391,7 @@
     {
 
       var s1 = document.getElementById("mins");
+      s1.innerHTML = "";
       var newoption = document.createElement("option");
 
       newoption.value = "0";
