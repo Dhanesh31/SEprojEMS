@@ -27,7 +27,7 @@ fs.createReadStream('F:\\Sem 6\\Software Engineering\\Elective Data.csv')
 .pipe(csv({}))
 .on('data', (data) => excel_results.push(data))
 .on('end', () => {
-	//console.log(excel_results);
+	console.log(excel_results);
 });
 
 
@@ -1153,8 +1153,30 @@ app.get('/coord_group', (req, res) => {
 	var results=0;
 	var sem=0;
 	var dept="NOTHING"
-	res.render("coord_group.ejs",{results:results, sem : sem, dept : dept, message : req.flash('message')});
-	//res.render("coord_group.ejs",{results:results,  message : req.flash('message')});
+
+	var sql = "Select * from timer where role = 'faculty';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if(results.length == 0)
+			{
+				res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
+			}
+			else
+			{
+				res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 1});
+			}
+			
+		}
+
+	});
+
+	
 })
 
 app.post('/groupelective', (req, res) => {
@@ -1175,6 +1197,50 @@ app.post('/groupelective', (req, res) => {
 		}
 
 	});
+})
+
+app.post('/faculty_setTime', (req, res) => {
+
+	var day = req.body.day;
+	var hours = req.body.hours;
+	var mins = req.body.mins;
+	var arr = day.split("-");
+	var role = 'faculty';
+
+	console.log(arr);
+	console.log(hours);
+	console.log(mins);
+
+	var sql = "Delete from timer;";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			var sql = "Insert into timer values(" + arr[2] + "," + arr[1] + "," + arr[0] + "," + hours + "," + mins + ",'" + role + "');";
+			db.query(sql, (err, results, field) => {
+				if (err)
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+					req.flash('message', 'Timer has been set and once it is over, you can send the electives to the students');
+					res.redirect('/coord_group');
+				}
+		
+			});
+			
+		}
+
+	});
+
+
+	
 })
 
 
@@ -1212,7 +1278,6 @@ app.post('/sendstudents' , (req, res) => {
 							req.flash('sem', sem)
 							req.flash('dept', dept)
 							res.redirect(307, '/groupelective');
-							//res.render("coord_group.ejs",{results:results, req.session.mailsem:results[0].elective_sem, req.session.maildept:results[0].elective_dept});
 						}
 
 					});
@@ -1267,7 +1332,6 @@ app.post('/sendfaculties' , (req, res) => {
 							req.flash('sem', sem)
 							req.flash('dept', dept)
 							res.redirect(307, '/groupelective');
-							//res.render("coord_group.ejs",{results:results, req.session.mailsem:results[0].elective_sem, req.session.maildept:results[0].elective_dept});
 						}
 
 					});
