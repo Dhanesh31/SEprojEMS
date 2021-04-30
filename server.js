@@ -931,7 +931,7 @@ app.post('/faculty_save', (req, res) => {
 
 app.get('/fac_choose', (req, res) => {
 
-	var sql = "SELECT preference_given FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
+	var sql = "SELECT preference_given, faculty_dept FROM faculty WHERE faculty_email = '"+req.session.mail+"';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -939,12 +939,16 @@ app.get('/fac_choose', (req, res) => {
 			return;
 		}
 		else
-		{
+		{	
+			console.log(req.session.mail)
+			console.log(results[0].preference_given)
 			if(results[0].preference_given==1){
 				res.render("choosepref_done.ejs");
 			}
 			else{
-				var sql = "SELECT faculty_dept FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
+				
+				var dept=results[0].faculty_dept;
+				var sql = "SELECT elective_id,elective_name, elective_sem, sent_faculties FROM elective WHERE elective_dept='" + dept + "';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -952,33 +956,20 @@ app.get('/fac_choose', (req, res) => {
 						return;
 					}
 					else
-					{
-						// var sem=results[0].student_sem;
-						var dept=results[0].student_dept;
-						var sql = "SELECT elective_name,sent_faculties FROM elective WHERE elective_dept='" + dept + "';";
-						db.query(sql, (err, results, field) => {
-							if (err)
-							{
-								console.log(err);
-								return;
+					{	
+						var flag=0;
+						for(var i=0;i<results.length;i++){
+							if(results[i].sent_faculties==1){
+								flag=1;
+								break;
 							}
-							else
-							{
-								var flag=0;
-								for(var i=0;i<results.length;i++){
-									if(results[i].sent_faculties==1){
-										flag=1;
-										break;
-									}
-								}
-								if(flag==1){
-									res.render("fac_choosepref.ejs",{results:results, message : req.flash('message')});
-								}
-								else{
-									res.render("choosepref_done.ejs");
-								}
-							}
-						});
+						}
+						if(flag==0){
+							res.render('fac_choosepref', {message : req.flash('message'), results : JSON.stringify(results)});
+						}
+						else{
+							res.render("choosepref_done.ejs");
+						}
 					}
 				});
 			}
@@ -988,6 +979,9 @@ app.get('/fac_choose', (req, res) => {
 
 app.post('/fac_chooseelective', (req, res) => {
 	
+	var elective_id=req.body.elective_id;
+	var sem=req.body.elective_sem;
+	var f_id;
 	var sql = "SELECT faculty_id FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
@@ -998,46 +992,25 @@ app.post('/fac_chooseelective', (req, res) => {
 		else
 		{
 			f_id=results[0].faculty_id;
-		}
-	});
-
-	var sql = "SELECT faculty_dept FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
-	db.query(sql, (err, results, field) => {
-		if (err)
-		{
-			console.log(err);
-			return;
-		}
-		else
-		{
-			// var sem=results[0].student_sem;
-			var dept=results[0].student_dept;
-			var sql = "SELECT elective_id,elective_name FROM elective WHERE elective_dept='" + dept + "';";
+			var sql = "INSERT INTO facelec_pref VALUES(" + f_id + ",'" + elective_id + "'," + sem + ");";
 			db.query(sql, (err, results, field) => {
 				if (err)
 				{
 					console.log(err);
+					console.log('Preference added successfully');
+					req.flash('message', 'This preference has already been collected');
+					res.redirect('/fac_choose');
 					return;
 				}
 				else
-				{	
-					var elec_id=req.body.elec_pref;
-					var sql = "INSERT INTO facelec_pref VALUES('" + f_id + "','" + elec_id + "');";
-					db.query(sql, (err, results, field) => {
-						if (err)
-						{
-							console.log(err);
-							return;
-						}
-						// else
-						// {
-						// 	console.log("inserted successfully");
-						// }
-					});
+				{
+					console.log('Preference added successfully');
+					req.flash('message', 'Saved succesfully');
+					res.redirect('/fac_choose');
 				}
 			});
 		}
-	});
+	});	
 })
 
 app.get('/coord_add', (req, res) => {
