@@ -1168,20 +1168,42 @@ app.get('/coord_group', (req, res) => {
 
 				if(diffTime < 0)
 				{
-					res.send("Print Faculty Preference Table");
+					var sql = "SELECT * FROM facelec_pref";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							res.render("coord_group.ejs",{flag : 2, results : results});
+						}
+
+					});
 				}
+				
 				else
 				{
 					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 					diffTime = diffTime % (1000 * 60 * 60 * 24);
-					hours = Math.floor(day / (1000 * 60 * 60));
+					hours = Math.floor(diffTime / (1000 * 60 * 60));
 					diffTime = diffTime % (1000 * 60 * 60);
 					mins = Math.floor(diffTime / (1000 * 60));
+
+					if(hours < 10)
+					{
+						hours = '0' + hours + '   :';
+					}
+					if(mins < 10)
+					{
+						mins = '0' + mins;
+					}
 
 					var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
 					console.log(rem_time);
 	
-					res.render("coord_group.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time});
+					res.render("coord_group.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
 
 				}
 

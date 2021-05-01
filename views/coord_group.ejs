@@ -102,6 +102,25 @@
     .flashup {
       display: None;
     }
+
+    .countdownContainer{
+      position : absolute;
+      top : 50%;
+      left: 50%;
+      transform : translate(-50%) translate(-50%);
+      text-align: center;
+      background: #889cf1;
+      border: 1px solid #889cf1;
+      padding: 10px;
+      box-shadow: 0 0 5px 3px #ccc;
+    }
+
+    .info{
+      font-size: 80px;
+    }
+
+
+
   </style>
 
 </head>
@@ -185,11 +204,68 @@
         <% } %>
           </div>
         <form method="GET">
-          <input class="combo form-control input-sm select-hidden-accessible"value="<%= rem_time %>" name = "rem_time" type="text">
+          <input class="combo form-control input-sm select-hidden-accessible"value="<%= rem_time %>" name = "rem_time" type="text" style = "display:None">
           <button type="submit" id='refresh' class="btn btn-primary" formaction="/coord_group">Refresh Timer</button>
+
+          <table class = "countdownContainer">
+            <tr>
+              <td colspan = "4" class = "info">Time Left</td>
+            </tr>
+            <tr class = "info">
+              <td id = "days" name = "days"><%= days %></td>
+              <td id = "hours" name = "hours"><%= hours %></td>
+              <td id = "mins" name = "mins"><%= mins %></td>
+            </tr>
+            <tr>
+              <td>Days</td>
+              <td>Hours</td>
+              <td>Minutes</td>
+            </tr>
+
+          </table>
 
 
         </form>
+
+
+      <% } %>
+
+      <% if (flag == 2) { %>
+
+        <div class="center">
+          <center>
+            <h3> Preferences given by the facuties</h3>
+
+            <% if(results.length> 0) { %>
+
+
+
+                <table id="customers" style="margin-top:20px">
+
+                  <tr>
+                    <th>faculty_id</th>
+                    <th>elective_id</th>
+                    <th>sem</th>
+                  </tr>
+                  <% results.forEach(function(k){ %>
+
+                    <tr>
+                      <td>
+                        <%= k.faculty_id %>
+                      </td>
+                      <td>
+                        <%= k.elective_id %>
+                      </td>
+                      <td>
+                        <%= k.sem %>
+                      </td>
+                    </tr>
+
+                    <% }) %>
+
+                  <% } %>
+                </center>
+              </div>
 
 
       <% } %>
