@@ -1122,6 +1122,120 @@ app.post('/remelective', (request, response) => {
 
 });
 
+app.get('/coord_stuents_send', (req, res) => {
+	var results=0;
+	var sem=0;
+	var dept="NOTHING"
+
+	var sql = "Select * from timer where role = 'student';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if(results.length == 0)
+			{
+				res.render("coord_group_student.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
+			}
+			else
+			{
+				var currentTime = new Date();
+				currentTime = currentTime.toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
+				var arr =  currentTime.split(",");
+				var arr1 = arr[0].split("/");
+				var arr2 = arr[1].split(":");
+				var day = results[0].day;
+				var month = results[0].month;
+				var year = results[0].year;
+				var hours = results[0].hours;
+				var mins = results[0].mins;
+
+				var date1 = new Date(year, month, day, hours, mins);
+				date1.setMonth(date1.getMonth() - 1);
+				date1.setMinutes( date1.getMinutes() + 30 );
+				date1.setHours( date1.getHours() + 5 );
+				var date2 = new Date();
+				date2.setMinutes( date2.getMinutes() + 30 );
+				date2.setHours( date2.getHours() + 5 );
+				console.log(date1);
+				console.log(date2);
+				var diffTime = (date1 - date2);
+				console.log(diffTime);
+
+				if(diffTime < 0)
+				{
+					// var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id ) as faculty_dept, sem from facelec_pref A;";					
+					// db.query(sql, (err, results, field) => {
+					// 	if (err)
+					// 	{
+					// 		console.log(err);
+					// 		return;
+					// 	}
+					// 	else
+					// 	{
+					// 		res.render("coord_group.ejs",{flag : 2, results : results});
+					// 	}
+
+					// });
+					res.send("Time over da kanna");
+				}
+				
+				else
+				{
+					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+					diffTime = diffTime % (1000 * 60 * 60 * 24);
+					hours = Math.floor(diffTime / (1000 * 60 * 60));
+					diffTime = diffTime % (1000 * 60 * 60);
+					mins = Math.floor(diffTime / (1000 * 60));
+
+					if(hours < 10)
+					{
+						hours = '0' + hours + '   :';
+					}
+					if(mins < 10)
+					{
+						mins = '0' + mins;
+					}
+
+					var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
+					console.log(rem_time);
+	
+					res.render("coord_group_students.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
+
+				}
+
+			}
+			
+		}
+
+	});
+
+	
+})
+
+app.post('/groupelective_students', (req, res) => {
+
+	var sem=req.body.sem;
+	var dept=req.body.dept;
+
+	var sql = "SELECT * FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			res.render("coord_group_students.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
+		}
+
+	});
+})
+
 app.get('/coord_group', (req, res) => {
 	var results=0;
 	var sem=0;
@@ -1248,7 +1362,7 @@ app.post('/faculty_setTime', (req, res) => {
 	console.log(hours);
 	console.log(mins);
 
-	var sql = "Delete from timer;";
+	var sql = "Delete from timer where role = 'faculty';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
