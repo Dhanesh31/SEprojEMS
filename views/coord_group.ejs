@@ -183,7 +183,7 @@
         <li>
           <a href="coord_group">
             <i class="fas fa-copy"></i>
-            Group Elective
+            Faculties
           </a>
         </li>
 
@@ -244,7 +244,10 @@
 
                   <tr>
                     <th>faculty_id</th>
+                    <th>faculty_name</th>
+                    <th>faculty_dept</th>
                     <th>elective_id</th>
+                    <th>elective_name</th>
                     <th>sem</th>
                   </tr>
                   <% results.forEach(function(k){ %>
@@ -254,7 +257,16 @@
                         <%= k.faculty_id %>
                       </td>
                       <td>
+                        <%= k.faculty_name %>
+                      </td>
+                      <td>
+                        <%= k.faculty_dept %>
+                      </td>
+                      <td>
                         <%= k.elective_id %>
+                      </td>
+                      <td>
+                        <%= k.elective_name %>
                       </td>
                       <td>
                         <%= k.sem %>
@@ -392,7 +404,6 @@
             <button type="submit" id='timer' class="btn btn-primary" formaction="/faculty_setTime">Set Time</button>
             <button type="submit" id='group' class="btn btn-primary" formaction="/groupelective">Group</button></p>
 
-            <button type="submit" class="btn btn-primary" formaction="/sendstudents">Send to Students</button>
             <button type="submit" class="btn btn-primary" formaction="/sendfaculties">Send to Faculty</button>
             <button onclick="exportTableToExcel('customers', 'elective-data')" class="btn btn-primary" href="#">Export as Excel</button>
 
@@ -406,7 +417,6 @@
                     <th>Department</th>
                     <th>Credits</th>
                     <th>Capacity</th>
-                    <th>To Stduents</th>
                     <th>To Faculty</th>
 
                   </tr>
@@ -432,11 +442,6 @@
                         <%= k.capacity %>
                       </td>
 
-                      <% if(k.sent_students == 1) { %>
-                        <td>Sent</td>
-                      <% } else { %>
-                        <td>Not Sent</td>
-                      <% } %>
 
 
                       <% if(k.sent_faculties == 1) { %>

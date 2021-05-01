@@ -964,7 +964,7 @@ app.get('/fac_choose', (req, res) => {
 								break;
 							}
 						}
-						if(flag==0){
+						if(flag==1){
 							res.render('fac_choosepref', {message : req.flash('message'), results : JSON.stringify(results)});
 						}
 						else{
@@ -1168,7 +1168,7 @@ app.get('/coord_group', (req, res) => {
 
 				if(diffTime < 0)
 				{
-					var sql = "SELECT * FROM facelec_pref";
+					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id ) as faculty_dept, sem from facelec_pref A;";					
 					db.query(sql, (err, results, field) => {
 						if (err)
 						{
