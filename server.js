@@ -862,7 +862,7 @@ app.post('/faculty_save', (req, res) => {
 	var gender;
 	var edit_profile=1
 	var dept = req.body.dept;
-	var preference_given = 0;
+	// var preference_given = 0;
 
 	if(k == '1')
 	{
@@ -908,7 +908,7 @@ app.post('/faculty_save', (req, res) => {
 			else
 			{
 				console.log('INSERT');
-				var sql="insert into faculty (faculty_name,faculty_dob,faculty_age,faculty_email,faculty_dept,faculty_mobileno,gender,faculty_city,faculty_state, preference_given, edit_profile) values('" + name +"','"+ dob +"',"+ Age +",'"+ mail + "','" + dept + "','" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + preference_given + "," + edit_profile + ");";
+				var sql="insert into faculty (faculty_name,faculty_dob,faculty_age,faculty_email,faculty_dept,faculty_mobileno,gender,faculty_city,faculty_state, edit_profile) values('" + name +"','"+ dob +"',"+ Age +",'"+ mail + "','" + dept + "','" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + edit_profile + ");";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -946,11 +946,6 @@ app.get('/fac_choose', (req, res) => {
 			}
 			else
 			{
-				var currentTime = new Date();
-				currentTime = currentTime.toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
-				var arr =  currentTime.split(",");
-				var arr1 = arr[0].split("/");
-				var arr2 = arr[1].split(":");
 				
 				var day = results[0].day;
 				var month = results[0].month;
@@ -992,8 +987,8 @@ app.get('/fac_choose', (req, res) => {
 						mins = '0' + mins;
 					}
 
-					var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
-					console.log(rem_time);
+					// var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
+					// console.log(rem_time);
 					
 
 					var sql = "SELECT faculty_dept FROM faculty WHERE faculty_email = '"+req.session.mail+"';";
@@ -1016,7 +1011,7 @@ app.get('/fac_choose', (req, res) => {
 								else
 								{	
 									if(results.length>0){
-										res.render('fac_choosepref', {message : req.flash('message'), results : JSON.stringify(results), currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
+										res.render('fac_choosepref', {message : req.flash('message'), results : JSON.stringify(results), days : day, hours: hours, mins : mins});
 									}
 									else{
 										res.render("choosepref_done.ejs", {flag : 1});
@@ -1853,6 +1848,10 @@ app.get('/stud_view', (req, res) => {
 				}
 				else
 				{
+					if(results.length==0){
+						res.render('choosepref_done',{flag : 3});
+					}
+					
 					var sql = "SELECT * FROM elective WHERE elective_id IN (SELECT elective_id FROM elec_pref WHERE roll_no = '" + roll_no + "');";
 					db.query(sql, (err, result2, field) => {
 						if (err)
@@ -1875,7 +1874,7 @@ app.get('/stud_view', (req, res) => {
 
 app.get('/stud_choose', (req, res) => {
 
-	var sql = "SELECT preference_given FROM student WHERE student_email = '" + req.session.mail + "';";
+	var sql = "Select * from timer where role = 'student';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -1884,48 +1883,111 @@ app.get('/stud_choose', (req, res) => {
 		}
 		else
 		{
-			if(results[0].preference_given==1){
-				res.render("choosepref_done.ejs", {flag : 0});
+			if(results.length == 0)
+			{
+				res.render("choosepref_done.ejs", {flag : 1});
 			}
-			else{
-				var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + req.session.mail + "';";
-				db.query(sql, (err, results, field) => {
-					if (err)
+			else
+			{		
+				var day = results[0].day;
+				var month = results[0].month;
+				var year = results[0].year;
+				var hours = results[0].hours;
+				var mins = results[0].mins;
+
+				var date1 = new Date(year, month, day, hours, mins);
+				date1.setMonth(date1.getMonth() - 1);
+				date1.setMinutes( date1.getMinutes() + 30 );
+				date1.setHours( date1.getHours() + 5 );
+				var date2 = new Date();
+				date2.setMinutes( date2.getMinutes() + 30 );
+				date2.setHours( date2.getHours() + 5 );
+				console.log(date1);
+				console.log(date2);
+				var diffTime = (date1 - date2);
+				console.log(diffTime);
+
+				if(diffTime < 0)
+				{
+					res.render("choosepref_done.ejs", {flag : 2});
+				}
+				
+				else
+				{
+					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+					diffTime = diffTime % (1000 * 60 * 60 * 24);
+					hours = Math.floor(diffTime / (1000 * 60 * 60));
+					diffTime = diffTime % (1000 * 60 * 60);
+					mins = Math.floor(diffTime / (1000 * 60));
+
+					if(hours < 10)
 					{
-						console.log(err);
-						return;
+						hours = '0' + hours + '   :';
 					}
-					else
+					if(mins < 10)
 					{
-						var sem=results[0].student_sem;
-						var dept=results[0].student_dept;
-						var sql = "SELECT elective_id,elective_name,sent_students FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
-						db.query(sql, (err, results, field) => {
-							if (err)
-							{
-								console.log(err);
-								return;
+						mins = '0' + mins;
+					}
+
+					// var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
+					// console.log(rem_time);
+					
+
+					var sql = "SELECT preference_given FROM student WHERE student_email = '" + req.session.mail + "';";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							if(results[0].preference_given==1){
+								res.render("choosepref_done.ejs", {flag : 0});
 							}
-							else
-							{
-								var flag=0;
-								for(var i=0;i<results.length;i++){
-									if(results[i].sent_students==1){
-										flag=1;
-										break;
+							else{
+								var sql = "SELECT student_sem,student_dept FROM student WHERE student_email = '" + req.session.mail + "';";
+								db.query(sql, (err, results, field) => {
+									if (err)
+									{
+										console.log(err);
+										return;
 									}
-								}
-								if(flag==1){
-									res.render("choose_pref.ejs",{results:results, message : req.flash('message')});
-								}
-								else{
-									res.render("choosepref_done.ejs", {flag : 1});
-								}
-								
+									else
+									{
+										var sem=results[0].student_sem;
+										var dept=results[0].student_dept;
+										var sql = "SELECT elective_id,elective_name,sent_students FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+										db.query(sql, (err, results, field) => {
+											if (err)
+											{
+												console.log(err);
+												return;
+											}
+											else
+											{
+												var flag=0;
+												for(var i=0;i<results.length;i++){
+													if(results[i].sent_students==1){
+														flag=1;
+														break;
+													}
+												}
+												if(flag==1){
+													res.render("choose_pref.ejs",{results:results, message : req.flash('message'), days : day, hours: hours, mins : mins});
+												}
+												else{
+													res.render("choosepref_done.ejs", {flag : 1});
+												}
+												
+											}
+										});
+									}
+								});
 							}
-						});
-					}
-				});
+						}
+					});
+				}
 			}
 		}
 	});
@@ -1972,7 +2034,7 @@ app.post('/chooseelective', (req, res) => {
 						var elec=results[i].elective_id;
 						pref[i]=req.body[elec];
 
-						var sql = "INSERT INTO elec_pref VALUES('" + roll_no + "'," + elec + "," + pref[i] + ");";
+						var sql = "INSERT INTO elec_pref VALUES('" + roll_no + "','" + elec + "'," + pref[i] + ");";
 						db.query(sql, (err, results, field) => {
 							if (err)
 							{

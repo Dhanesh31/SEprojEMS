@@ -139,6 +139,31 @@
             <% } %>
 
             <h2><b>Give Preference</b></h2>
+            
+            <form method="GET">
+                
+                <button type="submit" id='refresh' class="btn btn-primary" formaction="/stud_choose">Refresh Timer</button>
+        
+                <table class = "countdownContainer">
+                    <tr>
+                    <td colspan = "4" class = "info">Time Left</td>
+                    </tr>
+                    <tr class = "info">
+                    <td id = "days" name = "days"><%= days %></td>
+                    <td id = "hours" name = "hours"><%= hours %></td>
+                    <td id = "mins" name = "mins"><%= mins %></td>
+                    </tr>
+                    <tr>
+                    <td>Days</td>
+                    <td>Hours</td>
+                    <td>Minutes</td>
+                    </tr>
+        
+                </table>
+        
+        
+                </form>
+            
             <form method='POST' action="/chooseelective">
             <div class="center">
                 <center>

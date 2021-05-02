@@ -13,30 +13,30 @@ integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fW
 a,
 a:hover,
 a:focus {
-    color: inherit;
-    text-decoration: none;
-    transition: all 0.3s;
+color: inherit;
+text-decoration: none;
+transition: all 0.3s;
 }
 .navbar {
-    margin-bottom: 0px;
+margin-bottom: 0px;
 
 }
 .btn-info {
-    color: #fff;
-    background-color:#212431 ;
-    border-color: #212431;
+color: #fff;
+background-color:#212431 ;
+border-color: #212431;
 }
 .btn-info:hover {
-    color: #fff;
-    background-color: #2e3346;
-    border-color:#2e3346 ;
+color: #fff;
+background-color: #2e3346;
+border-color:#2e3346 ;
 }
 .navbar-brand {
-    padding: 0px;
+padding: 0px;
 }
 @media (min-width: 1200px){
 .container {
-    width: 1471px;
+width: 1471px;
 }
 }
 </style>
@@ -44,182 +44,177 @@ a:focus {
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
+<div class="container-fluid">
 
+
+<a class="navbar-brand" href="student page.html">
+    <img src="24.jfif" alt="logo" style="width:180px;"> 
+</a>
+<div class="container">
+    <!-- <button class='btn btn-info pull-right' onclick="logout">
+        Logout
+    </button> -->
+    <form action="/logout">
         
-        <a class="navbar-brand" href="student page.html">
-            <img src="24.jfif" alt="logo" style="width:180px;"> 
-        </a>
-        <div class="container">
-            <!-- <button class='btn btn-info pull-right' onclick="logout">
-                Logout
-            </button> -->
-            <form action="/logout">
-                
-                <button class='btn btn-info pull-right'>Logout</button>
-            </form>
-        </div>
-    </div>   
+        <button class='btn btn-info pull-right'>Logout</button>
+    </form>
+</div>
+</div>   
 </nav>
 <div class="wrapper">
-    <!-- Sidebar  -->
-    <nav id="sidebar">
-        <div class="sidebar-header">
-            
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
-                <i class="fas fa-align-left"></i>
-                <span></span>
-            </button>
-            
-        </div>
-
-        <ul class="list-unstyled components">
-            <li >
-
-                <a href="faculty_edit" >
-                    <i class="fas fa-user"></i>
-                    Edit Profile
-                </a>
-                
-            </li>
-            <li>
-                <a href="fac_choose" >
-                    <i class="fas fa-pencil-alt"></i>
-                    Choose Elective 
-                </a>
-                
-            </li>
-            <!-- <li>
-                <a href="stud_view" >
-                    <i class="fas fa-pencil-alt"></i>
-                    View Preferences 
-                </a>
-                
-            </li>                 -->
-            
-        </ul>
-
-        
-    </nav>
-
-    <!-- Page Content  -->
+<!-- Sidebar  -->
+<nav id="sidebar">
+<div class="sidebar-header">
     
-    <div id="content">
-        <% if(message == "Saved succesfully".trim() ) { %>  
-            <div class="alert alert-success">
-                <%= message%>
-            </div>
-            <% } %>
+    <button type="button" id="sidebarCollapse" class="btn btn-info">
+        <i class="fas fa-align-left"></i>
+        <span></span>
+    </button>
+    
+</div>
 
-        <% if(message == "This preference has already been collected".trim() ) { %>  
-        <div class="alert alert-danger">
+<ul class="list-unstyled components">
+    <li >
+
+        <a href="faculty_edit" >
+            <i class="fas fa-user"></i>
+            Edit Profile
+        </a>
+        
+    </li>
+    <li>
+        <a href="fac_choose" >
+            <i class="fas fa-pencil-alt"></i>
+            Choose Elective 
+        </a>
+        
+    </li>
+    <!-- <li>
+        <a href="stud_view" >
+            <i class="fas fa-pencil-alt"></i>
+            View Preferences 
+        </a>
+        
+    </li>                 -->
+    
+</ul>
+
+
+</nav>
+
+<!-- Page Content  -->
+
+<div id="content">
+
+    <% if(message == "Saved succesfully".trim() ) { %>  
+        <div class="alert alert-success">
             <%= message%>
         </div>
         <% } %>
 
-        <% if(message == "This elective has already been chosen, please try another one".trim() ) { %>  
-            <div class="alert alert-danger">
-                <%= message%>
-            </div>
-            <% } %>
-
-        <h2 id='h2'><b>Give Preference</b></h2>
-        
-        <div id="content">
-
-                <form method="GET">
-                <input class="combo form-control input-sm select-hidden-accessible"value="<%= rem_time %>" name = "rem_time" type="text" style = "display:None">
-                <button type="submit" id='refresh' class="btn btn-primary" formaction="/fac_choose">Refresh Timer</button>
-        
-                <table class = "countdownContainer">
-                    <tr>
-                    <td colspan = "4" class = "info">Time Left</td>
-                    </tr>
-                    <tr class = "info">
-                    <td id = "days" name = "days"><%= days %></td>
-                    <td id = "hours" name = "hours"><%= hours %></td>
-                    <td id = "mins" name = "mins"><%= mins %></td>
-                    </tr>
-                    <tr>
-                    <td>Days</td>
-                    <td>Hours</td>
-                    <td>Minutes</td>
-                    </tr>
-        
-                </table>
-        
-        
-                </form>
-        
-        <form method='POST' action="/fac_chooseelective">
-            
-            <input type = "text" name="results" id ="results" class="input-text" value="<%=results %>" style = "display:None">
-            
-            <div class="center">
-                <center>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label h5 required">Semester:</label>
-                        <div class="col-md-4">
-                            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name='elective_sem' id='elective_sem'  onchange="populateblanks('elective_sem', 'elective_name')">
-                            <option value="0" selected="">--Select Semester--</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            </select>
-                        </div>
-                        <br><br>
-                        <label class="col-md-4 control-label h5 required"> Elective:</label>
-                        <div class="col-md-4">
-                            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_name" id = "elective_name">
-                            <option value="0">--Select Elective--</option>
-
-                            </select>
-                        </div>
-                        <input type = "text" name="elective_id" id ="elective_id" class="input-text" value="" style = "display:none">
-                        <div style="margin-left:120px;">
-                            <!-- <button type="button"  formaction="/addelective">ADD</button></p> -->
-                            <button type="submit" class="btn btn-primary">Sumbit</button>
-                        </div>
-                    </div>
-                </center>
-            </div>
-        </form>
+    <% if(message == "This preference has already been collected".trim() ) { %>  
+    <div class="alert alert-danger">
+        <%= message%>
     </div>
+    <% } %>
+
+    <% if(message == "This elective has already been chosen, please try another one".trim() ) { %>  
+        <div class="alert alert-danger">
+            <%= message%>
+        </div>
+    <% } %>
+
+    <h2 id='h2'><b>Give Preference</b></h2>
+
+    <form method="GET">
+        <button type="submit" id='refresh' class="btn btn-primary" formaction="/fac_choose">Refresh Timer</button>
+
+        <table class = "countdownContainer">
+            <tr>
+            <td colspan = "4" class = "info">Time Left</td>
+            </tr>
+            <tr class = "info">
+            <td id = "days" name = "days"><%= days %></td>
+            <td id = "hours" name = "hours"><%= hours %></td>
+            <td id = "mins" name = "mins"><%= mins %></td>
+            </tr>
+            <tr>
+            <td>Days</td>
+            <td>Hours</td>
+            <td>Minutes</td>
+            </tr>
+
+        </table>
+    </form>
+
+<form method='POST' action="/fac_chooseelective">
+    
+    <input type = "text" name="results" id ="results" class="input-text" value="<%=results %>" style = "display:None">
+    
+    <div class="center">
+        <center>
+            <div class="form-group">
+                <label class="col-md-4 control-label h5 required">Semester:</label>
+                <div class="col-md-4">
+                    <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name='elective_sem' id='elective_sem'  onchange="populateblanks('elective_sem', 'elective_name')">
+                    <option value="0" selected="">--Select Semester--</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    </select>
+                </div>
+                <br><br>
+                <label class="col-md-4 control-label h5 required"> Elective:</label>
+                <div class="col-md-4">
+                    <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_name" id = "elective_name">
+                    <option value="0">--Select Elective--</option>
+
+                    </select>
+                </div>
+                <input type = "text" name="elective_id" id ="elective_id" class="input-text" value="" style = "display:none">
+                <div style="margin-left:120px;">
+                    <!-- <button type="button"  formaction="/addelective">ADD</button></p> -->
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </center>
+    </div>
+</form>
 </div>       
 
 <script>
 
-    function populateblanks(s1, s2)
-        {
-            var s1 = document.getElementById(s1);
-            var s2 = document.getElementById(s2);
-            var elective_id = document.getElementById("elective_id");
-            
-            s2.innerHTML="";
-            
-            var results = JSON.parse(document.getElementById("results").value);
-            
-            var newoption = document.createElement("option");
-            newoption.value = "0";
-            newoption.innerHTML = "--Select Elective--";
-            s2.options.add(newoption);
-
-            for (var i = 0; i<results.length;i++)
-            {
-                if(results[i].elective_sem == s1.value)
-                {
-                    elective_id.value = results[i].elective_id;
-                    
-                    newoption = document.createElement("option");
-                    newoption.value = results[i].elective_name;
-                    newoption.innerHTML = results[i].elective_name;
-                    s2.options.add(newoption);
-                }
-            }
-
-        }
+function populateblanks(s1, s2)
+{
+    var s1 = document.getElementById(s1);
+    var s2 = document.getElementById(s2);
+    var elective_id = document.getElementById("elective_id");
     
+    s2.innerHTML="";
+    
+    var results = JSON.parse(document.getElementById("results").value);
+    
+    var newoption = document.createElement("option");
+    newoption.value = "0";
+    newoption.innerHTML = "--Select Elective--";
+    s2.options.add(newoption);
+
+    for (var i = 0; i<results.length;i++)
+    {
+        if(results[i].elective_sem == s1.value)
+        {
+            elective_id.value = results[i].elective_id;
+            
+            newoption = document.createElement("option");
+            newoption.value = results[i].elective_name;
+            newoption.innerHTML = results[i].elective_name;
+            s2.options.add(newoption);
+        }
+    }
+
+}
+
 </script>          
 
 
@@ -234,12 +229,12 @@ a:focus {
 
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-        });
-    });
-    
+$(document).ready(function () {
+$('#sidebarCollapse').on('click', function () {
+    $('#sidebar').toggleClass('active');
+});
+});
+
 </script>
 
 <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
