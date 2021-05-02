@@ -106,8 +106,18 @@
         <div id="content">
             <div class="center" style ="margin-top: 200px;">
                 <center>
-                <h1><b>Your preferences have been collected!</b></h1>
-            </center>
+                    <% if(flag==0) { %>  
+                        <h1><b>Your preferences have been collected!</b></h1>
+                    <% } %>
+                    
+                    <% if(flag==1) { %>  
+                        <h1><b>The portal is not yet opened!</b></h1>
+                    <% } %>
+
+                    <% if(flag==2) { %>  
+                        <h1><b>The portal is now closed. Thank you!</b></h1>
+                    <% } %>
+                </center>
             </div>
 
         </div>
