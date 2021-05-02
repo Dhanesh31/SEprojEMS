@@ -237,10 +237,43 @@
       <% } %>
 
       <% if (flag == 2) { %>
+        <form method='POST'>
 
         <div class="center">
           <center>
             <h3> Preferences given by the facuties</h3>
+            <br><br>
+
+            <label class="col-md-4 control-label h5 required">Semester:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="filter_sem"  value="<%= filter_sem %>selected">
+                <option value="<%= filter_sem %>" selected>--Select Semester--</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="ALL">ALL</option>
+              </select>
+            </div>
+
+
+
+            <label class="col-md-4 control-label h5 required"> Department:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="filter_dept" value="<%= filter_dept %>">
+                <option value="<%= filter_dept %>"selected>--Select Department--</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="MEC">MECH</option>
+                <option value="CIE">CIVIL</option>
+                <option value="ALL">ALL</option>
+              </select>
+            </div>
+            <br><br>
+
+            <button type="submit" id='filter' class="btn btn-primary" formaction="/filter_faculty">Filter</button></p>
+            <br>
 
             <% if(results.length> 0) { %>
 
@@ -284,7 +317,7 @@
                   <% } %>
                 </center>
               </div>
-
+            </form>
 
       <% } %>
 

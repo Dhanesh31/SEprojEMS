@@ -1212,23 +1212,7 @@ app.get('/coord_stuents_send', (req, res) => {
 	var sem=0;
 	var dept="NOTHING"
 
-	var sql = "delete from elective where elective_id not in(select elective_id from facelec_pref);";
-	db.query(sql, (err, results, field) => {
-		if (err)
-		{
-			console.log(err);
-			return;
-		}
-		else
-		{
-			console.log(results);
-			//res.render("coord_group_students.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
-		}
-
-	});
-
-	
-	var sql = "Select * from timer where role = 'student';";
+	var sql = "Select * from timer where role = 'faculty';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -1239,7 +1223,7 @@ app.get('/coord_stuents_send', (req, res) => {
 		{
 			if(results.length == 0)
 			{
-				res.render("coord_group_students.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
+				res.render("coord_group_students.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 3});
 			}
 			else
 			{
@@ -1268,44 +1252,107 @@ app.get('/coord_stuents_send', (req, res) => {
 
 				if(diffTime < 0)
 				{
-					// var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id ) as faculty_dept, sem from facelec_pref A;";					
-					// db.query(sql, (err, results, field) => {
-					// 	if (err)
-					// 	{
-					// 		console.log(err);
-					// 		return;
-					// 	}
-					// 	else
-					// 	{
-					// 		res.render("coord_group.ejs",{flag : 2, results : results});
-					// 	}
-
-					// });
-					res.send("Time over da kanna");
+					var sql = "delete from elective where elective_id not in(select elective_id from facelec_pref);";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							var sql = "Select * from timer where role = 'student';";
+							db.query(sql, (err, results, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									if(results.length == 0)
+									{
+										res.render("coord_group_students.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
+									}
+									else
+									{
+										var currentTime = new Date();
+										currentTime = currentTime.toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
+										var arr =  currentTime.split(",");
+										var arr1 = arr[0].split("/");
+										var arr2 = arr[1].split(":");
+										var day = results[0].day;
+										var month = results[0].month;
+										var year = results[0].year;
+										var hours = results[0].hours;
+										var mins = results[0].mins;
+						
+										var date1 = new Date(year, month, day, hours, mins);
+										date1.setMonth(date1.getMonth() - 1);
+										date1.setMinutes( date1.getMinutes() + 30 );
+										date1.setHours( date1.getHours() + 5 );
+										var date2 = new Date();
+										date2.setMinutes( date2.getMinutes() + 30 );
+										date2.setHours( date2.getHours() + 5 );
+										console.log(date1);
+										console.log(date2);
+										var diffTime = (date1 - date2);
+										console.log(diffTime);
+						
+										if(diffTime < 0)
+										{
+											var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept, sem from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no);";					
+											db.query(sql, (err, results, field) => {
+												if (err)
+												{
+													console.log(err);
+													return;
+												}
+												else
+												{
+													res.render("coord_group.ejs",{flag : 2, results : results});
+												}
+						
+											});
+										}
+										
+										else
+										{
+											day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+											diffTime = diffTime % (1000 * 60 * 60 * 24);
+											hours = Math.floor(diffTime / (1000 * 60 * 60));
+											diffTime = diffTime % (1000 * 60 * 60);
+											mins = Math.floor(diffTime / (1000 * 60));
+						
+											if(hours < 10)
+											{
+												hours = '0' + hours + '   :';
+											}
+											if(mins < 10)
+											{
+												mins = '0' + mins;
+											}
+						
+											var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
+											console.log(rem_time);
+							
+											res.render("coord_group_students.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
+						
+										}
+						
+									}
+									
+								}
+						
+							});
+						}
+				
+					});
 				}
 				
 				else
 				{
-					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-					diffTime = diffTime % (1000 * 60 * 60 * 24);
-					hours = Math.floor(diffTime / (1000 * 60 * 60));
-					diffTime = diffTime % (1000 * 60 * 60);
-					mins = Math.floor(diffTime / (1000 * 60));
-
-					if(hours < 10)
-					{
-						hours = '0' + hours + '   :';
-					}
-					if(mins < 10)
-					{
-						mins = '0' + mins;
-					}
-
-					var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
-					console.log(rem_time);
-	
-					res.render("coord_group_students.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
-
+					res.render("coord_group_students.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 3});
 				}
 
 			}
@@ -1313,6 +1360,11 @@ app.get('/coord_stuents_send', (req, res) => {
 		}
 
 	});
+
+
+
+	
+
 
 	
 })
@@ -1367,7 +1419,7 @@ app.post('/student_setTime', (req, res) => {
 				}
 				else
 				{
-					req.flash('message', 'Timer has been set and once it is over, you can assign electives to the students');
+					req.flash('message', 'Timer has been set and once it is over, you can view the preferences given by the students.');
 					res.redirect('/coord_stuents_send');
 				}
 		
@@ -1380,6 +1432,139 @@ app.post('/student_setTime', (req, res) => {
 
 	
 })
+
+app.post('/filter_student',(req, res) => {
+	var sem = req.body.filter_sem;
+	var dept = req.body.filter_dept;
+
+	if(sem == 'ALL')
+	{
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept, sem from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_dept = '" + dept +"');";					
+		db.query(sql, (err, results, field) => {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+			}
+	
+		});
+	}
+	else if(dept == 'ALL')
+	{
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept, sem from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no) and sem = " + sem + ";";					
+		db.query(sql, (err, results, field) => {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+			}
+	
+		});
+	}
+	else
+	{
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + " and exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";					
+		db.query(sql, (err, results, field) => {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+			}
+	
+		});
+	}
+
+
+
+})
+
+app.post('/filter_faculty',(req, res) => {
+	var sem = req.body.filter_sem;
+	var dept = req.body.filter_dept;
+
+	if(sem == 'ALL' &&  dept != 'ALL')
+	{
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";					
+		db.query(sql, (err, results, field) => {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+			}
+	
+		});
+	}
+	else if(dept == 'ALL' && sem != 'ALL')
+	{
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + ";";					
+		db.query(sql, (err, results, field) => {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+			}
+	
+		});
+	}
+
+	else if(dept == 'ALL' && sem == 'ALL')
+	{
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";					
+		db.query(sql, (err, results, field) => {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+			}
+	
+		});
+	}
+
+	else
+	{
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + " and exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";					
+		db.query(sql, (err, results, field) => {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+			}
+	
+		});
+	}
+
+
+
+})
+
 
 app.get('/coord_group', (req, res) => {
 	var results=0;
@@ -1436,7 +1621,7 @@ app.get('/coord_group', (req, res) => {
 						}
 						else
 						{
-							res.render("coord_group.ejs",{flag : 2, results : results});
+							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : 'ALL', filter_dept : 'ALL'});
 						}
 
 					});

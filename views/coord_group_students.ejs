@@ -187,11 +187,11 @@
           </a>
         </li>
         <li>
-            <a href="coord_stuents_send">
-              <i class="fas fa-copy"></i>
-              Students
-            </a>
-          </li>
+          <a href="coord_stuents_send">
+            <i class="fas fa-copy"></i>
+            Students
+          </a>
+        </li>
 
       </ul>
 
@@ -203,8 +203,24 @@
 
     <div id="content">
 
+      <% if (flag == 3) { %>
+
+        <div id="content">
+          <div class="center" style ="margin-top: 200px;">
+              <center>
+                    
+                  <h1><b>Student Portal hasn't been enabled yet.  Please wait for faculties to give their preferences</b></h1>
+  
+              </center>
+          </div>
+  
+      </div>
+  
+      <% } %>
+
+
       <% if (flag == 1) { %>
-        <% if(message == "Timer has been set and once it is over, you can assign electives to the students".trim() ) { %>
+        <% if(message == "Timer has been set and once it is over, you can view the preferences given by the students.".trim() ) { %>
           <div class="alert alert-success">
             <%= message%>
         <% } %>
@@ -237,10 +253,43 @@
       <% } %>
 
       <% if (flag == 2) { %>
+        <form method='POST'>
 
         <div class="center">
           <center>
-            <h3> Preferences given by the students</h3>
+            <h3> Preferences given by the Students</h3>
+            <br><br>
+
+            <label class="col-md-4 control-label h5 required">Semester:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="filter_sem"  value="<%= filter_sem %>selected">
+                <option value="<%= filter_sem %>" selected>--Select Semester--</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="ALL">ALL</option>
+              </select>
+            </div>
+
+
+
+            <label class="col-md-4 control-label h5 required"> Department:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="filter_dept" value="<%= filter_dept %>">
+                <option value="<%= filter_dept %>"selected>--Select Department--</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="MEC">MECH</option>
+                <option value="CIE">CIVIL</option>
+                <option value="ALL">ALL</option>
+              </select>
+            </div>
+            <br><br>
+
+            <button type="submit" id='filter' class="btn btn-primary" formaction="/filter_student">Filter</button></p>
+            <br>
 
             <% if(results.length> 0) { %>
 
@@ -249,9 +298,9 @@
                 <table id="customers" style="margin-top:20px">
 
                   <tr>
-                    <th>faculty_id</th>
-                    <th>faculty_name</th>
-                    <th>faculty_dept</th>
+                    <th>roll_no</th>
+                    <th>student_name</th>
+                    <th>student_dept</th>
                     <th>elective_id</th>
                     <th>elective_name</th>
                     <th>sem</th>
@@ -260,13 +309,13 @@
 
                     <tr>
                       <td>
-                        <%= k.faculty_id %>
+                        <%= k.roll_no %>
                       </td>
                       <td>
-                        <%= k.faculty_name %>
+                        <%= k.student_name %>
                       </td>
                       <td>
-                        <%= k.faculty_dept %>
+                        <%= k.student_dept %>
                       </td>
                       <td>
                         <%= k.elective_id %>
@@ -284,7 +333,7 @@
                   <% } %>
                 </center>
               </div>
-
+            </form>
 
       <% } %>
 
@@ -294,6 +343,12 @@
       
       <h2><b>GROUP ELECTIVES</b></h2>
       <form method='POST'>
+
+        <!-- <% if(message === "Electives are displayed in Student Portal".trim()) { %>
+          <div class="alert alert-success">
+            <%= message %>
+          </div>
+        <% } %> -->
 
 
         <% if(message == "Electives are already displayed in Student Portal".trim() ) { %>
