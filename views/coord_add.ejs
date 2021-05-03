@@ -125,6 +125,12 @@
             Students
           </a>
         </li>
+        <li>
+          <a href="coord_assign">
+            <i class="fas fa-copy"></i>
+            Assign electives
+          </a>
+        </li>
 
       </ul>
 
@@ -134,25 +140,25 @@
     <!-- Page Content  -->
 
     <div id="content">
-      
-      <% if(message == "Elective already inserted, try adding a new one".trim() ) { %>  
+
+      <% if(message == "Elective already inserted, try adding a new one".trim() ) { %>
         <div class="alert alert-danger">
           <%= message%>
         </div>
-      <% } %> 
+      <% } %>
 
-      <% if(message == "Saved succesfully".trim() ) { %>  
+      <% if(message == "Saved succesfully".trim() ) { %>
         <div class="alert alert-success">
           <%= message%>
         </div>
-      <% } %> 
-      
+      <% } %>
+
       <h2><b>ADD ELECTIVES</b></h2>
       <form method='POST' action='/addelective'>
         <div class="center">
 
           <input type = "text" name="results" id ="results" class="input-text" value="<%=results %>" style = "display:None">
-          
+
           <label class="col-md-4 control-label h5 required">Semester:</label>
           <div class="col-md-4">
             <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name='elective_sem' id='elective_sem'>
@@ -225,7 +231,7 @@
         var EEE = [];
         var MEC = [];
         var CIE = [];
-        
+
         for (var i = 0; i<results.length;i++)
         {
             if(results[i].Department == 'CSE')
@@ -254,7 +260,7 @@
             }
         }
 
-        
+
 
         if(s1.value == "CSE")
         {
@@ -306,7 +312,7 @@
         var results = JSON.parse(document.getElementById("results").value);
         for (var i = 0; i<results.length - 1;i++)
         {
-            
+
             if(results[i].Department == s1.value && results[i].Elective_Name == s2.value)
             {
                 elective_id.value = results[i].Course_ID

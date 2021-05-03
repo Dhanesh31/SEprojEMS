@@ -192,6 +192,12 @@
             Students
           </a>
         </li>
+        <li>
+          <a href="coord_assign">
+            <i class="fas fa-copy"></i>
+            Assign electives
+          </a>
+        </li>
 
       </ul>
 
@@ -199,7 +205,7 @@
     </nav>
 
     <!-- Page Content  -->
-    
+
 
     <div id="content">
 
@@ -208,14 +214,14 @@
         <div id="content">
           <div class="center" style ="margin-top: 200px;">
               <center>
-                    
+
                   <h1><b>Student Portal hasn't been enabled yet.  Please wait for faculties to give their preferences</b></h1>
-  
+
               </center>
           </div>
-  
+
       </div>
-  
+
       <% } %>
 
 
@@ -305,7 +311,7 @@
                     <th>elective_id</th>
                     <th>elective_name</th>
                     <th>prefernce</th>
-                    
+
                   </tr>
                   <% results.forEach(function(k){ %>
 
@@ -345,7 +351,7 @@
 
 
       <% if (flag == 0) { %>
-      
+
       <h2><b>GROUP ELECTIVES</b></h2>
       <form method='POST'>
 
@@ -520,10 +526,10 @@
               </div>
       </form>
 
-      <% } %> 
+      <% } %>
 
     </div>
-    
+
   </div>
 
   <script>

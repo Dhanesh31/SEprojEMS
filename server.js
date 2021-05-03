@@ -23,7 +23,7 @@ const client = new OAuth2Client(CLIENT_ID);
 
 
 var excel_results = [];
-fs.createReadStream('F:\\Sem 6\\Software Engineering\\Elective Data.csv')
+fs.createReadStream('C:\\Users\\welcome\\Downloads\\Elective Data.csv')
 .pipe(csv({}))
 .on('data', (data) => excel_results.push(data))
 .on('end', () => {
@@ -225,7 +225,7 @@ app.post('/fpwd', (request, response) => {
 				console.log('email sent' + info.response);
 			}
 		})
-	
+
 		response.render('otp_forgot.ejs', {email : mail, pwd : pwd, pwdrpt : pwdrpt, role : role , otp : num})
 	}
 	else
@@ -246,11 +246,11 @@ app.post('/otppwd', (request, response) => {
 	var pwdrpt = request.body.pwdrpt;
 	var role = request.body.role;
 	var inotp = request.body.inotp;
-	
+
 	if (inotp == otp) {
 		//response.send('Password changed successfully');
 
-		
+
 		if(role == 'coordinator')
 		{
 			var sql = "SELECT * FROM coord_login";
@@ -265,7 +265,7 @@ app.post('/otppwd', (request, response) => {
 						break;
 					}
 				}
-	
+
 				if (flag == 1) {
 					var sql = "Update coord_login set coord_password = '" + pwd + "' where coord_email = '"+ email + "';";
 					db.query(sql, (err, result, field) => {
@@ -278,14 +278,14 @@ app.post('/otppwd', (request, response) => {
 							console.log('Password Changed Successfully', err);
 							response.render('login',{message : ''});
 						}
-				
+
 					});
 				}
-				else 
+				else
 				{
 					response.send('Cannot find email');
 				}
-		
+
 			});
 		}
 		else if(role == 'student')
@@ -302,7 +302,7 @@ app.post('/otppwd', (request, response) => {
 						break;
 					}
 				}
-	
+
 				if (flag == 1) {
 					var sql = "Update student_login set student_pass = '" + pwd + "' where student_email = '"+ email + "';";
 					db.query(sql, (err, result, field) => {
@@ -315,14 +315,14 @@ app.post('/otppwd', (request, response) => {
 							console.log('Password Changed Successfully', err);
 							response.render('login',{message : ''});
 						}
-				
+
 					});
 				}
-				else 
+				else
 				{
 					response.send('Cannot find email');
 				}
-		
+
 			});
 
 		}
@@ -340,7 +340,7 @@ app.post('/otppwd', (request, response) => {
 						break;
 					}
 				}
-	
+
 				if (flag == 1) {
 					var sql = "Update faculty_login set faculty_password = '" + pwd + "' where faculty_email = '"+ email + "';";
 					db.query(sql, (err, result, field) => {
@@ -355,11 +355,11 @@ app.post('/otppwd', (request, response) => {
 						}
 					});
 				}
-				else 
+				else
 				{
 					response.send('Cannot find email');
 				}
-		
+
 			});
 
 
@@ -403,7 +403,7 @@ app.post('/login_student', (request, response) => {
 			request.flash('message', 'Give your credentials correctly');
 			response.redirect('/');
 			//response.render("login");
-			
+
 			return;
 		}
 
@@ -794,7 +794,7 @@ app.get('/faculty_edit', (req, res) => {
 			return;
 		}
 		else
-		{	
+		{
 			console.log(results.length);
 			if (results.length==0)
 			{
@@ -946,7 +946,7 @@ app.get('/fac_choose', (req, res) => {
 			}
 			else
 			{
-				
+
 				var day = results[0].day;
 				var month = results[0].month;
 				var year = results[0].year;
@@ -969,7 +969,7 @@ app.get('/fac_choose', (req, res) => {
 				{
 					res.render("choosepref_done.ejs", {flag : 2});
 				}
-				
+
 				else
 				{
 					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -989,7 +989,7 @@ app.get('/fac_choose', (req, res) => {
 
 					// var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
 					// console.log(rem_time);
-					
+
 
 					var sql = "SELECT faculty_dept FROM faculty WHERE faculty_email = '"+req.session.mail+"';";
 					db.query(sql, (err, results, field) => {
@@ -999,7 +999,7 @@ app.get('/fac_choose', (req, res) => {
 							return;
 						}
 						else
-						{	
+						{
 							var dept=results[0].faculty_dept;
 							var sql = "SELECT elective_id,elective_name, elective_sem, sent_faculties FROM elective WHERE elective_dept='" + dept + "' AND sent_faculties=" +1+ ";";
 							db.query(sql, (err, results, field) => {
@@ -1009,7 +1009,7 @@ app.get('/fac_choose', (req, res) => {
 									return;
 								}
 								else
-								{	
+								{
 									if(results.length>0){
 										res.render('fac_choosepref', {message : req.flash('message'), results : JSON.stringify(results), days : day, hours: hours, mins : mins});
 									}
@@ -1027,7 +1027,7 @@ app.get('/fac_choose', (req, res) => {
 })
 
 app.post('/fac_chooseelective', (req, res) => {
-	
+
 	var elective_id=req.body.elective_id;
 	var sem=req.body.elective_sem;
 	var f_id;
@@ -1041,7 +1041,7 @@ app.post('/fac_chooseelective', (req, res) => {
 		else
 		{
 			f_id=results[0].faculty_id;
-			var sql = "SELECT fac_limit FROM elective WHERE elective_id='" + elective_id +"';"; 
+			var sql = "SELECT fac_limit FROM elective WHERE elective_id='" + elective_id +"';";
 			db.query(sql, (err, results, field) => {
 				if (err)
 				{
@@ -1065,7 +1065,7 @@ app.post('/fac_chooseelective', (req, res) => {
 							}
 							else
 							{
-								var sql = "UPDATE elective SET fac_limit=fac_limit-1 WHERE elective_id='" + elective_id +"';"; 
+								var sql = "UPDATE elective SET fac_limit=fac_limit-1 WHERE elective_id='" + elective_id +"';";
 								db.query(sql, (err, results, field) => {
 									if (err)
 									{
@@ -1080,7 +1080,7 @@ app.post('/fac_chooseelective', (req, res) => {
 									}
 								});
 							}
-						});	
+						});
 					}
 					else
 					{
@@ -1090,7 +1090,7 @@ app.post('/fac_chooseelective', (req, res) => {
 				}
 			});
 		}
-	});	
+	});
 })
 
 app.get('/coord_add', (req, res) => {
@@ -1151,7 +1151,7 @@ app.get('/coord_remove', (req, res) => {
 			res.render('coord_remove', {message : req.flash('message') , results : JSON.stringify(results)});
 		}
 	});
-	
+
 })
 
 app.post('/remelective', (request, response) => {
@@ -1281,7 +1281,7 @@ app.get('/coord_stuents_send', (req, res) => {
 										var year = results[0].year;
 										var hours = results[0].hours;
 										var mins = results[0].mins;
-						
+
 										var date1 = new Date(year, month, day, hours, mins);
 										date1.setMonth(date1.getMonth() - 1);
 										date1.setMinutes( date1.getMinutes() + 30 );
@@ -1293,7 +1293,7 @@ app.get('/coord_stuents_send', (req, res) => {
 										console.log(date2);
 										var diffTime = (date1 - date2);
 										console.log(diffTime);
-						
+
 										if(diffTime < 0)
 										{
 											var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A;";
@@ -1307,10 +1307,10 @@ app.get('/coord_stuents_send', (req, res) => {
 												{
 													res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 												}
-						
+
 											});
 										}
-										
+
 										else
 										{
 											day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -1318,7 +1318,7 @@ app.get('/coord_stuents_send', (req, res) => {
 											hours = Math.floor(diffTime / (1000 * 60 * 60));
 											diffTime = diffTime % (1000 * 60 * 60);
 											mins = Math.floor(diffTime / (1000 * 60));
-						
+
 											if(hours < 10)
 											{
 												hours = '0' + hours + '   :';
@@ -1327,41 +1327,41 @@ app.get('/coord_stuents_send', (req, res) => {
 											{
 												mins = '0' + mins;
 											}
-						
+
 											var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
 											console.log(rem_time);
-							
+
 											res.render("coord_group_students.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
-						
+
 										}
-						
+
 									}
-									
+
 								}
-						
+
 							});
 						}
-				
+
 					});
 				}
-				
+
 				else
 				{
 					res.render("coord_group_students.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 3});
 				}
 
 			}
-			
+
 		}
 
 	});
 
 
 
-	
 
 
-	
+
+
 })
 
 app.post('/groupelective_students', (req, res) => {
@@ -1417,15 +1417,15 @@ app.post('/student_setTime', (req, res) => {
 					req.flash('message', 'Timer has been set and once it is over, you can view the preferences given by the students.');
 					res.redirect('/coord_stuents_send');
 				}
-		
+
 			});
-			
+
 		}
 
 	});
 
 
-	
+
 })
 
 app.post('/filter_student',(req, res) => {
@@ -1434,7 +1434,7 @@ app.post('/filter_student',(req, res) => {
 
 	if(sem == 'ALL' && dept != 'ALL')
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_dept = '" + dept + "');";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_dept = '" + dept + "');";
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1445,12 +1445,12 @@ app.post('/filter_student',(req, res) => {
 			{
 				res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 			}
-	
+
 		});
 	}
 	else if(dept == 'ALL' && sem != 'ALL')
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_sem = " + sem + ");";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_sem = " + sem + ");";
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1461,7 +1461,7 @@ app.post('/filter_student',(req, res) => {
 			{
 				res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 			}
-	
+
 		});
 	}
 
@@ -1478,12 +1478,12 @@ app.post('/filter_student',(req, res) => {
 			{
 				res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 			}
-	
+
 		});
 	}
 	else
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_dept = '" + dept + "' and C.student_sem = " + sem + ");";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_dept = '" + dept + "' and C.student_sem = " + sem + ");";
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1494,7 +1494,7 @@ app.post('/filter_student',(req, res) => {
 			{
 				res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 			}
-	
+
 		});
 	}
 
@@ -1508,7 +1508,7 @@ app.post('/filter_faculty',(req, res) => {
 
 	if(sem == 'ALL' &&  dept != 'ALL')
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1519,12 +1519,12 @@ app.post('/filter_faculty',(req, res) => {
 			{
 				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 			}
-	
+
 		});
 	}
 	else if(dept == 'ALL' && sem != 'ALL')
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + ";";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + ";";
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1535,13 +1535,13 @@ app.post('/filter_faculty',(req, res) => {
 			{
 				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 			}
-	
+
 		});
 	}
 
 	else if(dept == 'ALL' && sem == 'ALL')
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1552,13 +1552,13 @@ app.post('/filter_faculty',(req, res) => {
 			{
 				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 			}
-	
+
 		});
 	}
 
 	else
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + " and exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + " and exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1569,7 +1569,7 @@ app.post('/filter_faculty',(req, res) => {
 			{
 				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 			}
-	
+
 		});
 	}
 
@@ -1577,6 +1577,12 @@ app.post('/filter_faculty',(req, res) => {
 
 })
 
+app.get('/coord_assign',(req,res) =>{
+	var results=0;
+	var sem=0;
+	var dept="NOTHING"
+	res.render('coord_assign',{results: results,sem : sem, dept : dept, message : req.flash('message')});
+})
 
 app.get('/coord_group', (req, res) => {
 	var results=0;
@@ -1624,7 +1630,7 @@ app.get('/coord_group', (req, res) => {
 
 				if(diffTime < 0)
 				{
-					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id ) as faculty_dept, sem from facelec_pref A;";					
+					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id ) as faculty_dept, sem from facelec_pref A;";
 					db.query(sql, (err, results, field) => {
 						if (err)
 						{
@@ -1638,7 +1644,7 @@ app.get('/coord_group', (req, res) => {
 
 					});
 				}
-				
+
 				else
 				{
 					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -1658,18 +1664,18 @@ app.get('/coord_group', (req, res) => {
 
 					var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
 					console.log(rem_time);
-	
+
 					res.render("coord_group.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
 
 				}
 
 			}
-			
+
 		}
 
 	});
 
-	
+
 })
 
 app.post('/groupelective', (req, res) => {
@@ -1725,15 +1731,15 @@ app.post('/faculty_setTime', (req, res) => {
 					req.flash('message', 'Timer has been set and once it is over, you can send the electives to the students');
 					res.redirect('/coord_group');
 				}
-		
+
 			});
-			
+
 		}
 
 	});
 
 
-	
+
 })
 
 
@@ -1868,7 +1874,7 @@ app.get('/stud_view', (req, res) => {
 					if(results.length==0){
 						res.render('choosepref_done',{flag : 3});
 					}
-					
+
 					var sql = "SELECT * FROM elective WHERE elective_id IN (SELECT elective_id FROM elec_pref WHERE roll_no = '" + roll_no + "');";
 					db.query(sql, (err, result2, field) => {
 						if (err)
@@ -1880,11 +1886,11 @@ app.get('/stud_view', (req, res) => {
 						{
 							res.render("view_pref.ejs",{elec:result2, elecpref:result1});
 						}
-					});	
+					});
 				}
-			});	
-			
-			
+			});
+
+
 		}
 	});
 })
@@ -1905,7 +1911,7 @@ app.get('/stud_choose', (req, res) => {
 				res.render("choosepref_done.ejs", {flag : 1});
 			}
 			else
-			{		
+			{
 				var day = results[0].day;
 				var month = results[0].month;
 				var year = results[0].year;
@@ -1928,7 +1934,7 @@ app.get('/stud_choose', (req, res) => {
 				{
 					res.render("choosepref_done.ejs", {flag : 2});
 				}
-				
+
 				else
 				{
 					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -1948,7 +1954,7 @@ app.get('/stud_choose', (req, res) => {
 
 					// var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
 					// console.log(rem_time);
-					
+
 
 					var sql = "SELECT preference_given FROM student WHERE student_email = '" + req.session.mail + "';";
 					db.query(sql, (err, results, field) => {
@@ -1996,7 +2002,7 @@ app.get('/stud_choose', (req, res) => {
 												else{
 													res.render("choosepref_done.ejs", {flag : 1});
 												}
-												
+
 											}
 										});
 									}
@@ -2011,7 +2017,7 @@ app.get('/stud_choose', (req, res) => {
 })
 
 app.post('/chooseelective', (req, res) => {
-	
+
 	var sql = "SELECT roll_no FROM student WHERE student_email = '" + req.session.mail + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
- 
+
 <head>
   <link rel="stylesheet" type="text/css" href="main.css">
 
@@ -124,6 +124,12 @@
             Students
           </a>
         </li>
+        <li>
+          <a href="coord_assign">
+            <i class="fas fa-copy"></i>
+            Assign electives
+          </a>
+        </li>
 
       </ul>
 
@@ -134,17 +140,17 @@
 
     <div id="content">
 
-      <% if(message == "No such elective exists".trim() ) { %>  
+      <% if(message == "No such elective exists".trim() ) { %>
         <div class="alert alert-danger">
           <%= message%>
         </div>
-      <% } %> 
+      <% } %>
 
-      <% if(message == "Elective removed successfully".trim() ) { %>  
+      <% if(message == "Elective removed successfully".trim() ) { %>
         <div class="alert alert-success">
           <%= message%>
         </div>
-      <% } %> 
+      <% } %>
 
       <h2><b>REMOVE ELECTIVES</b></h2>
       <form method='POST' action='/remelective'>
@@ -221,7 +227,7 @@
         var EEE = [];
         var MEC = [];
         var CIE = [];
-        
+
         for (var i = 0; i<results.length;i++)
         {
             if(results[i].elective_dept == 'CSE' && results[i].elective_sem ==  elective_sem.value)
@@ -250,7 +256,7 @@
             }
         }
 
-        
+
 
         if(s1.value == "CSE")
         {
@@ -277,7 +283,7 @@
             var optionArray = CIE;
         }
 
-        
+
 
         var newoption = document.createElement("option");
         newoption.value = "0";
@@ -286,7 +292,7 @@
 
         for(var i = 0;i<optionArray.length;i++)
         {
-            
+
             newoption = document.createElement("option");
             newoption.value = optionArray[i];
             newoption.innerHTML = optionArray[i];
