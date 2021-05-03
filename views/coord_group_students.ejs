@@ -300,10 +300,12 @@
                   <tr>
                     <th>roll_no</th>
                     <th>student_name</th>
+                    <th>student_sem</th>
                     <th>student_dept</th>
                     <th>elective_id</th>
                     <th>elective_name</th>
-                    <th>sem</th>
+                    <th>prefernce</th>
+                    
                   </tr>
                   <% results.forEach(function(k){ %>
 
@@ -315,6 +317,9 @@
                         <%= k.student_name %>
                       </td>
                       <td>
+                        <%= k.student_sem %>
+                      </td>
+                      <td>
                         <%= k.student_dept %>
                       </td>
                       <td>
@@ -324,7 +329,7 @@
                         <%= k.elective_name %>
                       </td>
                       <td>
-                        <%= k.sem %>
+                        <%= k.pref %>
                       </td>
                     </tr>
 

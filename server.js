@@ -1296,7 +1296,7 @@ app.get('/coord_stuents_send', (req, res) => {
 						
 										if(diffTime < 0)
 										{
-											var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept, sem from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no);";					
+											var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A;";
 											db.query(sql, (err, results, field) => {
 												if (err)
 												{
@@ -1305,7 +1305,7 @@ app.get('/coord_stuents_send', (req, res) => {
 												}
 												else
 												{
-													res.render("coord_group.ejs",{flag : 2, results : results});
+													res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
 												}
 						
 											});
@@ -1432,9 +1432,9 @@ app.post('/filter_student',(req, res) => {
 	var sem = req.body.filter_sem;
 	var dept = req.body.filter_dept;
 
-	if(sem == 'ALL')
+	if(sem == 'ALL' && dept != 'ALL')
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept, sem from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_dept = '" + dept +"');";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_dept = '" + dept + "');";					
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1448,9 +1448,26 @@ app.post('/filter_student',(req, res) => {
 	
 		});
 	}
-	else if(dept == 'ALL')
+	else if(dept == 'ALL' && sem != 'ALL')
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept, sem from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no) and sem = " + sem + ";";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_sem = " + sem + ");";					
+		db.query(sql, (err, results, field) => {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				res.render("coord_group_students.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+			}
+	
+		});
+	}
+
+	else if(dept == 'ALL' && sem == 'ALL')
+	{
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A;";
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1466,7 +1483,7 @@ app.post('/filter_student',(req, res) => {
 	}
 	else
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + " and exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.roll_no, (select D.student_name from student D where A.roll_no = D.roll_no ) as student_name, (select C.student_dept from student C where A.roll_no = C.roll_no) as student_dept,(select C.student_sem from student C where A.roll_no = C.roll_no) as student_sem, pref from elec_pref A where exists (select C.student_dept from student C where A.roll_no = C.roll_no  and C.student_dept = '" + dept + "' and C.student_sem = " + sem + ");";					
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
@@ -1491,7 +1508,7 @@ app.post('/filter_faculty',(req, res) => {
 
 	if(sem == 'ALL' &&  dept != 'ALL')
 	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";					
+		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";					
 		db.query(sql, (err, results, field) => {
 			if (err)
 			{
