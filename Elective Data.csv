@@ -1,0 +1,151 @@
+S.No,Course_ID,Elective_Name,Department,Credits
+1,19CSE331,Cryptography,CSE,3
+2,19CSE332,Information Security,CSE,3
+3,19CSE333,Secure Coding,CSE,3
+4,19CSE334,Cyber Forensics and Malware,CSE,3
+5,19CSE335,Ethical Hacking,CSE,3
+6,19CSE336,Digital Currency Programming,CSE,3
+7,19CSE337,Social Networking and Security,CSE,3
+8,19CSE338,Mobile and Wireless Security,CSE,3
+9,19CSE339,Wireless Sensor Networks,CSE,3
+10,19CSE340,Advanced Computer Network,CSE,3
+11,19CSE341,Mobile Adhoc Networks,CSE,3
+12,19CSE342,Wireless and Mobile Communications,CSE,3
+13,19CSE351,Computational statistics and Inference Theory,CSE,3
+14,19CSE352,Business Analytics,CSE,3
+15,19CSE353,Mining of Massive Datasets,CSE,3
+16,19CSE354,Web Mining,CSE,3
+17,19CSE355,Time Series Analysis and Forecasting,CSE,3
+18,19CSE356,Social Network Analytics ,CSE,3
+19,19CSE357,Big Data Analytics,CSE,3
+20,19CSE431,Digital Image Processing,CSE,3
+21,19CSE432,Pattern Recognition,CSE,3
+22,19CSE433,Computer Graphics and Visualization ,CSE,3
+23,19CSE434,Image and Video Analysis,CSE,3
+24,19CSE435,Computer Vision,CSE,3
+25,19CSE436,Machine Vision,CSE,3
+26,19CSE437,Deep Learning for Computer Vision,CSE,3
+27,19CSE438,Medical Image Processing,CSE,3
+28,19CSE439,Augmented and Virtual Reality ,CSE,3
+29,19CSE440,Biometrics,CSE,3
+30,19CSE441,Introduction to Cyber-Physical Systems,CSE,3
+31,19ECE331,Biomedical Instrumentation,ECE,3
+32,19ECE332,Mixed Signal Design,ECE,3
+33,19ECE333,Micro Electro Mechanical Systems,ECE,3
+34,19ECE334,Analog IC Design,ECE,3
+35,19ECE335,Applications of Linear Integrated Circuits,ECE,3
+36,19ECE336,Nano Electronics,ECE,3
+37,19ECE337,VLSI Fabrication Technology,ECE,3
+38,19ECE338,Solid State Devices,ECE,3
+39,19ECE339,Optical Engineering,ECE,3
+40,19ECE341,VLSI System Design,ECE,3
+41,19ECE342,Hardware Security and Trust,ECE,3
+42,19ECE343,FPGA Based System Design,ECE,3
+43,19ECE344,Embedded Systems,ECE,3
+44,19ECE345,Computer Systems Architecture,ECE,3
+45,19ECE346,Digital IC Design,ECE,3
+46,19ECE347,Electronic System Level Design and Verification,ECE,3
+47,19ECE348,VLSI Testing and Testability,ECE,3
+48,19ECE349,RISC Processor Design using HDL,ECE,3
+49,19ECE350,VLSI Signal Processing,ECE,3
+50,19ECE351,Markov Process and Queuing Theory,ECE,3
+51,19ECE352,Operations Research,ECE,3
+52,19ECE353,Convex Optimization,ECE,3
+53,19ECE354,Deep Learning,ECE,3
+54,19ECE355,Bio Inspired Algorithms,ECE,3
+55,19ECE356,Game Theory,ECE,3
+56,19ECE357,Pattern Recognition,ECE,3
+57,19ECE358,Signal Processing for Business Applications,ECE,3
+58,19ECE359,Non-linear Dynamics and Chaos,ECE,3
+59,19ECE360,Agent Based Modeling,ECE,3
+60,19ECE361,Data Structures and Algorithms,ECE,3
+61,19EEE331,Smart Grid and IoT,EEE,3
+62,19EEE332,Deregulated Power Systems,EEE,3
+63,19EEE333,High Voltage Engineering,EEE,3
+64,19EEE334,Design of Electrical Apparatus,EEE,3
+65,19EEE335,Power Quality and FACTS,EEE,3
+66,19EEE336,Power Converters,EEE,3
+67,19EEE337,Power System Management,EEE,3
+68,19EEE338,Power plant Instrumentation,EEE,3
+69,19EEE339,"Power system operation, control and stability",EEE,3
+70,19EEE340,Utilization of Electrical Energy ,EEE,3
+71,19EEE341,Renewable Energy and Energy Conservation,EEE,3
+72,19EEE342,Design of Electrical Systems,EEE,3
+73,19EEE343,Management of Power Distribution,EEE,3
+74,19EEE344,Energy Storage Systems,EEE,3
+75,19EEE351,Advanced Control Systems,EEE,3
+76,19EEE352,Digital Control System,EEE,3
+77,19EEE353,Process Control and Instrumentation,EEE,3
+78,19EEE354,Introduction to Robotic,EEE,3
+79,19EEE355,Mechatronics,EEE,3
+80,19EEE356,Industrial Electronics,EEE,3
+81,19EEE357,Embedded Systems Design,EEE,3
+82,19EEE358,Advanced Microcontrollers,EEE,3
+83,19EEE359,Digital Signal Processors,EEE,3
+84,19EEE360,VLSI System Design,EEE,3
+85,19EEE431,Electric Vehicles,EEE,3
+86,19EEE432,Vehicular Networks and Communication,EEE,3
+87,19EEE433,E-mobility Business and Policies,EEE,3
+88,19EEE434,Automotive Electronics,EEE,3
+89,19EEE435,Automotive Control Systems,EEE,3
+90,19EEE436,Vehicle Dynamics and Control,EEE,3
+91,19MEE331,Machine Learning Based Condition Monitoring,MEC,3
+92,19MEE332,Failure Analysis and Design,MEC,3
+93,19MEE333,Optimization Techniques in Engineering,MEC,3
+94,19MEE334,Modeling and Simulation of Engineering Systems,MEC,3
+95,19MEE335,Tool Design,MEC,3
+96,19MEE336,NVH and Refinement,MEC,3
+97,19MEE337,Fundamentals of Fracture Mechanics,MEC,3
+98,19MEE338,Theory of Vibrations,MEC,3
+99,19MEE339,Theory of Elasticity,MEC,3
+100,19MEE340,Introduction to Nonlinear Dynamics and Chaos,MEC,3
+101,19MEE311,Design Thinking,MEC,3
+102,19MEE333,Optimization Techniques in Engineering,MEC,3
+103,19MEE431,CNC Machines,MEC,3
+104,19MEE432,Composite Materials and Design,MEC,3
+105,19MEE433,Fundamentals of Nanomaterials,MEC,3
+106,19MEE434,Industrial Robotics,MEC,3
+107,19MEE435,Additive Manufacturing,MEC,3
+108,19MEE436,Nano Technology and Surface Engineering,MEC,3
+109,19MEE437,Advanced Casting Technology,MEC,3
+110,19MEE438,Advanced Manufacturing Processes,MEC,3
+111,19MEE439,Advanced Materials and Processes,MEC,3
+112,19MEE440,Advanced Metrology and Sensing Systems,MEC,3
+113,19MEE441,Advanced Welding Technology,MEC,3
+114,19MEE442,Micro-Manufacturing,MEC,3
+115,19MEE443,Non-Destructive Testing,MEC,3
+116,19MEE444,Product Cost Estimation,MEC,3
+117,19MEE445,Quality Control and Reliability Engineering,MEC,3
+118,19MEE446,Simulation Modeling of Manufacturing Systems,MEC,3
+119,19MEE434,Industrial Robotics,MEC,3
+120,19MEE443,Non-Destructive Testing,MEC,3
+121,19CIE431,Advanced Concrete Design,CIE,3
+122,19CIE432,Advanced Steel Design,CIE,3
+123,19CIE433,Advanced Structural Analysis,CIE,3
+124,19CIE434,"Prestressed Concrete - Analyses, Design and Construction",CIE,3
+125,19CIE435,Structural Dynamics & Seismic Design,CIE,3
+126,19CIE437,Bridge Engineering,CIE,3
+127,19CIE438,Finite Element Methods,CIE,3
+128,19CIE451,Ground Improvement Techniques,CIE,3
+129,19CIE452,Advanced Foundation Engineering,CIE,3
+130,19CIE453,Environmental Geotechnology,CIE,3
+131,19CIE471,Advanced Environmental Engineering,CIE,3
+132,19CIE472,Industrial Waste Treatment,CIE,3
+133,19CIE441,Concrete Technology,CIE,3
+134,19CIE442,Repair and Rehabilitation of Structures,CIE,3
+135,19CIE443,Introduction to Architectural Science,CIE,3
+136,19CIE444,Introduction to Architectural Science,CIE,3
+137,19CIE445,Construction Economics and Finance,CIE,3
+138,19CIE461,Pavement Design,CIE,3
+139,19CIE462,Urban Transportation Planning,CIE,3
+140,19CIE463,Traffic Engineering and Management,CIE,3
+141,19CIE473,Ground Water Hydrology,CIE,3
+142,19CIE474,Water Resources Systems Planning and Design,CIE,3
+143,19CIE475,Environmental Impact Assessment,CIE,3
+144,19CIE476,Remote sensing & GIS,CIE,3
+145,19CIE477,Transportation System Management and Control,CIE,3
+146,19CHY243,Computational Chemistry and Molecular Modelling,CIE,3
+147,19CHY236,Electrochemical Energy Systems and Processes,CIE,3
+148,19CHY240,Fuels and Combustion,CIE,3
+149,19CHY232,Green Chemistry and Technology,CIE,3
+150,19CHY239,Instrumental Methods of Analysis,CIE,3

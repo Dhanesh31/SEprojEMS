@@ -18,12 +18,13 @@ const flush = require('connect-flash')
 //Google auth
 //check lokesh
 const { OAuth2Client } = require('google-auth-library');
+const { RSA_NO_PADDING } = require('constants');
 const CLIENT_ID = '183043165157-m5ul62le4e9n124kmkaekj7mu29ee1k9.apps.googleusercontent.com'
 const client = new OAuth2Client(CLIENT_ID);
 
 
 var excel_results = [];
-fs.createReadStream('C:\\Users\\welcome\\Downloads\\Elective Data.csv')
+fs.createReadStream('Elective Data.csv')
 .pipe(csv({}))
 .on('data', (data) => excel_results.push(data))
 .on('end', () => {
@@ -1032,6 +1033,7 @@ app.post('/fac_chooseelective', (req, res) => {
 	var sem=req.body.elective_sem;
 	var f_id;
 	var sql = "SELECT faculty_id FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
+	var strength = 0;
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -1053,7 +1055,7 @@ app.post('/fac_chooseelective', (req, res) => {
 					fac_limit=results[0].fac_limit;
 					if(fac_limit>0)
 					{
-						var sql = "INSERT INTO facelec_pref VALUES(" + f_id + ",'" + elective_id + "'," + sem + ");";
+						var sql = "INSERT INTO facelec_pref VALUES(" + f_id + ",'" + elective_id + "'," + sem + "," +  strength +");";
 						db.query(sql, (err, results, field) => {
 							if (err)
 							{
@@ -1578,17 +1580,108 @@ app.post('/filter_faculty',(req, res) => {
 })
 
 app.get('/coord_assign',(req,res) =>{
+	var columns = []
 	var results=0;
 	var sem=0;
 	var dept="NOTHING"
-	res.render('coord_assign',{results: results,sem : sem, dept : dept, message : req.flash('message')});
+	var sql = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A ;";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : [], sem : sem, dept : dept, message : req.flash('message'), table_flag : 0, columns : columns});
+		}
+
+	});
+})
+
+app.post('/coord_view_pref', (req, res) => {
+	var columns = []
+	var sem = req.body.elective_sem;
+	var dept = req.body.elective_dept;
+
+	var sql = "select count(*) as count from elec_pref A where exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			var sql = '';
+			var count = results[0].count;
+			var columns = []
+			console.log(count);
+		
+			for(var i = 1; i <= count; i++)
+			{
+				sql = sql + '(select count(B.pref) from elec_pref B where B.pref = ' + i +') as Preference_' + i;
+				if (i != count)
+				{
+					
+					sql = sql + ', ';
+				}
+				columns.push('Preference_' + i);
+			}
+
+			console.log(columns);
+			sql = "select A.elective_id, (select B.elective_sem from elective B where A.elective_id = B.elective_id) as elective_sem, (select B.elective_dept from elective B where A.elective_id = B.elective_id) as elective_dept,  (select B.elective_name from elective B where A.elective_id = B.elective_id) as elective_name," + sql + " from elec_pref A  where exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
+			db.query(sql, (err, results, field) => {
+				if (err)
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+					console.log(results);
+					res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns});
+				}
+		
+			});
+
+
+
+			//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message')});
+		}
+
+	});
+
+	
+
+
+
+})
+
+app.post('/coord_check_availability', (req, res) => {
+	var columns = []
+	var sem = req.body.elective_sem;
+	var dept = req.body.elective_dept;
+
+	var sql = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A where exists(select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id and B.faculty_dept ='"+ dept + "') and sem = " + sem + ";";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message') ,table_flag : 0, columns : columns});
+		}
+
+	});
 })
 
 app.get('/coord_group', (req, res) => {
 	var results=0;
 	var sem=0;
 	var dept="NOTHING"
-	console.log(dept);
 
 	var sql = "Select * from timer where role = 'faculty';";
 	db.query(sql, (err, results, field) => {
