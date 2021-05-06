@@ -1614,13 +1614,18 @@ app.post('/coord_view_pref', (req, res) => {
 		else
 		{
 			var sql = '';
-			var count = results[0].count;
+			var count = 0;
+			if (results.length > 0)
+			{
+				count = results[0].count;
+			}
+			
 			var columns = []
 			console.log(count);
 		
 			for(var i = 1; i <= count; i++)
 			{
-				sql = sql + '(select count(B.pref) from elec_pref B where B.pref = ' + i +') as Preference_' + i;
+				sql = sql + '(select count(B.pref) from elec_pref B where B.pref = ' + i +' and A.elective_id = B.elective_id) as Preference_' + i;
 				if (i != count)
 				{
 					
@@ -1630,7 +1635,14 @@ app.post('/coord_view_pref', (req, res) => {
 			}
 
 			console.log(columns);
-			sql = "select A.elective_id, (select B.elective_sem from elective B where A.elective_id = B.elective_id) as elective_sem, (select B.elective_dept from elective B where A.elective_id = B.elective_id) as elective_dept,  (select B.elective_name from elective B where A.elective_id = B.elective_id) as elective_name," + sql + " from elec_pref A  where exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
+			if(results.length > 0)
+			{
+				sql = "select A.elective_id, (select B.elective_sem from elective B where A.elective_id = B.elective_id) as elective_sem, (select B.elective_dept from elective B where A.elective_id = B.elective_id) as elective_dept,  (select B.elective_name from elective B where A.elective_id = B.elective_id) as elective_name," + sql + " from elec_pref A  where exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
+			}
+			else
+			{
+				sql = "select A.elective_id, (select B.elective_sem from elective B where A.elective_id = B.elective_id) as elective_sem, (select B.elective_dept from elective B where A.elective_id = B.elective_id) as elective_dept,  (select B.elective_name from elective B where A.elective_id = B.elective_id) as elective_name" + sql + " from elec_pref A  where exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
+			}
 			db.query(sql, (err, results, field) => {
 				if (err)
 				{
@@ -1644,10 +1656,6 @@ app.post('/coord_view_pref', (req, res) => {
 				}
 		
 			});
-
-
-
-			//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message')});
 		}
 
 	});

@@ -397,18 +397,11 @@
                       <td>
                         <%= k.elective_name %>
                       </td>
-                      <td>
-                        <%= k.elective_name %>
-                      </td>
-                      <td>
-                        <%= k.elective_name %>
-                      </td>
-                      <td>
-                        <%= k.elective_name %>
-                      </td>
 
 
-
+                      <% for (var i =0; i <columns.length;  i++ ) { %>
+                        <td> <%= k[columns[i]] %> </td>
+                      <% } %> 
 
   
                     </tr>
