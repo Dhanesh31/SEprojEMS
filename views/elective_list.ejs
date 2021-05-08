@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="main.css">
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <style type="text/css">
+    a,
+    a:hover,
+    a:focus {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .navbar {
+      margin-bottom: 0px;
+
+    }
+
+    .btn-info {
+      color: #fff;
+      background-color: #212431;
+      border-color: #212431;
+    }
+
+    .btn-info:hover {
+      color: #fff;
+      background-color: #2e3346;
+      border-color: #2e3346;
+    }
+
+    .navbar-brand {
+      padding: 0px;
+    }
+
+
+    #customers th {
+
+    background-color: #2e3346;
+
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        width: 1471px;
+      }
+
+      .col-md-4 {
+        width: 22.33333333%;
+      }
+
+    }
+
+    @media (max-width: 1200px) {
+
+      .col-md-4 {
+        width: 100%;
+      }
+    }
+
+    #customers {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #customers td,
+    #customers th {
+      border: 1px solid #f1f1f1;
+      padding: 8px;
+      width: 4px;
+
+    }
+
+    #customers tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+
+    #customers tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    #customers tr:hover {
+      background-color: #ddd;
+    }
+
+    #customers th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      color: white;
+      width: 4px;
+      background-color: #6d7fcc;
+    }
+
+    .flashup {
+      display: None;
+    }
+
+    .countdownContainer{
+      position : relative;
+      text-align: center;
+      background: #889cf1;
+      border: 1px solid #889cf1;
+      padding: 10px;
+      box-shadow: 0 0 5px 3px #ccc;
+    }
+    .info{
+      font-size: 80px;
+    }
+
+
+
+  </style>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+
+      <a class="navbar-brand" href="student page.html">
+        <img src="24.jfif" alt="logo" style="width:180px;">
+      </a>
+
+      <div class="container">
+        <!-- <button class='btn btn-info pull-right' onclick="logout">
+          Logout
+        </button> -->
+        <form action="/logout">
+          <button class='btn btn-info pull-right'>Logout</button>
+        </form>
+
+      </div>
+
+
+    </div>
+
+  </nav>
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <button type="button" id="sidebarCollapse" class="btn btn-info">
+          <i class="fas fa-align-left"></i>
+          <span></span>
+        </button>
+      </div>
+
+      <ul class="list-unstyled components">
+        <li>
+
+          <a href="coord_edit">
+            <i class="fas fa-user"></i>
+            Profile
+          </a>
+
+        </li>
+        <li>
+          <a href="coord_add">
+            <i class="fas fa-pencil-alt"></i>
+            Add Elective
+          </a>
+
+        </li>
+        <li>
+          <a href="coord_remove">
+            <i class="fas fa-pencil-alt"></i>
+            Remove Elective
+          </a>
+        </li>
+        <li>
+          <a href="coord_group">
+            <i class="fas fa-copy"></i>
+            Faculties
+          </a>
+        </li>
+        <li>
+          <a href="coord_stuents_send">
+            <i class="fas fa-copy"></i>
+            Students
+          </a>
+        </li>
+        <li>
+          <a href="coord_assign">
+            <i class="fas fa-copy"></i>
+            Assign electives
+          </a>
+        </li>
+        <li>
+          <a href="elective_list">
+            <i class="fas fa-copy"></i>
+            Elective List
+          </a>
+        </li>
+
+      </ul>
+
+
+    </nav>
+
+    <!-- Page Content  -->
+
+
+    <div id="content">
+      <div id = 'center'>
+
+
+        <form method='POST'>
+
+        <div class="center">
+          <center>
+            <h3>Elective List</h3>
+            <br><br>
+
+            <input type = "text" name="results" id ="results" class="input-text" value="<%=results %>" style="display:None">
+
+            <label class="col-md-4 control-label h5 required">Semester:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="filter_sem" id="filter_sem" onchange="populate('filter_sem','filter_dept','elective_id')">
+                <option value="0" selected>--Select Semester--</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="ALL">ALL</option>
+              </select>
+            </div>
+
+
+
+            <label class="col-md-4 control-label h5 required"> Department:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="filter_dept" id="filter_dept" onchange="populate('filter_sem','filter_dept','elective_id')">
+                <option value="0"selected>--Select Department--</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="MEC">MECH</option>
+                <option value="CIE">CIVIL</option>
+                <option value="ALL">ALL</option>
+              </select>
+            </div>
+            <br><br>
+
+            <label class="col-md-4 control-label h5 required"> Elective ID:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_id" id = "elective_id" onchange="populatefac('elective_id','faculty_id','filter_sem','filter_dept')">
+                <option value="0">--Select Elective ID--</option>
+
+              </select>
+            </div>
+
+            <label class="col-md-4 control-label h5 required"> Faculty ID:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="faculty_id" id = "faculty_id" >
+                <option value="0">--Select Faculty ID--</option>
+
+              </select>
+            </div>
+            <br><br><br>
+
+            <button type="submit" id='filter' class="btn btn-primary" formaction="/filter_list">Filter</button>
+            <button onclick="exportTableToExcel('customers', 'elective-data')" class="btn btn-primary" href="#">Export as Excel</button>
+            <br>
+            <% if(results_table.length> 0) { %>
+
+                <table id="customers" style="margin-top:20px">
+                  <tr>
+                    <th>Roll_no</th>
+                    <th>Student_name</th>
+                    <th>Semester</th>
+                    <th>Department</th>
+                    <th>Elective_id</th>
+                    <th>Elective_name</th>
+                    <th>Faculty_id</th>
+                    <th>Faculty_name</th>
+
+                  </tr>
+                  <% results_table.forEach(function(k){ %>
+
+                    <tr>
+                      <td>
+                        <%= k.roll_no%>
+                      </td>
+                      <td>
+                        <%= k.student_name %>
+                      </td>
+                      <td>
+                        <%= k.sem %>
+                      </td>
+                      <td>
+                        <%= k.dept %>
+                      </td>
+                      <td>
+                        <%= k.elective_id %>
+                      </td>
+                      <td>
+                        <%= k.elective_name %>
+                      </td>
+                      <td>
+                        <%= k.faculty_id %>
+                      </td>
+                      <td>
+                        <%= k.faculty_name %>
+                      </td>
+                    </tr>
+
+                    <% }) %>
+
+                  <% } %>
+
+
+                </center>
+              </div>
+            </form>
+
+    </div>
+
+  </div>
+
+  <script>
+        function exportTableToExcel(tableID, filename = '') {
+          var downloadLink;
+          var dataType = 'application/vnd.ms-excel';
+          var tableSelect = document.getElementById(tableID);
+          var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+          // Specify file name
+          filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+          // Create download link element
+          downloadLink = document.createElement("a");
+
+          document.body.appendChild(downloadLink);
+
+          if (navigator.msSaveOrOpenBlob) {
+            var blob = new Blob(['\ufeff', tableHTML], {
+              type: dataType
+            });
+            navigator.msSaveOrOpenBlob(blob, filename);
+          } else {
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+          }
+        }
+
+
+        function populate(s1,s2,s3)
+        {
+
+            var results = JSON.parse(document.getElementById("results").value);
+            var s1 = document.getElementById(s1);
+            var s2 = document.getElementById(s2);
+            var s3 = document.getElementById(s3);
+            s3.innerHTML = "";
+            var arr=[];
+
+            var s4 = document.getElementById('faculty_id');
+            s4.innerHTML = "";
+
+            if (s1.value=='ALL' && s2.value=='ALL')
+            {
+              for(var i=0;i<results.length;i++)
+              {
+                arr.push(results[i].elective_id)
+              }
+            }
+            else if(s1.value=='ALL' && s2.value!='ALL')
+            {
+              for(var i=0;i<results.length;i++)
+              {
+                if(results[i].elective_dept==s2.value)
+                {
+                  arr.push(results[i].elective_id);
+                }
+              }
+            }
+            else if(s1.value!='ALL' && s2.value=='ALL')
+            {
+              for(var i=0;i<results.length;i++)
+              {
+                if(results[i].elective_sem==s1.value)
+                {
+                  arr.push(results[i].elective_id);
+                }
+              }
+            }
+            else
+            {
+              if(s2.value=='CSE')
+              {
+                for(var i=0;i<results.length;i++)
+                {
+                  if(results[i].elective_dept=='CSE' && results[i].elective_sem==s1.value)
+                  {
+                    arr.push(results[i].elective_id);
+                  }
+                }
+              }
+              else if(s2.value=='ECE')
+              {
+                for(var i=0;i<results.length;i++)
+                {
+                  if(results[i].elective_dept=='ECE' && results[i].elective_sem==s1.value)
+                  {
+                    arr.push(results[i].elective_id);
+                  }
+                }
+              }
+              else if(s2.value=='EEE')
+              {
+                for(var i=0;i<results.length;i++)
+                {
+                  if(results[i].elective_dept=='EEE' && results[i].elective_sem==s1.value)
+                  {
+                    arr.push(results[i].elective_id);
+                  }
+                }
+              }
+              else if(s2.value=='CIE')
+              {
+                for(var i=0;i<results.length;i++)
+                {
+                  if(results[i].elective_dept=='CIE' && results[i].elective_sem==s1.value)
+                  {
+                    arr.push(results[i].elective_id);
+                  }
+                }
+              }
+              else if(s2.value=='MEC')
+              {
+                for(var i=0;i<results.length;i++)
+                {
+                  if(results[i].elective_dept=='MEC' && results[i].elective_sem==s1.value)
+                  {
+                    arr.push(results[i].elective_id);
+                  }
+                }
+              }
+            }
+            arr.push('ALL');
+            var optionArray=arr;
+            optionArray = Array.from(new Set(optionArray));
+            var newoption = document.createElement("option");
+            newoption.value = "0";
+            newoption.innerHTML = "--Select Elective ID--";
+            s3.options.add(newoption);
+
+            for(var i = 0;i<optionArray.length;i++)
+            {
+                newoption = document.createElement("option");
+                newoption.value = optionArray[i];
+                newoption.innerHTML = optionArray[i];
+                s3.options.add(newoption);
+            }
+
+            newoption = document.createElement("option");
+            newoption.value = "0";
+            newoption.innerHTML = "--Select Faculty ID--";
+            s4.options.add(newoption);
+
+        }
+
+        function populatefac(s1, s2, s3, s4) 
+        {
+
+          var results = JSON.parse(document.getElementById("results").value);
+          var s1 = document.getElementById(s1);
+          var s2 = document.getElementById(s2);
+          var s3 = document.getElementById(s3);
+          var s4 = document.getElementById(s4);
+
+
+          s2.innerHTML = "";
+          var arr = [];
+          var newoption = document.createElement("option");
+          newoption.value = "0";
+          newoption.innerHTML = "--Select Faculty ID--";
+          s2.options.add(newoption);
+
+          if (s1.value == "ALL") {
+            if (s3.value == 'ALL') {
+              if (s4.value == 'ALL') {
+                for (var i = 0; i < results.length; i++) {
+                  arr.push(results[i].faculty_id);
+                }
+              } else {
+                for (var i = 0; i < results.length; i++) {
+                  if (results[i].elective_dept == s4.value) {
+                    arr.push(results[i].faculty_id);
+                  }
+                }
+              }
+            } else {
+              if (s4.value == 'ALL') {
+                for (var i = 0; i < results.length; i++) {
+                  if (results[i].elective_sem == s3.value) {
+                    arr.push(results[i].faculty_id);
+                  }
+                }
+              } else {
+                for (var i = 0; i < results.length; i++) {
+                  if (results[i].elective_dept == s4.value && results[i].elective_sem == s3.value) {
+                    arr.push(results[i].faculty_id);
+                  }
+                }
+              }
+            }
+          } else {
+            if (s3.value == 'ALL') {
+              if (s4.value == 'ALL') {
+                for (var i = 0; i < results.length; i++) {
+                  if (results[i].elective_id == s1.value) {
+                    arr.push(results[i].faculty_id);
+                  }
+                }
+              } else {
+                for (var i = 0; i < results.length; i++) {
+                  if (results[i].elective_dept == s4.value && results[i].elective_id == s1.value) {
+                    arr.push(results[i].faculty_id);
+                  }
+                }
+              }
+            } else {
+              if (s4.value == 'ALL') {
+                for (var i = 0; i < results.length; i++) {
+                  if (results[i].elective_sem == s3.value && results[i].elective_id == s1.value) {
+                    arr.push(results[i].faculty_id);
+                  }
+                }
+              } else {
+                for (var i = 0; i < results.length; i++) {
+                  if (results[i].elective_dept == s4.value && results[i].elective_sem == s3.value && results[i].elective_id == s1.value) {
+                    arr.push(results[i].faculty_id);
+                  }
+                }
+              }
+            }
+          }
+
+          var optionArray = arr;
+          optionArray = Array.from(new Set(optionArray));
+
+          for (var i = 0; i < optionArray.length; i++) {
+            newoption = document.createElement("option");
+            newoption.value = optionArray[i];
+            newoption.innerHTML = optionArray[i];
+            s2.options.add(newoption);
+          }
+
+          newoption = document.createElement("option");
+          newoption.value = "ALL";
+          newoption.innerHTML = "ALL";
+          s2.options.add(newoption);
+
+        }
+
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <!-- Popper.JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+    integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    crossorigin="anonymous"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+    integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+      });
+    });
+  </script>
+
+  <script>
+    function exportTableToExcel(tableID, filename = '') {
+      var downloadLink;
+      var dataType = 'application/vnd.ms-excel';
+      var tableSelect = document.getElementById(tableID);
+      var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+      // Specify file name
+      filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+      // Create download link element
+      downloadLink = document.createElement("a");
+
+      document.body.appendChild(downloadLink);
+
+      if (navigator.msSaveOrOpenBlob) {
+        var blob = new Blob(['\ufeff', tableHTML], {
+          type: dataType
+        });
+        navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+        // Setting the file name
+        downloadLink.download = filename;
+
+        //triggering the function
+        downloadLink.click();
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+
+</html>
