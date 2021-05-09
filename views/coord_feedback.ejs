@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="main.css">
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <style type="text/css">
+    a,
+    a:hover,
+    a:focus {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .navbar {
+      margin-bottom: 0px;
+
+    }
+
+    .btn-info {
+      color: #fff;
+      background-color: #212431;
+      border-color: #212431;
+    }
+
+    .btn-info:hover {
+      color: #fff;
+      background-color: #2e3346;
+      border-color: #2e3346;
+    }
+
+    .navbar-brand {
+      padding: 0px;
+    }
+
+
+    #customers th {
+
+    background-color: #2e3346;
+
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        width: 1471px;
+      }
+
+      .col-md-4 {
+        width: 22.33333333%;
+      }
+
+    }
+
+    @media (max-width: 1200px) {
+
+      .col-md-4 {
+        width: 100%;
+      }
+    }
+
+    #customers {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #customers td,
+    #customers th {
+      border: 1px solid #f1f1f1;
+      padding: 8px;
+      width: 4px;
+
+    }
+
+    #customers tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+
+    #customers tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    #customers tr:hover {
+      background-color: #ddd;
+    }
+
+    #customers th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      color: white;
+      width: 4px;
+      background-color: #6d7fcc;
+    }
+
+    .flashup {
+      display: None;
+    }
+
+    .countdownContainer{
+      position : absolute;
+      top : 50%;
+      left: 50%;
+      transform : translate(-50%) translate(-50%);
+      text-align: center;
+      background: #889cf1;
+      border: 1px solid #889cf1;
+      padding: 10px;
+      box-shadow: 0 0 5px 3px #ccc;
+    }
+
+    .info{
+      font-size: 80px;
+    }
+
+
+
+  </style>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+
+      <a class="navbar-brand" href="student page.html">
+        <img src="24.jfif" alt="logo" style="width:180px;">
+      </a>
+
+      <div class="container">
+        <!-- <button class='btn btn-info pull-right' onclick="logout">
+          Logout
+        </button> -->
+        <form action="/logout">
+          <button class='btn btn-info pull-right'>Logout</button>
+        </form>
+
+      </div>
+
+
+    </div>
+
+  </nav>
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <button type="button" id="sidebarCollapse" class="btn btn-info">
+          <i class="fas fa-align-left"></i>
+          <span></span>
+        </button>
+      </div>
+
+      <ul class="list-unstyled components">
+        <li>
+
+          <a href="coord_edit">
+            <i class="fas fa-user"></i>
+            Profile
+          </a>
+
+        </li>
+        <li>
+          <a href="coord_add">
+            <i class="fas fa-pencil-alt"></i>
+            Add Elective
+          </a>
+
+        </li>
+        <li>
+          <a href="coord_remove">
+            <i class="fas fa-pencil-alt"></i>
+            Remove Elective
+          </a>
+        </li>
+        <li>
+          <a href="coord_group">
+            <i class="fas fa-copy"></i>
+            Faculties
+          </a>
+        </li>
+        <li>
+          <a href="coord_stuents_send">
+            <i class="fas fa-copy"></i>
+            Students
+          </a>
+        </li>
+        <li>
+          <a href="coord_assign">
+            <i class="fas fa-copy"></i>
+            Assign electives
+          </a>
+        </li>
+        <li>
+          <a href="elective_list">
+            <i class="fas fa-copy"></i>
+            Elective List
+          </a>
+        </li>
+        <li>
+          <a href="coord_feedback">
+            <i class="fas fa-copy"></i>
+            Feedback
+          </a>
+        </li>
+
+      </ul>
+
+
+    </nav>
+
+    <!-- Page Content  -->
+
+
+    <div id="content">
+    <h2>Feedback</h2>
+      
+      <form method='POST'>
+        <div class="center">
+          <center>
+            <br>
+            <label class="col-md-4 control-label h5 required">Semester:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="sem" >
+                <option value="<%= sem %>"selected>--Select Semester--</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+              </select>
+            </div>
+
+            <label class="col-md-4 control-label h5 required"> Department:</label>
+            <div class="col-md-4">
+              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="dept" >
+                <option value="<%= dept %>"selected>--Select Department--</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="MEC">MECH</option>
+                <option value="CIE">CIVIL</option>
+              </select>
+            </div>
+            <br><br><br>
+
+            <button type="submit" id='timer' class="btn btn-primary" formaction="/coord_enable_feedback">Enable Feedback</button>
+            <button type="submit" id='group' class="btn btn-primary" formaction="/coord_feedback_points">View Feedback</button>
+
+            <% if(results.length> 0) { %>
+
+                <table id="customers" style="margin-top:20px">
+                  <tr>
+                    <th>faculty_id</th>
+                    <th>faculty_name</th>
+                    <th>elective_id</th>
+                    <th>elective_name</th>
+                    <th>points</th>
+
+                  </tr>
+                  <% results.forEach(function(k){ %>
+
+                    <tr>
+                      <td>
+                        <%= k.faculty_id %>
+                      </td>
+                      <td>
+                        <%= k.faculty_name %>
+                      </td>
+                      <td>
+                        <%= k.elective_id %>
+                      </td>
+                      <td>
+                        <%= k.elective_name %>
+                      </td>
+                      <td>
+                        <%= k.points %>
+                      </td>
+                    </tr>
+
+                    <% }) %>
+
+                  <% } %>
+
+                </center>
+              </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <!-- Popper.JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+    integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    crossorigin="anonymous"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+    integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+      });
+    });
+  </script>
+
+
+
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+
+</html>

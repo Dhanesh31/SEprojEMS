@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="stu_main.css">
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <style type="text/css">
+    a,
+    a:hover,
+    a:focus {
+        color: inherit;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    .navbar {
+        margin-bottom: 0px;
+
+    }
+    .btn-info {
+        color: #fff;
+        background-color:#212431 ;
+        border-color: #212431;
+    }
+    .btn-info:hover {
+        color: #fff;
+        background-color: #2e3346;
+        border-color:#2e3346 ;
+    }
+    .navbar-brand {
+        padding: 0px;
+    }
+    @media (min-width: 1200px){
+    .container {
+        width: 1471px;
+    }
+    }
+    #customers {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #customers td,
+    #customers th {
+      border: 1px solid #f1f1f1;
+      padding: 8px;
+      width: 4px
+    }
+
+    #customers tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+
+    #customers tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    #customers tr:hover {
+      background-color: #ddd;
+    }
+
+    #customers th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #6d7fcc;
+      color: white;
+      width: 4px
+    }
+
+    .flashup {
+      display: None;
+    }
+  </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+
+
+            <a class="navbar-brand" href="student page.html">
+                <img src="24.jfif" alt="logo" style="width:180px;">
+            </a>
+            <div class="container">
+                <!-- <button class='btn btn-info pull-right' onclick="logout">
+                  Logout
+                </button> -->
+                <form action="/logout">
+                    <button class='btn btn-info pull-right'>Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+   <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+
+            </div>
+
+            <ul class="list-unstyled components">
+                <li >
+
+                    <a href="faculty_edit" >
+                        <i class="fas fa-user"></i>
+                       Edit Profile
+                    </a>
+
+                </li>
+                <li>
+                    <a href="fac_choose" >
+                        <i class="fas fa-pencil-alt"></i>
+                        Choose Elective
+                    </a>
+
+                </li>
+                <li>
+                    <a href="faculty_elective" >
+                        <i class="fas fa-pencil-alt"></i>
+                        Assigned Elective
+                    </a>
+
+                </li>
+                
+
+            </ul>
+
+
+        </nav>
+
+        <!-- Page Content  -->
+
+        <div id="content">
+            <h1 class="page-header" style="margin-top: 13px;">Assigned Elective</h1>
+
+            <div>
+              <br><br>
+              <form method="post">
+
+
+                <div class="center">
+                  <center>
+
+                  <label class="col-md-4 control-label h5 required">Semester:</label>
+                  <div class="col-md-4">
+                    <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name='faculty_sem' id='faculty_sem' ">
+                      <option value="<%= sem %>"selected>--Select Semester--</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+
+                    </select>
+                  </div>
+                  <br><br><br>
+
+                  <button type="submit" class="btn btn-primary" formaction="/fac_student">View Assigned Elective</button>
+                  <button type="submit" class="btn btn-primary" formaction="/fac_elective">View Students List</button>
+                  <br>
+                  <button onclick="exportTableToExcel('customers', 'students-list')" class="btn btn-primary" >Export as Excel</button>
+
+                  <% if(flag==0) { %>
+                    <% if(results.length==0) { %>
+                    <br><br>
+                    <h3>
+                      No electives are assigned to you yet!!!
+                    </h3>
+                    <% } %>
+                    <% if(results.length>0) { %>
+                      <table id = "customers" style="margin-top:20px">
+                        <tr>
+                          <th>Elective_id</th>
+                          <th>Elective_name</th>
+                          <th>Semester</th>
+                          <th>Department</th>
+                        </tr>
+                        <% results.forEach(function(k){ %>
+                          <tr>
+                            <td>
+                              <%= k.elective_id %>
+                            </td>
+                            <td>
+                              <%= k.elective_name %>
+                            </td>
+                            <td>
+                              <%= k.sem %>
+                            </td>
+                            <td>
+                              <%= k.dept %>
+                            </td>
+                          </tr>
+
+                        <% }) %>
+                    <% } %>
+
+                  <% } %>
+
+                  <% if(flag==1) { %>
+                    <% if(results.length==0) { %>
+                    <br><br>
+                    <h3>
+                      No students are assigned to you yet!!
+                    </h3>
+                    <% } %>
+                    <% if(results.length>0) { %>
+                      <table id = "customers" style="margin-top:20px">
+                        <tr>
+                          <th>Roll_no</th>
+                          <th>Student_name</th>
+                          <th>Semester</th>
+                          <th>Department</th>
+                        </tr>
+                        <% results.forEach(function(k){ %>
+                          <tr>
+                            <td>
+                              <%= k.roll_no %>
+                            </td>
+                            <td>
+                              <%= k.student_name %>
+                            </td>
+                            <td>
+                              <%= k.sem %>
+                            </td>
+                            <td>
+                              <%= k.dept %>
+                            </td>
+                          </tr>
+
+                        <% }) %>
+                    <% } %>
+
+                  <% } %>
+
+                  </center>
+                </div>
+                </form>
+        </div>
+    </div>
+
+
+    <script>
+      function exportTableToExcel(tableID, filename = '') {
+      var downloadLink;
+      var dataType = 'application/vnd.ms-excel';
+      var tableSelect = document.getElementById(tableID);
+      var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+      // Specify file name
+      filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+      // Create download link element
+      downloadLink = document.createElement("a");
+
+      document.body.appendChild(downloadLink);
+
+      if (navigator.msSaveOrOpenBlob) {
+        var blob = new Blob(['\ufeff', tableHTML], {
+          type: dataType
+        });
+        navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+        // Setting the file name
+        downloadLink.download = filename;
+
+        //triggering the function
+        downloadLink.click();
+      }
+    }
+    </script>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+
+    </script>
+
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>

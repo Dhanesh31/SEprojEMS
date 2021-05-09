@@ -5,7 +5,7 @@
 
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <link 
+  <link
     rel="stylesheet"
     href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
     integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
@@ -19,7 +19,7 @@
     }
     .navbar {
         margin-bottom: 0px;
-    
+
     }
     .btn-info {
         color: #fff;
@@ -39,6 +39,43 @@
         width: 1471px;
     }
     }
+    #customers {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #customers td,
+    #customers th {
+      border: 1px solid #f1f1f1;
+      padding: 8px;
+      width: 4px
+    }
+
+    #customers tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+
+    #customers tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    #customers tr:hover {
+      background-color: #ddd;
+    }
+
+    #customers th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #6d7fcc;
+      color: white;
+      width: 4px
+    }
+
+    .flashup {
+      display: None;
+    }
   </style>
 
 </head>
@@ -46,80 +83,133 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
 
-            
+
             <a class="navbar-brand" href="student page.html">
-                <img src="24.jfif" alt="logo" style="width:180px;"> 
+                <img src="24.jfif" alt="logo" style="width:180px;">
             </a>
             <div class="container">
                 <!-- <button class='btn btn-info pull-right' onclick="logout">
                   Logout
                 </button> -->
                 <form action="/logout">
-                    <button class='btn btn-info pull-right'>Logout</button>
+                    <input type="text" name="mailid"  class="input-text" value="<%=mailid %>" style="display:None">
+                    <button id='Logout' class='btn btn-info pull-right'>Logout</button>
                 </form>
             </div>
-        </div>   
+        </div>
     </nav>
    <div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
             <div class="sidebar-header">
-                
+
                 <button type="button" id="sidebarCollapse" class="btn btn-info">
                     <i class="fas fa-align-left"></i>
                     <span></span>
                 </button>
-               
+
             </div>
 
             <ul class="list-unstyled components">
                 <li >
 
-                    <a href="faculty_edit" >
+                    <a href="stud_edit" >
                         <i class="fas fa-user"></i>
                        Edit Profile
                     </a>
-                    
+
                 </li>
                 <li>
-                    <a href="fac_choose" >
+                    <a href="stud_choose" >
                         <i class="fas fa-pencil-alt"></i>
-                        Choose Elective 
+                        Choose Elective
                     </a>
-                    
+
                 </li>
-                <!-- <li>
+                <li>
                     <a href="stud_view" >
                         <i class="fas fa-pencil-alt"></i>
-                        View Preferences 
+                        View Preferences
                     </a>
-                    
-                </li>                 -->
+
+                </li>
                 <li>
-                    <a href="faculty_elective" >
+                    <a href="assigned_elective" >
                         <i class="fas fa-pencil-alt"></i>
                         Assigned Elective
                     </a>
 
                 </li>
-               
+                <li>
+                    <a href="student_feedback">
+                        <i class="fas fa-copy"></i>
+                        Elective Feedback
+                    </a>
+                </li>
+
             </ul>
 
-            
+
         </nav>
 
         <!-- Page Content  -->
 
         <div id="content">
-            <h1 class="page-header" style="margin-top: 13px;">Faculty Dashboard</h1>           
-        </div>
-    </div>       
+            <h1 class="page-header" style="margin-top: 13px;">Assigned Elective</h1>
+              <div>
+                <br><br>
+                  <div class="center">
+                    <center>
+                         <% if(flag==0) { %>
+                           <h2>
+                             No electives are assigned to you yet!!!
+                           </h2>
+                         <% } %>
 
-           
- 
-    
-   
-  
+                         <% if(flag==1) { %>
+
+                           <% if(results.length> 0) { %>
+
+                             <table id = "customers" style="margin-top:20px">
+                               <tr>
+                                 <th>Elective_id</th>
+                                 <th>Elective_name</th>
+                                 <th>Faculty_id</th>
+                                 <th>Faculty_name</th>
+                               </tr>
+                               <% results.forEach(function(k){ %>
+
+                                 <tr>
+                                   <td>
+                                     <%= k.elective_id %>
+                                   </td>
+                                   <td>
+                                     <%= k.elective_name %>
+                                   </td>
+                                   <td>
+                                     <%= k.faculty_id %>
+                                   </td>
+                                   <td>
+                                     <%= k.faculty_name %>
+                                   </td>
+                                 </tr>
+
+                                 <% }) %>
+
+                               <% } %>
+
+                         <% } %>
+
+                    </center>
+                  </div>
+              </div>
+        </div>
+
+
+
+
+
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <!-- Popper.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
@@ -132,11 +222,10 @@
                 $('#sidebar').toggleClass('active');
             });
         });
-        
+
     </script>
-   
+
 <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
-

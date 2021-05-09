@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="stu_main.css">
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link 
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <style type="text/css">
+    
+    #content {
+        
+        grid-row-gap: 0px;
+    }
+    a,
+    a:hover,
+    a:focus {
+        color: inherit;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    .navbar {
+        margin-bottom: 0px;
+    
+    }
+    .btn-info {
+        color: #fff;
+        background-color:#212431 ;
+        border-color: #212431;
+    }
+    .btn-info:hover {
+        color: #fff;
+        background-color: #2e3346;
+        border-color:#2e3346 ;
+    }
+    .navbar-brand {
+        padding: 0px;
+    }
+    .testbox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: inherit;
+        padding: 20px;
+        }
+        form {
+        width: 100%;
+        padding: 20px;
+        border-radius: 6px;
+        background: aliceblue;
+        }
+        .banner {
+        position: relative;
+        height: 250px;
+        background-image: url("/uploads/media/default/0001/02/4e42b3735b93106f8167f9cfe092931dba56df55.jpeg");  
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        }
+        .banner::after {
+        content: "";
+        background-color: rgba(0, 0, 0, 0.4); 
+        position: absolute;
+     width: 100%;
+        height: 100%;
+        }
+        input,  textarea {
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        }
+        input {
+        width: calc(100% - 10px);
+        padding: 5px;
+        }
+        textarea {
+        width: calc(100% - 12px);
+        padding: 5px;
+        }
+        .item:hover, .question label:hover, input:hover::placeholder {
+        color:  #000;
+        }
+        .item input:hover,  .item textarea:hover {
+        border: 1px solid transparent;
+        box-shadow: 0 0 3px 0  #aa1409;
+        color:  #a3a1a1;
+        }
+        .item {
+        position: relative;
+        margin: 10px 0;
+        }
+        input[type=radio]  {
+        display: none;
+        }
+        label.radio {
+        position: relative;
+        display: inline-block;
+        margin: 5px 20px 15px 0;
+        cursor: pointer;
+        }
+        .red {
+        color: red;
+        }
+        .question span {
+        margin-left: 30px;
+        }
+        label.radio:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        border: 2px solid rgb(0, 0, 0);
+        }
+        input[type=radio]:checked + label:before, label.radio:hover:before {
+        border: 2px solid #aa1409;
+      }
+        label.radio:after {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 5px;
+        width: 8px;
+        height: 4px;
+        border: 3px solid #aa1409;
+        border-top: none;
+        border-right: none;
+        transform: rotate(-45deg);
+        opacity: 0;
+        }
+        input[type=radio]:checked + label:after {
+        opacity: 1;
+        }
+    @media (min-width: 1200px){
+    .container {
+        width: 1471px;
+    }
+    }
+  </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+
+            
+            <a class="navbar-brand" href="student page.html">
+                <img src="24.jfif" alt="logo" style="width:180px;">
+            </a>
+
+            <div class="container"> 
+                <button class='btn btn-info pull-right' id='Logout' onclick="window.location.href='logout'"> 
+                Logout
+                </button> 
+               
+              </h1> 
+            </div>
+          
+
+        </div>
+       
+    </nav>
+   <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li >
+
+                    <a href="stud_edit" >
+                        <i class="fas fa-user"></i>
+                       Edit Profile
+                    </a>
+
+                </li>
+                <li>
+                    <a href="stud_choose" >
+                        <i class="fas fa-pencil-alt"></i>
+                        Choose Elective
+                    </a>
+
+                </li>
+                <li>
+                  <a href="stud_view" >
+                      <i class="fas fa-pencil-alt"></i>
+                      View Preferences
+                  </a>
+
+                </li>
+                <li>
+                    <a href="assigned_elective" >
+                        <i class="fas fa-pencil-alt"></i>
+                        Assigned Elective
+                    </a>
+
+                </li>
+                <li>
+                <a href="student_feedback">
+                    <i class="fas fa-copy"></i>
+                    Elective Feedback
+                </a>
+                </li>
+               
+            </ul>
+
+            
+        </nav>
+
+        <!-- Page Content  -->
+
+        <div id="content"> 
+
+            <% if(flag==0) { %>
+
+                <div class="center" style ="margin-top: 200px;">
+                    <center>
+                            <h1><b>No Electives are assigned to you yet</b></h1>
+                    </center>
+                </div>
+
+            <% } %>
+
+            <% if(flag==1) { %>
+
+                <div class="center" style ="margin-top: 200px;">
+                    <center>
+                            <h1><b>Your Feedback has been collected</b></h1>
+                    </center>
+                </div>
+
+            <% } %>
+
+            <% if(flag==3) { %>
+
+                <div class="center" style ="margin-top: 200px;">
+                    <center>
+                            <h1><b>Feedback haven't been enabled yet</b></h1>
+                    </center>
+                </div>
+
+            <% } %>
+
+            <% if(flag==2) { %>
+
+                <h1 class="page-header" style="margin-top: 13px;">Feedback</h1>
+
+                <div class="testbox">
+                <form method = "POST">
+                    
+                    <div class="question">
+                    <label>How much of the syllabus was covered in the semester/year?</label>
+                    <div class="question-answer">
+                        <div>
+                        <input type="radio" value=90 id="radio_1" name="q1"/>
+                        <label for="radio_1" class="radio"><span>80 to 100%</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=60 id="radio_2" name="q1"/>
+                        <label for="radio_2" class="radio"><span>60 to 79%</span></label>
+                        </div>
+                        <div>
+                            <input type="radio" value=30 id="radio_02" name="q1"/>
+                            <label for="radio_02" class="radio"><span>40 to 59%</span></label>
+                        </div>
+
+                        
+                    </div>
+                    </div>
+                    <br><br>
+                    <div class="question">
+                    <label>Faculty inform you about the expected competencies, course outcomes and programme outcomes. </label>
+                    <div class="question-answer">
+                        <div>
+                            <input type="radio" value=90 id="radio_04" name="q2"/>
+                            <label for="radio_04" class="radio"><span>Every time</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=60 id="radio_5" name="q2"/>
+                        <label for="radio_5" class="radio"><span>Occasionally/Sometimes</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=30 id="radio_6" name="q2"/>
+                        <label for="radio_6" class="radio"><span>Never</span></label>
+                        </div>
+                    </div>
+                    </div>
+                    <br><br>
+
+                    <div class="question">
+                    <label>How well was the faculty able to communicate?</label>
+                    <div class="question-answer">
+                        <div>
+                        <input type="radio" value=90 id="radio_7" name="q3"/>
+                        <label for="radio_7" class="radio"><span>Always effective</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=60 id="radio_8" name="q3"/>
+                        <label for="radio_8" class="radio"><span>Just satisfactorily</span></label>
+                        </div>
+                        <div>
+                            <input type="radio" value=30 id="radio_9" name="q3"/>
+                            <label for="radio_9" class="radio"><span>Very poor communication</span></label>
+                        </div>
+                    </div>
+                    </div>
+                    <br><br>
+
+                    <div class="question">
+                    <label>The instructor was well prepared for the class</label>
+                    <div class="question-answer">
+                        <div>
+                            <input type="radio" value=90 id="radio_10" name="q4"/>
+                            <label for="radio_10" class="radio"><span>Always</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=60 id="radio_11" name="q4"/>
+                        <label for="radio_11" class="radio"><span>Sometimes</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=30 id="radio_12" name="q4"/>
+                        <label for="radio_12" class="radio"><span>Never</span></label>
+                        </div>
+                    </div>
+                    </div>
+                    <br><br>
+
+
+                    <div class="question">
+                    <label>Fairness of the internal evaluation process by the faculty.</label>
+                    <div class="question-answer">
+                        <div>
+                        <input type="radio" value=90 id="radio_001" name="q5"/>
+                        <label for="radio_001" class="radio"><span>Always</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=60 id="radio_002" name="q5"/>
+                        <label for="radio_002" class="radio"><span>Sometimes</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=30 id="radio_004" name="q5"/>
+                        <label for="radio_004" class="radio"><span>Never</span></label>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    <br><br>
+
+                    <div class="question">
+                    <label>Do you achieve all the course outcomes?</label>
+                    <div class="question-answer">
+                        <div>
+                            <input type="radio" value=90 id="radio_05" name="q6"/>
+                            <label for="radio_05" class="radio"><span>Agree</span></label>
+                        </div>
+                        <div>
+                            <input type="radio" value=60 id="radio_07" name="q6"/>
+                            <label for="radio_07" class="radio"><span>Neutral</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=30 id="radio_06" name="q6"/>
+                        <label for="radio_06" class="radio"><span>Disagree</span></label>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    <br><br>
+
+                    <div class="question">
+                    <label>The course was organized in a manner that helped me understand the underlying concepts.</label>
+                    <div class="question-answer">
+                        
+                        <div>
+                        <input type="radio" value=90 id="radio_09" name="q7"/>
+                        <label for="radio_09" class="radio"><span>Agree</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=60 id="radio_010" name="q7"/>
+                        <label for="radio_010" class="radio"><span>Neutral</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=30 id="radio_011" name="q7"/>
+                        <label for="radio_011" class="radio"><span>Disagree</span></label>
+                        </div>
+                        
+                        
+                    </div>
+                    </div>
+                    <br><br>
+
+                    <div class="question">
+                    <label>The course gave me the confidence to do more advanced work in the subject</label>
+                    <div class="question-answer">
+                        <div>
+                        <input type="radio" value=90 id="radio_013" name="q8"/>
+                        <label for="radio_013" class="radio"><span>Agree</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=60 id="radio_014" name="q8"/>
+                        <label for="radio_014" class="radio"><span>Neutral</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=30 id="radio_015" name="q8"/>
+                        <label for="radio_015" class="radio"><span>Disagree</span></label>
+                        </div>
+                    </div>
+                    </div>
+                    <br><br>
+
+                    <div class="question">
+                    <label>Overall, this course met my expectations for the quality of the course</label>
+                    <div class="question-answer">
+                        <div>
+                        <input type="radio" value=90 id="radio_13" name="q9"/>
+                        <label for="radio_13" class="radio"><span>Agree</span></label>
+                        </div>
+                        <div>
+                        <input type="radio" value=60 id="radio_14" name="q9"/>
+                        <label for="radio_14" class="radio"><span>Neutral</span></label>
+                        </div>
+                        <div>
+                            <input type="radio" value=30 id="radio_08" name="q9"/>
+                            <label for="radio_08" class="radio"><span>Strongly Agree</span></label>
+                        </div>
+                    </div>
+                    </div>
+                    <br><br>
+
+                    <button type="submit" class="btn btn-primary" formaction="/student_response" style="background-color: black;">Save Changes</button>
+
+                    
+                    
+                </form>
+                </div>
+
+                
+
+            <% } %>
+
+            
+        </div>
+    </div>       
+
+           
+ 
+    
+   
+  
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+        
+    </script>
+   
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>
