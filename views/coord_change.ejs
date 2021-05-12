@@ -226,79 +226,73 @@
 
 
     <div id="content">
-    <h2>Feedback</h2>
-      
+
       <form method='POST'>
+
         <div class="center">
           <center>
-            <br>
-            <label class="col-md-4 control-label h5 required">Semester:</label>
-            <div class="col-md-4">
-              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="sem" >
-                <option value="<%= sem %>"selected>--Select Semester--</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-              </select>
-            </div>
-
-            <label class="col-md-4 control-label h5 required"> Department:</label>
-            <div class="col-md-4">
-              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="dept" >
-                <option value="<%= dept %>"selected>--Select Department--</option>
-                <option value="CSE">CSE</option>
-                <option value="ECE">ECE</option>
-                <option value="EEE">EEE</option>
-                <option value="MEC">MECH</option>
-                <option value="CIE">CIVIL</option>
-              </select>
-            </div>
-            <br><br><br>
-
-            <button type="submit" id='timer' class="btn btn-primary" formaction="/coord_enable_feedback">Enable Feedback</button>
-            <button type="submit" id='group' class="btn btn-primary" formaction="/coord_feedback_points">View Feedback</button>
-
+            <h3> List of Elective Change Request</h3>
+        
             <% if(results.length> 0) { %>
 
-                <table id="customers" style="margin-top:20px">
-                  <tr>
-                    <th>faculty_id</th>
-                    <th>faculty_name</th>
-                    <th>elective_id</th>
-                    <th>elective_name</th>
-                    <th>points</th>
 
+
+                <table id="customers" style="margin-top:20px">
+
+                  <tr>
+                    <th>roll_no</th>
+                    <th>Assigned Elective</th>
+                    <th>Change Requested</th>
                   </tr>
+
                   <% results.forEach(function(k){ %>
 
                     <tr>
                       <td>
-                        <%= k.faculty_id %>
+                        <%= k.roll_no %>
                       </td>
                       <td>
-                        <%= k.faculty_name %>
+                        <%= k.current_elective %>
                       </td>
                       <td>
-                        <%= k.elective_id %>
-                      </td>
-                      <td>
-                        <%= k.elective_name %>
-                      </td>
-                      <td>
-                        <%= k.points %>
+                        <%= k.new_elective %>
                       </td>
                     </tr>
-
                     <% }) %>
-
                   <% } %>
+
+                  <button type="submit" id='filter' class="btn btn-primary" formaction="/coord_reassign">Reassign Electives</button>
 
                 </center>
               </div>
-      </form>
+            </form>
     </div>
+
   </div>
+
+  <script>
+
+    function populate(s1)
+    {
+
+      var s1 = document.getElementById("mins");
+      s1.innerHTML = "";
+      var newoption = document.createElement("option");
+
+      newoption.value = "0";
+      newoption.innerHTML = "--Select Minutes--";
+      s1.options.add(newoption);
+
+      for(var i = 0;i<60;i++)
+      {
+          newoption = document.createElement("option");
+          newoption.value = i;
+          newoption.innerHTML = i;
+          s1.options.add(newoption);
+      }
+    }
+
+  </script>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -320,7 +314,38 @@
     });
   </script>
 
+  <script>
+    function exportTableToExcel(tableID, filename = '') {
+      var downloadLink;
+      var dataType = 'application/vnd.ms-excel';
+      var tableSelect = document.getElementById(tableID);
+      var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
 
+      // Specify file name
+      filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+      // Create download link element
+      downloadLink = document.createElement("a");
+
+      document.body.appendChild(downloadLink);
+
+      if (navigator.msSaveOrOpenBlob) {
+        var blob = new Blob(['\ufeff', tableHTML], {
+          type: dataType
+        });
+        navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+        // Setting the file name
+        downloadLink.download = filename;
+
+        //triggering the function
+        downloadLink.click();
+      }
+    }
+  </script>
 
   <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

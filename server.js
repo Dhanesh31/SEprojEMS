@@ -1013,7 +1013,7 @@ app.get('/fac_choose', (req, res) => {
 								else
 								{
 									if(results.length>0){
-										res.render('fac_choosepref_done.ejs', {message : req.flash('message'), results : JSON.stringify(results), days : day, hours: hours, mins : mins});
+										res.render('fac_choosepref.ejs', {message : req.flash('message'), results : JSON.stringify(results), days : day, hours: hours, mins : mins});
 									}
 									else{
 										res.render("fac_choosepref_done.ejs", {flag : 1});
@@ -1774,11 +1774,6 @@ app.post('/coord_view_pref', (req, res) => {
 		}
 
 	});
-
-	
-
-
-
 })
 
 app.post('/coord_check_availability', (req, res) => {
@@ -1880,8 +1875,6 @@ app.post('/coord_final_assign', (req, res) =>{
 
 			});
 
-			
-
 			var sql = "update elec_pref A set assigned = 1 where A.roll_no = (select roll_no from assigned_electives B where A.roll_no = B.roll_no)";
 			db.query(sql, (err, results, field) => {
 				if (err)
@@ -1914,9 +1907,106 @@ app.post('/coord_final_assign', (req, res) =>{
 		}
 
 	});
+})
 
-	
+app.get('/coord_elecchange',(req,res)=>{
+	var flag=0;
+	console.log(req.session.mail);
+	var sql="SELECT * FROM elec_change;";
+	db.query(sql,(err,results,field) => {
+		if(err)
+		{
+			console.log(err);
+			return;
+		}
+		else if(results.length>0)
+		{
+			flag=1;
+			res.render('coord_change.ejs',{results : results, flag : flag });
+		}
+		else
+		{
+			res.render('coord_change.ejs',{results: results, flag : flag });
+		}
+	});
+})
 
+app.post('/coord_reassign',(req,res) =>{
+
+	var sql="SELECT * FROM elec_change;";
+	db.query(sql,(err,results,field) => {
+		if(err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{	
+			for(var i=0;i<results.length;i++){
+				if(results[i].new_facid==0){
+					for(var j=0;j<results.length;j++){
+						if(results[j].new_facid==0 && (results[i].new_elective == results[j].current_elective)){
+							var sql="UPDATE elec_change SET new_facid='" + results[j].curr_facid + "' WHERE roll_no='" + results[i].roll_no + "';";
+							db.query(sql,(err,results,field) => {
+								if(err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{	
+									// console.log("Change 1 for" + i);
+								}
+							});
+							var sql="UPDATE elec_change SET new_facid='" + results[i].curr_facid + "' WHERE roll_no='" + results[j].roll_no + "';";
+							db.query(sql,(err,results,field) => {
+								if(err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{	
+									// console.log("Change 2 for" + i);
+								}
+							});
+						}
+					}
+				}	
+			}
+			var sql="SELECT * FROM elec_change;";
+			db.query(sql,(err,results,field) => {
+				if(err)
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{	
+					var f=0;
+					for(var i=0;i<results.length;i++){
+						if(results[i].new_facid!=0){
+							console.log(results[i].new_elective);
+							var sql="UPDATE assigned_electives SET elective_id='" + results[i].new_elective + "', faculty_id=" + results[i].new_facid + " WHERE roll_no='" + results[i].roll_no + "';";
+							db.query(sql,(err,results,field) => {
+								if(err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{	
+									// console.log("Changed assigned");
+									f=1;
+								}
+							});
+						}
+					}
+					res.render("choosepref_done.ejs", {flag : 0});
+				}
+			});
+		}
+	});	
 })
 
 app.get('/assigned_elective',(req,res)=>{
@@ -1939,6 +2029,159 @@ app.get('/assigned_elective',(req,res)=>{
 			res.render('assigned_elective',{results: results,mailid : req.session.mail,flag : flag });
 		}
 	});
+})
+
+app.get('/change_elective',(req,res)=>{
+	var sql = "select * from timer where role = 'elective';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if(results.length == 0)
+			{
+				res.render("choosepref_done.ejs", {flag : 1});
+			}
+			else
+			{
+
+				var day = results[0].day;
+				var month = results[0].month;
+				var year = results[0].year;
+				var hours = results[0].hours;
+				var mins = results[0].mins;
+
+				var date1 = new Date(year, month, day, hours, mins);
+				date1.setMonth(date1.getMonth() - 1);
+				date1.setMinutes( date1.getMinutes() + 30 );
+				date1.setHours( date1.getHours() + 5 );
+				var date2 = new Date();
+				date2.setMinutes( date2.getMinutes() + 30 );
+				date2.setHours( date2.getHours() + 5 );
+				console.log(date1);
+				console.log(date2);
+				var diffTime = (date1 - date2);
+				console.log(diffTime);
+
+				if(diffTime < 0)
+				{
+					res.render("choosepref_done.ejs", {flag : 2});
+				}
+
+				else
+				{
+					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+					diffTime = diffTime % (1000 * 60 * 60 * 24);
+					hours = Math.floor(diffTime / (1000 * 60 * 60));
+					diffTime = diffTime % (1000 * 60 * 60);
+					mins = Math.floor(diffTime / (1000 * 60));
+
+					if(hours < 10)
+					{
+						hours = '0' + hours + '   :';
+					}
+					if(mins < 10)
+					{
+						mins = '0' + mins;
+					}
+
+					var sql = "SELECT student_dept, student_sem FROM student WHERE student_email = '"+req.session.mail+"';";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							var dept=results[0].student_dept;
+							var sem=results[0].student_sem;
+							var sql = "SELECT elective_id,elective_name, elective_sem, sent_students FROM elective WHERE elective_dept='" + dept + "' AND elective_sem=" + sem + " AND sent_students=" +1+ ";";
+							db.query(sql, (err, results, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									var elective_id;
+									var elective_name;
+									var sql = "select B.elective_id,(select C.elective_name from elective C where C.elective_id=B.elective_id) as elective_name from assigned_electives B where exists(select A.roll_no from student A where A.roll_no = B.roll_no and A.student_email='" + req.session.mail + "');";
+									db.query(sql, (err, result2, field) => {
+										if (err)
+										{
+											console.log(err);
+											return;
+										}
+										else
+										{
+											elective_id=result2[0].elective_id;
+											elective_name=result2[0].elective_name;
+											if(results.length>0){
+												res.render('stud_elecchange.ejs', {message : req.flash('message'), results : results, elective_id : elective_id, elective_name : elective_name, days : day, hours: hours, mins : mins});
+											}
+											else{
+												res.render("choosepref_done.ejs", {flag : 1});
+											}
+										}
+									});
+								}
+							});
+						}
+					});
+				}
+			}
+		}
+	});
+})
+
+app.post('/stud_changeelec',(req,res) =>{
+	var curr_elec = req.body.curr_elective;
+	var change_elec = req.body.elective_change;
+
+	var sql="SELECT roll_no FROM student WHERE student_email='" + req.session.mail + "';";
+	db.query(sql,(err,results,field) => {
+		if(err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			roll_no=results[0].roll_no;
+			
+			var sql="SELECT faculty_id FROM assigned_electives WHERE roll_no='" + roll_no + "';";
+			db.query(sql,(err,results,field) => {
+				if(err)
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+					curr_facid=results[0].faculty_id;
+					var sql="INSERT INTO elec_change VALUES ('" + roll_no + "', '" + curr_elec + "', '" + change_elec + "', " + curr_facid + ", " + 0 + ");";
+					db.query(sql,(err,results,field) => {
+						if(err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							res.render('choosepref_done',{flag : 0});
+						}
+					});
+				}
+			});
+		}
+	});
+
+	
 })
 
 app.get('/faculty_elective',(req,res) =>{
