@@ -136,7 +136,7 @@ width: 1471px;
     <h2 id='h2'><b>Change Elective</b></h2>
 
     <form method="GET">
-        <button type="submit" id='refresh' class="btn btn-primary" formaction="/fac_choose">Refresh Timer</button>
+        <button type="submit" id='refresh' class="btn btn-primary" formaction="/change_elective">Refresh Timer</button>
 
         <table class = "countdownContainer">
             <tr>
@@ -163,8 +163,8 @@ width: 1471px;
             <div class="form-group">
                 <div class="row">
                     <input type = "text" name="curr_elective" id ="results" class="input-text" value="<%= elective_id %>" style = "display:None">
-                    <label class="col-md-4 control-label h5 required"> Assigned Elective:</label>
-                    <label class="col-md-4 control-label h5 required"><%= elective_name %></label>
+                    <!-- <label class="col-md-4 control-label h5 required"> Assigned Elective:</label>
+                    <label class="col-md-4 control-label h5 required"><%= elective_name %></label> -->
                     <!-- <div class="col-md-6">
                        
                     </div> -->
@@ -173,7 +173,9 @@ width: 1471px;
                         <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_change" id = "elective_name" onchange = "populate('elective_name', 'elective_id')">
                             <option value="0">--Select Elective--</option>
                             <% results.forEach(function(k){ %>
-                                <option value="<%= k.elective_id %>"><%= k.elective_name %></option>
+                                <% if(elective_name != k.elective_name){ %>
+                                    <option value="<%= k.elective_id %>"><%= k.elective_name %></option>
+                                <% } %>
                             <% }) %>
                         </select>
                     </div>

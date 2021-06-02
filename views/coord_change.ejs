@@ -227,6 +227,54 @@
 
     <div id="content">
 
+      <% if (display_flag == 0) { %>
+
+        <div id="content">
+          <div class="center" style ="margin-top: 200px;">
+              <center>
+
+                  <h1><b>Changing haven't been enabled yet.</b></h1>
+
+              </center>
+          </div>
+
+      </div>
+
+      <% } %>
+
+
+      <% if (display_flag == 2) { %>
+        
+          </div>
+        <form method="GET">
+          <input class="combo form-control input-sm select-hidden-accessible"value="<%= rem_time %>" name = "rem_time" type="text" style = "display:None">
+          <button type="submit" id='refresh' class="btn btn-primary" formaction="/coord_elecchange">Refresh Timer</button>
+
+          <table class = "countdownContainer">
+            <tr>
+              <td colspan = "4" class = "info">Time Left</td>
+            </tr>
+            <tr class = "info">
+              <td id = "days" name = "days"><%= days %></td>
+              <td id = "hours" name = "hours"><%= hours %></td>
+              <td id = "mins" name = "mins"><%= mins %></td>
+            </tr>
+            <tr>
+              <td>Days</td>
+              <td>Hours</td>
+              <td>Minutes</td>
+            </tr>
+
+          </table>
+
+
+        </form>
+
+
+      <% } %>
+
+      <% if (display_flag == 1) { %>
+
       <form method='POST'>
 
         <div class="center">
@@ -266,6 +314,7 @@
                 </center>
               </div>
             </form>
+        <% } %>
     </div>
 
   </div>

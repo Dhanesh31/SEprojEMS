@@ -1699,6 +1699,81 @@ app.get('/coord_assign',(req,res) =>{
 	});
 })
 
+app.post('/coord_assign_mail',(req,res)=>{
+
+	var day = req.body.day;
+	var hours = req.body.hours;
+	var mins = req.body.mins;
+	var arr = day.split("-");
+	var role = 'elective';
+
+	console.log(arr);
+	console.log(hours);
+	console.log(mins);
+
+	var sql = "Delete from timer where role = 'elective';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			var sql = "Insert into timer values(" + arr[2] + "," + arr[1] + "," + arr[0] + "," + hours + "," + mins + ",'" + role + "');";
+			db.query(sql, (err, results, field) => {
+				if (err)
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+					req.flash('message', 'Timer for changing elective has been set and mail has been sent to the students.');
+					res.redirect('/coord_assign');
+				}
+
+			});
+
+		}
+
+	});
+
+	var sql = "select roll_no, (Select student_email from student B where A.roll_no = B.roll_no) as student_email from assigned_electives A;";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			for(var i = 0; i<results.length; i++)
+			{
+				var mailOptions = {
+					from: 'noreplyems1@gmail.com',
+					to: results[i].student_email + '',
+					subject: 'Check your portal',
+					text: 'Elective has been assigned to you for this semester and timer for changing elective has beeen set.  Please check your portal for finding the details'
+				}
+			
+				transporter.sendMail(mailOptions, function (err, info) {
+					if (err) {
+						console.log(err);
+					}
+					else {
+						console.log('email sent' + info.response);
+					}
+				})
+			}
+
+			
+		}
+
+	});
+	
+})
+
 app.post('/coord_view_pref', (req, res) => {
 	var columns = []
 	var sem = req.body.elective_sem;
@@ -1910,25 +1985,96 @@ app.post('/coord_final_assign', (req, res) =>{
 })
 
 app.get('/coord_elecchange',(req,res)=>{
-	var flag=0;
-	console.log(req.session.mail);
-	var sql="SELECT * FROM elec_change;";
-	db.query(sql,(err,results,field) => {
-		if(err)
+
+	var sql = "Select * from timer where role = 'elective';";
+	db.query(sql, (err, results, field) => {
+		if (err)
 		{
 			console.log(err);
 			return;
 		}
-		else if(results.length>0)
-		{
-			flag=1;
-			res.render('coord_change.ejs',{results : results, flag : flag });
-		}
 		else
 		{
-			res.render('coord_change.ejs',{results: results, flag : flag });
+			if(results.length == 0)
+			{
+				res.render('coord_change.ejs',{results : results, flag : 0, display_flag : 0});
+			}
+			else
+			{
+				var currentTime = new Date();
+				currentTime = currentTime.toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
+				var arr =  currentTime.split(",");
+				var arr1 = arr[0].split("/");
+				var arr2 = arr[1].split(":");
+				var day = results[0].day;
+				var month = results[0].month;
+				var year = results[0].year;
+				var hours = results[0].hours;
+				var mins = results[0].mins;
+
+				var date1 = new Date(year, month, day, hours, mins);
+				date1.setMonth(date1.getMonth() - 1);
+				date1.setMinutes( date1.getMinutes() + 30 );
+				date1.setHours( date1.getHours() + 5 );
+				var date2 = new Date();
+				date2.setMinutes( date2.getMinutes() + 30 );
+				date2.setHours( date2.getHours() + 5 );
+				console.log(date1);
+				console.log(date2);
+				var diffTime = (date1 - date2);
+				console.log(diffTime);
+
+				if(diffTime < 0)
+				{
+					var flag=0;
+					console.log(req.session.mail);
+					var sql="SELECT * FROM elec_change;";
+					db.query(sql,(err,results,field) => {
+						if(err)
+						{
+							console.log(err);
+							return;
+						}
+						else if(results.length>0)
+						{
+							flag=1;
+							res.render('coord_change.ejs',{results : results, flag : flag, display_flag : 1 });
+						}
+						else
+						{
+							res.render('coord_change.ejs',{results: results, flag : flag, display_flag : 1 });
+						}
+					});
+				}
+
+				else
+				{
+					day = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+					diffTime = diffTime % (1000 * 60 * 60 * 24);
+					hours = Math.floor(diffTime / (1000 * 60 * 60));
+					diffTime = diffTime % (1000 * 60 * 60);
+					mins = Math.floor(diffTime / (1000 * 60));
+
+					if(hours < 10)
+					{
+						hours = '0' + hours + '   :';
+					}
+					if(mins < 10)
+					{
+						mins = '0' + mins;
+					}
+
+					var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
+					console.log(rem_time);
+
+					res.render('coord_change.ejs',{results : results, flag : 0, display_flag : 2, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
+
+				}
+
+			}			
 		}
-	});
+	})
+
 })
 
 app.post('/coord_reassign',(req,res) =>{
