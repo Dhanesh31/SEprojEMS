@@ -931,6 +931,48 @@ app.post('/faculty_save', (req, res) => {
 	});
 })
 
+
+app.get('/fac_view',(req,res) => {
+
+	var sql = "SELECT faculty_id FROM faculty WHERE faculty_email = '" + req.session.mail + "';";
+	db.query(sql, (err,results,field) => {
+		if(err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			var fac_id=results[0].faculty_id;
+			var sql = "SELECT * FROM facelec_pref WHERE faculty_id = '" + fac_id + "';";
+			db.query(sql, (err,result1,field) => {
+				if (err)
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+					if(results.length==0){
+						res.render('fac_choosepref_done',{flag : 3});
+					}
+					var sql = "select  elective_id, (select elective_name from elective B where B.elective_id = A.elective_id) as elective_name, (select credits from elective B where B.elective_id = A.elective_id) as credits,sem from facelec_pref A where faculty_id = '" + fac_id + "';";
+					db.query(sql, (err, result2, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							res.render("fac_view_pref.ejs",{elec:result2, elecpref:result1});
+						}
+					});
+				}
+			});
+		}
+	});
+})
 app.get('/fac_choose', (req, res) => {
 
 	var sql = "Select * from timer where role = 'faculty';";
@@ -1582,7 +1624,7 @@ app.post('/filter_faculty',(req, res) => {
 })
 
 app.get('/elective_list',(req,res)=>{
-	
+
 
 	var sql = "select A.sem as elective_sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as elective_dept, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id,(select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A ;";
 	db.query(sql,(err,results,field)=>{
@@ -1756,7 +1798,7 @@ app.post('/coord_assign_mail',(req,res)=>{
 					subject: 'Check your portal',
 					text: 'Elective has been assigned to you for this semester and timer for changing elective has beeen set.  Please check your portal for finding the details'
 				}
-			
+
 				transporter.sendMail(mailOptions, function (err, info) {
 					if (err) {
 						console.log(err);
@@ -1767,11 +1809,11 @@ app.post('/coord_assign_mail',(req,res)=>{
 				})
 			}
 
-			
+
 		}
 
 	});
-	
+
 })
 
 app.post('/coord_view_pref', (req, res) => {
@@ -1779,7 +1821,7 @@ app.post('/coord_view_pref', (req, res) => {
 	var sem = req.body.elective_sem;
 	var dept = req.body.elective_dept;
 
-	
+
 	//var sql = "select count(elective_id) as count from elective where elective_sem = (select student_sem from student where roll_no = (select roll_no from student where student_email = '" + req.session.mail + "')) and elective_dept = (select student_dept from student where roll_no = (select roll_no from student where student_email = '" + req.session.mail + "'));";
 	var sql = "select count(elective_id) as count from elective where elective_sem = " + sem + " and elective_dept = '" + dept + "';";
 	db.query(sql, (err, results, field) => {
@@ -1796,16 +1838,16 @@ app.post('/coord_view_pref', (req, res) => {
 			{
 				count = results[0].count;
 			}
-			
+
 			var columns = []
 			console.log(count);
-		
+
 			for(var i = 1; i <= count; i++)
 			{
 				sql = sql + '(select count(B.pref) from elec_pref B where assigned = 0 and B.pref = ' + i +' and A.elective_id = B.elective_id) as Preference_' + i;
 				if (i != count)
 				{
-					
+
 					sql = sql + ', ';
 				}
 				columns.push('Preference_' + i);
@@ -1840,11 +1882,11 @@ app.post('/coord_view_pref', (req, res) => {
 						{
 							res.render("coord_assign.ejs",{results : JSON.stringify(results1), results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns, flag : 1});
 						}
-				
+
 					});
 					//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns});
 				}
-		
+
 			});
 		}
 
@@ -1876,7 +1918,7 @@ app.post('/coord_check_availability', (req, res) => {
 				{
 					res.render("coord_assign.ejs",{results : JSON.stringify(results1), results_table : results, sem : sem, dept : dept, message : req.flash('message') ,table_flag : 0, columns : columns, flag : 1});
 				}
-		
+
 			});
 			//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message') ,table_flag : 0, columns : columns});
 		}
@@ -1961,7 +2003,7 @@ app.post('/coord_final_assign', (req, res) =>{
 				{
 					//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : [], sem : sem, dept : dept, message : req.flash('message'), table_flag : 0, columns : columns});
 				}
-		
+
 			});
 
 			var sql1 = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A ;";
@@ -1975,7 +2017,7 @@ app.post('/coord_final_assign', (req, res) =>{
 				{
 					res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns, flag : 0});
 				}
-		
+
 			});
 
 
@@ -2071,7 +2113,7 @@ app.get('/coord_elecchange',(req,res)=>{
 
 				}
 
-			}			
+			}
 		}
 	})
 
@@ -2087,7 +2129,7 @@ app.post('/coord_reassign',(req,res) =>{
 			return;
 		}
 		else
-		{	
+		{
 			for(var i=0;i<results.length;i++){
 				if(results[i].new_facid==0){
 					for(var j=0;j<results.length;j++){
@@ -2100,7 +2142,7 @@ app.post('/coord_reassign',(req,res) =>{
 									return;
 								}
 								else
-								{	
+								{
 									// console.log("Change 1 for" + i);
 								}
 							});
@@ -2112,13 +2154,13 @@ app.post('/coord_reassign',(req,res) =>{
 									return;
 								}
 								else
-								{	
+								{
 									// console.log("Change 2 for" + i);
 								}
 							});
 						}
 					}
-				}	
+				}
 			}
 			var sql="SELECT * FROM elec_change;";
 			db.query(sql,(err,results,field) => {
@@ -2128,7 +2170,7 @@ app.post('/coord_reassign',(req,res) =>{
 					return;
 				}
 				else
-				{	
+				{
 					var f=0;
 					for(var i=0;i<results.length;i++){
 						if(results[i].new_facid!=0){
@@ -2141,7 +2183,7 @@ app.post('/coord_reassign',(req,res) =>{
 									return;
 								}
 								else
-								{	
+								{
 									// console.log("Changed assigned");
 									f=1;
 								}
@@ -2152,7 +2194,7 @@ app.post('/coord_reassign',(req,res) =>{
 				}
 			});
 		}
-	});	
+	});
 })
 
 app.get('/assigned_elective',(req,res)=>{
@@ -2299,7 +2341,7 @@ app.post('/stud_changeelec',(req,res) =>{
 		else
 		{
 			roll_no=results[0].roll_no;
-			
+
 			var sql="SELECT faculty_id FROM assigned_electives WHERE roll_no='" + roll_no + "';";
 			db.query(sql,(err,results,field) => {
 				if(err)
@@ -2327,7 +2369,7 @@ app.post('/stud_changeelec',(req,res) =>{
 		}
 	});
 
-	
+
 })
 
 app.get('/faculty_elective',(req,res) =>{
@@ -2338,7 +2380,7 @@ app.post('/fac_student',(req,res) =>{
 	var sem = req.body.faculty_sem;
 	var flag = 0;
 
-	var sql="select B.elective_id,(select C.elective_name from elective C where C.elective_id=B.elective_id) as elective_name,(select C.elective_sem from elective C where C.elective_id=B.elective_id) as sem,(select C.elective_dept from elective C where C.elective_id=B.elective_id) as dept from assigned_electives B where exists(select A.faculty_id from faculty A where A.faculty_id=B.faculty_id and A.faculty_email='"+req.session.mail+"') and exists(select C.elective_sem from elective C where C.elective_id=B.elective_id and C.elective_sem = "+sem+");";
+	var sql="select B.elective_id,(select C.elective_name from elective C where C.elective_id=B.elective_id) as elective_name,(select C.elective_sem from elective C where C.elective_id=B.elective_id) as sem,(select C.elective_dept from elective C where C.elective_id=B.elective_id) as dept from assigned_electives B where exists(select A.faculty_id from faculty A where A.faculty_id=B.faculty_id and A.faculty_email='"+req.session.mail+"') and exists(select C.elective_sem from elective C where C.elective_id=B.elective_id and C.elective_sem = "+sem+") group by elective_id;";
 
 	db.query(sql,(err,results,field) => {
 		if(err)
@@ -2405,7 +2447,7 @@ app.get('/student_feedback', (req, res) => {
 						else
 						{
 							var sql = "select roll_no from student where student_email = '" + req.session.mail +"' and feedback_given = 1;"
-							db.query(sql, (err, results, field) => 
+							db.query(sql, (err, results, field) =>
 							{
 								if (err)
 								{
@@ -2428,9 +2470,9 @@ app.get('/student_feedback', (req, res) => {
 						}
 					}
 				});
-				
 
-				
+
+
 			}
 		}
 
@@ -2454,7 +2496,7 @@ app.post('/student_response', (req, res) => {
 	q.push(req.body.q9);
 
 	var sql = "select * from assigned_electives where roll_no = (select roll_no from student where student_email = '" + req.session.mail +"');";
-	db.query(sql, (err, results, field) => 
+	db.query(sql, (err, results, field) =>
 	{
 		if (err)
 		{
@@ -2466,7 +2508,7 @@ app.post('/student_response', (req, res) => {
 			for(var i = 0; i < 9; i++)
 			{
 				var sql = "insert into feedback_response values('" + results[0].roll_no + "'," + results[0].faculty_id + ",'" + results[0].elective_id + "'," + (200 + i + 1) + "," + q[i] + ")";
-				db.query(sql, (err, results, field) => 
+				db.query(sql, (err, results, field) =>
 				{
 					if (err)
 					{
@@ -2475,14 +2517,14 @@ app.post('/student_response', (req, res) => {
 					}
 					else
 					{
-						
+
 					}
 
 				});
 			}
 
 			var sql = "update student set feedback_given = 1 where roll_no = '" + results[0].roll_no +"';";
-			db.query(sql, (err, results, field) => 
+			db.query(sql, (err, results, field) =>
 			{
 				if (err)
 				{
@@ -2514,7 +2556,7 @@ app.post('/coord_feedback_points', (req, res) => {
 	var dept = req.body.dept;
 
 	var sql = "select faculty_id, (select faculty_name from faculty C where C.faculty_id = A.faculty_id) as faculty_name, (select elective_id from feedback_response B where A.faculty_id = B.faculty_id and A.elective_id = B.elective_id group by faculty_id) as elective_id, (select elective_name from elective B where A.elective_id = B.elective_id) as elective_name,(select sum(B.points)/(select strength from facelec_pref B where A.faculty_id = B.faculty_id and A.elective_id = B.elective_id) from feedback_response B  where A.faculty_id = B.faculty_id and elective_id In(select elective_id from elective where elective_sem = " + sem + " and elective_dept = '" + dept + "')) as points from assigned_electives A where exists(select elective_id from elective B where elective_sem = " + sem + " and elective_dept = '" + dept + "' and A.elective_id = B.elective_id) group by faculty_id;";
-	db.query(sql, (err, results, field) => 
+	db.query(sql, (err, results, field) =>
 	{
 		if (err)
 		{
@@ -2536,7 +2578,7 @@ app.post('/coord_enable_feedback', (req, res) => {
 	var dept = req.body.dept;
 
 	var sql = "update elective set feedback_given = 1 where elective_sem = " + sem + " and elective_dept = '" + dept + "';";
-	db.query(sql, (err, results, field) => 
+	db.query(sql, (err, results, field) =>
 	{
 		if (err)
 		{

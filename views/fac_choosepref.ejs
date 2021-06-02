@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-<link 
+<link
 rel="stylesheet"
 href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
 integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
@@ -48,29 +48,29 @@ width: 1471px;
 
 
 <a class="navbar-brand" href="student page.html">
-    <img src="24.jfif" alt="logo" style="width:180px;"> 
+    <img src="24.jfif" alt="logo" style="width:180px;">
 </a>
 <div class="container">
     <!-- <button class='btn btn-info pull-right' onclick="logout">
         Logout
     </button> -->
     <form action="/logout">
-        
+
         <button class='btn btn-info pull-right'>Logout</button>
     </form>
 </div>
-</div>   
+</div>
 </nav>
 <div class="wrapper">
 <!-- Sidebar  -->
 <nav id="sidebar">
 <div class="sidebar-header">
-    
+
     <button type="button" id="sidebarCollapse" class="btn btn-info">
         <i class="fas fa-align-left"></i>
         <span></span>
     </button>
-    
+
 </div>
 
 <ul class="list-unstyled components">
@@ -80,22 +80,22 @@ width: 1471px;
             <i class="fas fa-user"></i>
             Edit Profile
         </a>
-        
+
     </li>
     <li>
         <a href="fac_choose" >
             <i class="fas fa-pencil-alt"></i>
-            Choose Elective 
+            Choose Elective
         </a>
-        
+
     </li>
-    <!-- <li>
-        <a href="stud_view" >
+    <li>
+        <a href="fac_view" >
             <i class="fas fa-pencil-alt"></i>
-            View Preferences 
+            View Preferences
         </a>
-        
-    </li>                 -->
+
+    </li>
     <li>
         <a href="faculty_elective" >
             <i class="fas fa-pencil-alt"></i>
@@ -103,7 +103,7 @@ width: 1471px;
         </a>
 
     </li>
-    
+
 </ul>
 
 
@@ -113,19 +113,19 @@ width: 1471px;
 
 <div id="content">
 
-    <% if(message == "Saved succesfully".trim() ) { %>  
+    <% if(message == "Saved succesfully".trim() ) { %>
         <div class="alert alert-success">
             <%= message%>
         </div>
         <% } %>
 
-    <% if(message == "This preference has already been collected".trim() ) { %>  
+    <% if(message == "This preference has already been collected".trim() ) { %>
     <div class="alert alert-danger">
         <%= message%>
     </div>
     <% } %>
 
-    <% if(message == "This elective has already been chosen, please try another one".trim() ) { %>  
+    <% if(message == "This elective has already been chosen, please try another one".trim() ) { %>
         <div class="alert alert-danger">
             <%= message%>
         </div>
@@ -155,9 +155,9 @@ width: 1471px;
     </form>
 
 <form method='POST' action="/fac_chooseelective">
-    
+
     <input type = "text" name="results" id ="results" class="input-text" value="<%=results %>" style = "display:None">
-    
+
     <div class="center">
         <center>
             <div class="form-group">
@@ -188,7 +188,7 @@ width: 1471px;
         </center>
     </div>
 </form>
-</div>       
+</div>
 
 <script>
 
@@ -196,11 +196,11 @@ function populateblanks(s1, s2)
 {
     var s1 = document.getElementById(s1);
     var s2 = document.getElementById(s2);
-    
+
     s2.innerHTML="";
-    
+
     var results = JSON.parse(document.getElementById("results").value);
-    
+
     var newoption = document.createElement("option");
     newoption.value = "0";
     newoption.innerHTML = "--Select Elective--";
@@ -223,9 +223,9 @@ function populate(s1, s2)
 {
     var s1 = document.getElementById(s1);
     var s2 = document.getElementById(s2);
-    
+
     var results = JSON.parse(document.getElementById("results").value);
-    
+
 
     for (var i = 0; i<results.length;i++)
     {
@@ -237,7 +237,7 @@ function populate(s1, s2)
 
 }
 
-</script>          
+</script>
 
 
 

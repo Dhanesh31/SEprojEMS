@@ -39,6 +39,44 @@
         width: 1471px;
     }
     }
+
+    #customers {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #customers td,
+    #customers th {
+      border: 1px solid #f1f1f1;
+      padding: 8px;
+      width: 4px
+    }
+
+    #customers tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+
+    #customers tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    #customers tr:hover {
+      background-color: #ddd;
+    }
+
+    #customers th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #6d7fcc;
+      color: white;
+      width: 4px
+    }
+
+    .flashup {
+      display: None;
+    }
   </style>
 
 </head>
@@ -111,24 +149,35 @@
         <!-- Page Content  -->
 
         <div id="content">
-            <div class="center" style ="margin-top: 200px;">
-                <center>
-                    <% if(flag==0) { %>
-                        <h1><b>Your preferences have been collected!</b></h1>
+            <% if(elec.length > 0 && elecpref.length > 0) { %>
+                <table id="customers" style="margin-top:20px">
+                    <tr>
+                    <th>Elective_id</th>
+                    <th>Elective_name</th>
+                    <th>Credits</th>
+                    <th>Semester</th>
+
+                    </tr>
+                    <% for (var i = 0; i < elec.length; i++){ %>
+
+                    <tr>
+                        <td>
+                            <%= elec[i].elective_id %>
+                        </td>
+                        <td>
+                            <%= elec[i].elective_name %>
+                        </td>
+                        <td>
+                            <%= elec[i].credits %>
+                        </td>
+                        <td>
+                            <%= elecpref[i].sem %>
+                        </td>
+                    </tr>
+
                     <% } %>
 
-                    <% if(flag==1) { %>
-                        <h1><b>The portal is not yet opened!</b></h1>
-                    <% } %>
-
-                    <% if(flag==2) { %>
-                        <h1><b>The portal is now closed. Thank you!</b></h1>
-                    <% } %>
-                    <% if(flag==3) { %>
-                        <h1><b>Please give you prefernce</b></h1>
-                    <% } %>
-                </center>
-            </div>
+            <% } %>
 
         </div>
     </div>
