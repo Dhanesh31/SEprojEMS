@@ -222,19 +222,19 @@
 
     <input type = "text" name="results" id ="results" class="input-text" value="<%=results %>"  style = "display : none;">
 
-    
-    
+
+
     <div id="content">
       <h2 id = 'siva'><b>ASSIGN ELECTIVES</b></h2>
 
       <div>
-      
+
       <% if(message == "Timer for changing elective has been set and mail has been sent to the students.".trim() ) { %>
         <div class="alert alert-success">
           <%= message%>
         </div>
       <% } %>
-    
+
     </div>
       <div>
         <form method="post">
@@ -250,9 +250,9 @@
                   <option value="7">7</option>
                 </select>
               </div>
-  
-  
-  
+
+
+
               <label class="col-md-4 control-label h5 required"> Department:</label>
               <div class="col-md-4">
                 <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="dept" id = "dept" value="<%= dept %>" onchange="assign_populate('dept', 'elective_id')">
@@ -265,15 +265,15 @@
                 </select>
               </div>
               <br><br>
-  
+
               <label class="col-md-4 control-label h5 required"> Elective ID:</label>
               <div class="col-md-4">
                 <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" id = "elective_id" name="elective_id" value="" onchange="populate_faculty_id('elective_id', 'faculty_id')">
                   <option value="">--Select Elective ID--</option>
                 </select>
               </div>
-  
-  
+
+
               <label class="col-md-4 control-label h5 required"> Preference:</label>
               <div class="col-md-4">
                 <div >
@@ -281,24 +281,24 @@
                 </div>
               </div>
               <br><br>
-  
+
               <label class="col-md-4 control-label h5 required"> Strength:</label>
               <div class="col-md-4">
                 <div >
                   <input class="combo form-control input-sm select-hidden-accessible" value="" name = "strength" type="number">
                 </div>
               </div>
-  
+
               <label class="col-md-4 control-label h5 required"> Faculty ID:</label>
               <div class="col-md-4">
                 <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" id = faculty_id name="faculty_id" value="">
                   <option value=""selected>--Select Faculty ID--</option>
                 </select>
               </div>
-  
+
               <br><br>
               <button type="submit" id='timer' class="btn btn-primary" formaction="/coord_final_assign">Assign</button>
-              
+
                   </center>
           </div>
         </form>
@@ -309,52 +309,48 @@
 
 
 
+        <div>
+          <form method='POST'>
+            <div class="center">
+              <center>
 
-        <div class="center">
-            <form method='POST'>
-          <center>
+                <label class="col-md-4 control-label h5 required">Semester:</label>
+                <div class="col-md-4">
+                  <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name='elective_sem' id='elective_sem' onchange="populate('elective_dept', 'elective_name')">
+                    <option value="0" selected="">--Select Semester--</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
 
-            
-            <label class="col-md-4 control-label h5 required">Semester:</label>
-          <div class="col-md-4">
-            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name='elective_sem' id='elective_sem' onchange="populate('elective_dept', 'elective_name')">
-              <option value="0" selected="">--Select Semester--</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
+                  </select>
+                </div>
 
-            </select>
-          </div>
+                <label class="col-md-4 control-label h5 required"> Department:</label>
+                <div class="col-md-4">
+                  <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_dept" id = "elective_dept" onchange="populate('elective_dept', 'elective_name')">
+                    <option value="0" selected="">--Select Department--</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="MEC">MECH</option>
+                    <option value="CIE">CIVIL</option>
+                  </select>
+                </div>
+                <br><br>
 
+                <!-- <label class="col-md-4 control-label h5 required"> Elective:</label> -->
+                <div class="col-md-4">
+                  <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" style="display:None" name="elective_name" id = "elective_name">
+                    <option value="0">--Select Elective--</option>
 
+                  </select>
+                </div>
+                <br>
 
-          <label class="col-md-4 control-label h5 required"> Department:</label>
-          <div class="col-md-4">
-            <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_dept" id = "elective_dept" onchange="populate('elective_dept', 'elective_name')">
-              <option value="0" selected="">--Select Department--</option>
-              <option value="CSE">CSE</option>
-              <option value="ECE">ECE</option>
-              <option value="EEE">EEE</option>
-              <option value="MEC">MECH</option>
-              <option value="CIE">CIVIL</option>
-            </select>
-          </div>
-          <br><br>
+                <button type="submit" class="btn btn-primary" formaction="/coord_view_pref">View Preference Count</button>
+                <button type="submit" class="btn btn-primary" formaction="/coord_check_availability">Check Availability</button>
 
-
-            <label class="col-md-4 control-label h5 required"> Elective:</label>
-            <div class="col-md-4">
-              <select class="combo form-control input-sm select-hidden-accessible" aria-hidden="true" name="elective_name" id = "elective_name">
-                <option value="0">--Select Elective--</option>
-  
-              </select>
-            </div>
-            <br><br><br>
-
-
-            <button type="submit" class="btn btn-primary" formaction="/coord_view_pref">View Preference Count</button>
-            <button type="submit" class="btn btn-primary" formaction="/coord_check_availability">Check Availability</button>
 
             <% if (flag == 1) { %>
             <% if (table_flag == 0) { %>
@@ -369,10 +365,10 @@
                     <th>Faculty_id</th>
                     <th>Faculty_name</th>
                     <th>Strength</th>
-  
+
                   </tr>
                   <% results_table.forEach(function(k){ %>
-  
+
                     <tr>
                       <td>
                         <%= k.sem %>
@@ -395,11 +391,11 @@
                       <td>
                         <%= k.strength %>
                       </td>
-  
+
                     </tr>
-  
+
                     <% }) %>
-  
+
                   <% } %>
 
             <% } %>
@@ -415,13 +411,13 @@
                     <th>Elective_id</th>
                     <th>Elective_name</th>
                     <% columns.forEach(function(k){ %>
-                      <th><%= k %> </th>  
-                    <% }) %>  
+                      <th><%= k %> </th>
+                    <% }) %>
 
-  
+
                   </tr>
                   <% results_table.forEach(function(k){ %>
-  
+
                     <tr>
                       <td>
                         <%= k.elective_sem %>
@@ -439,20 +435,21 @@
 
                       <% for (var i =0; i <columns.length;  i++ ) { %>
                         <td> <%= k[columns[i]] %> </td>
-                      <% } %> 
+                      <% } %>
 
-  
+
                     </tr>
-  
+
                     <% }) %>
-  
+
                   <% } %>
 
             <% } %>
             <% } %>
 
-            
+          </table>
                 </center>
+                </div>
             </form>
         </div>
 
@@ -513,8 +510,8 @@
               </center>
             </div>
           </form>
-      </div>        
-    
+      </div>
+
     </div>
 
 <script>
@@ -525,7 +522,7 @@
     var results = JSON.parse(document.getElementById("results").value);
     var s1 = document.getElementById(s1);
     var s2 = document.getElementById(s2);
-    
+
 
     s2.innerHTML = ""
 
@@ -544,7 +541,7 @@
         s2.options.add(newoption);
       }
     }
-    
+
   }
 
   function assign_populate(s1, s2)
@@ -616,7 +613,7 @@
       {
           var optionArray = CIE;
       }
-      
+
 
       optionArray = Array.from(new Set(optionArray));
 
@@ -703,7 +700,7 @@
       {
           var optionArray = CIE;
       }
-      
+
       optionArray = Array.from(new Set(optionArray));
 
       var newoption = document.createElement("option");
