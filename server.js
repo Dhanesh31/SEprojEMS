@@ -68,6 +68,7 @@ const db = mysql.createConnection({
 	multipleStatements: true
 })
 
+
 db.connect(err => {
 	if (err) {
 		console.error('Database connection error: ' + err.stack);
