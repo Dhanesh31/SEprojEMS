@@ -1215,7 +1215,7 @@ app.get('/coord_remove', (req, res) => {
 			return;
 		}
 		else {
-			res.render('coord_remove', {message : req.flash('message') , results : JSON.stringify(results)});
+			res.render('coord_remove', {message : req.flash('message') , results : JSON.stringify(results), mailid : req.session.mail});
 		}
 	});
 
@@ -1225,46 +1225,69 @@ app.post('/remelective', (request, response) => {
 	var elective_name = request.body.elective_name;
 	var elective_sem = request.body.elective_sem;
 	var elective_dept = request.body.elective_dept;
+	var mailid = request.body.mailid;
 
-	var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
+	var sql = "select * from coord_login where coord_email = '" + mailid + "';";
 	db.query(sql, (err, result, field) => {
 		if (err) {
 			console.log(err);
 			return;
 		}
-		else {
-			if (result.length == 0) {
-				console.log('No such elective exists');
-				request.flash('message', 'No such elective exists');
-				response.redirect('/coord_remove');
-			}
-			else {
+		else
+		{
+			if (result.length > 0)
+			{
 				var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
 				db.query(sql, (err, result, field) => {
-					if (err)
-					{
+					if (err) {
 						console.log(err);
 						return;
 					}
-					else
-					{
-						var sql = "delete from elective where elective_id='" + result[0].elective_id + "';";
-						db.query(sql, (err, result, field) => {
-							if (err) {
-								console.log(err);
-								return;
-							}
-							console.log('Elective removed successfully');
-							request.flash('message', 'Elective removed successfully');
+					else {
+						if (result.length == 0) {
+							console.log('No such elective exists');
+							request.flash('message', 'No such elective exists');
 							response.redirect('/coord_remove');
-						});
+						}
+						else {
+							var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
+							db.query(sql, (err, result, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									var sql = "delete from elective where elective_id='" + result[0].elective_id + "';";
+									db.query(sql, (err, result, field) => {
+										if (err) {
+											console.log(err);
+											return;
+										}
+										console.log('Elective removed successfully');
+										request.flash('message', 'Elective removed successfully');
+										response.redirect('/coord_remove');
+									});
+								}
+			
+							});
+			
+						}
 					}
-
 				});
-
+			}
+			else
+			{
+				response.render('404_ejs');
 			}
 		}
+		
 	});
+
+
+
+	
 
 
 });
