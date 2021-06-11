@@ -131,6 +131,12 @@ width: 1471px;
         </div>
     <% } %>
 
+    <% if(message == "You cannot give two preference for one elective".trim() ) { %>
+        <div class="alert alert-danger">
+            <%= message%>
+        </div>
+    <% } %>
+
     <h2 id='h2'><b>Give Preference</b></h2>
 
     <form method="GET">

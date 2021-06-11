@@ -1139,48 +1139,68 @@ app.post('/fac_chooseelective', (req, res) => {
 				}
 				else
 				{
-					fac_limit=results[0].fac_limit;
-					if(fac_limit>0)
-					{
-						var sql = "INSERT INTO facelec_pref VALUES(" + f_id + ",'" + elective_id + "'," + sem + "," +  strength +");";
-						db.query(sql, (err, results, field) => {
-							if (err)
-							{
-								console.log(err);
+					var sql = "SELECT * FROM facelec_pref WHERE faculty_id='" + f_id +"' AND sem=" + sem +";";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							if(results.length == 0){
+								
+								fac_limit=results[0].fac_limit;
+								if(fac_limit>0)
+								{
+									var sql = "INSERT INTO facelec_pref VALUES(" + f_id + ",'" + elective_id + "'," + sem + "," +  strength +");";
+									db.query(sql, (err, results, field) => {
+										if (err)
+										{
+											console.log(err);
+											console.log('Preference added successfully');
+											req.flash('message', 'This preference has already been collected');
+											res.redirect('/fac_choose');
+											return;
+										}
+										else
+										{
+											var sql = "UPDATE elective SET fac_limit=fac_limit-1 WHERE elective_id='" + elective_id +"';";
+											db.query(sql, (err, results, field) => {
+												if (err)
+												{
+													console.log(err);
+													return;
+												}
+												else
+												{
+													console.log('Preference added successfully');
+													req.flash('message', 'Saved succesfully');
+													res.redirect('/fac_choose');
+												}
+											});
+										}
+									});
+								}
+								else
+								{
+									req.flash('message', 'This elective has already been chosen, please try another one');
+									res.redirect('/fac_choose');
+								}
+							}
+							else{
 								console.log('Preference added successfully');
-								req.flash('message', 'This preference has already been collected');
+								req.flash('message', 'You cannot give two preference for one elective');
 								res.redirect('/fac_choose');
-								return;
 							}
-							else
-							{
-								var sql = "UPDATE elective SET fac_limit=fac_limit-1 WHERE elective_id='" + elective_id +"';";
-								db.query(sql, (err, results, field) => {
-									if (err)
-									{
-										console.log(err);
-										return;
-									}
-									else
-									{
-										console.log('Preference added successfully');
-										req.flash('message', 'Saved succesfully');
-										res.redirect('/fac_choose');
-									}
-								});
-							}
-						});
-					}
-					else
-					{
-						req.flash('message', 'This elective has already been chosen, please try another one');
-						res.redirect('/fac_choose');
-					}
+						}
+					});
 				}
 			});
 		}
 	});
 })
+
 
 app.get('/coord_add', (req, res) => {
 	res.render('coord_add',  {mailid : req.session.mail ,message : req.flash('message'), results : JSON.stringify(excel_results)});
