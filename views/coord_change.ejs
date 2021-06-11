@@ -209,13 +209,14 @@
           </div>
 
       </div>
+    </div>
 
       <% } %>
 
 
       <% if (display_flag == 2) { %>
 
-          </div>
+          
         <form method="GET">
           <input class="combo form-control input-sm select-hidden-accessible"value="<%= rem_time %>" name = "rem_time" type="text" style = "display:None">
           <button type="submit" id='refresh' class="btn btn-primary" formaction="/coord_elecchange">Refresh Timer</button>
