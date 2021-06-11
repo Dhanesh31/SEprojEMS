@@ -496,11 +496,11 @@ app.get('/coord_edit', (req, res) => {
 		{
 			if (results.length==0)
 			{
-				res.render('profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', message : req.flash('message')});
+				res.render('profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', message : req.flash('message'), mailid : req.session.mail});
 			}
 			else if(results[0].edit_profile==0)
 			{
-				res.render('profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', message : req.flash('message')});
+				res.render('profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', message : req.flash('message'), mailid : req.session.mail});
 			}
 			else
 			{
@@ -537,7 +537,7 @@ app.get('/coord_edit', (req, res) => {
 						{
 							k='3';
 						}
-						res.render('profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, message : req.flash('message')});
+						res.render('profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, message : req.flash('message'), mailid : req.session.mail});
 					}
 
 				});
@@ -548,6 +548,7 @@ app.get('/coord_edit', (req, res) => {
 })
 
 app.post('/coord_save', (req, res) => {
+	var mailid = req.body.mailid;
 	var name = req.body.name;
 	var dob = req.body.dob;
 	var mobile = req.body.mobile;
@@ -555,24 +556,10 @@ app.post('/coord_save', (req, res) => {
 	var Age = req.body.Age;
 	var City = req.body.City;
 	var State = req.body.State;
-	var mail = req.session.mail;
 	var gender;
 	var edit_profile=1
 
-	if(k == '1')
-	{
-		gender = 'Male';
-	}
-	else if (k == '2')
-	{
-		gender = 'Female';
-	}
-	else
-	{
-		gender = 'Others';
-	}
-
-	var sql="Select * from coord where coord_email='"+req.session.mail+"';";
+	var sql="SELECT * FROM coord_login WHERE coord_email='" + mailid + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -581,9 +568,22 @@ app.post('/coord_save', (req, res) => {
 		}
 		else
 		{
-			if(results.length > 0)
-			{
-				var sql="update coord set coord_name = '"+ name +"',"+"coord_dob = '"+ dob + "'," + "coord_age = '" + Age + "', coord_mobileno = '" + mobile + "'," + "coord_gender = '" + gender + "'," + "coord_city ='"+ City + "'," + "coord_state ='"+ State + "' where coord_email='"+req.session.mail+"';";
+			if(results.length>0){
+
+				if(k == '1')
+				{
+					gender = 'Male';
+				}
+				else if (k == '2')
+				{
+					gender = 'Female';
+				}
+				else
+				{
+					gender = 'Others';
+				}
+			
+				var sql="Select * from coord where coord_email='"+mailid+"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -592,39 +592,53 @@ app.post('/coord_save', (req, res) => {
 					}
 					else
 					{
-						console.log('Details Updated Successfully');
-						req.flash('message', 'Profile Details Updated Successfully');
-						res.redirect('/coord_edit');
+						if(results.length > 0)
+						{
+							var sql="update coord set coord_name = '"+ name +"',"+"coord_dob = '"+ dob + "'," + "coord_age = '" + Age + "', coord_mobileno = '" + mobile + "'," + "coord_gender = '" + gender + "'," + "coord_city ='"+ City + "'," + "coord_state ='"+ State + "' where coord_email='"+ mailid +"';";
+							db.query(sql, (err, results, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									console.log('Details Updated Successfully');
+									req.flash('message', 'Profile Details Updated Successfully');
+									res.redirect('/coord_edit');
+								}
+			
+							});
+						}
+						else
+						{
+							var sql="insert into coord values('"+ name +"','"+ dob +"',"+ Age +",'"+ mailid +"','"+ mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + edit_profile + ");";
+							db.query(sql, (err, results, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									console.log('Inserted Successfully');
+									req.flash('message', 'Profile Details Saved Successfully');
+									res.redirect('/coord_edit');
+								}
+			
+							});
+						}
 					}
-
+			
 				});
 			}
-			else
-			{
-				var sql="insert into coord values('"+ name +"','"+ dob +"',"+ Age +",'"+ mail +"','"+ mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + edit_profile + ");";
-				db.query(sql, (err, results, field) => {
-					if (err)
-					{
-						console.log(err);
-						return;
-					}
-					else
-					{
-						console.log('Inserted Successfully');
-						//req.flash('name', name);
-						req.flash('message', 'Profile Details Saved Successfully');
-						res.redirect('/coord_edit');
-						//res.redirect('/?valid=' + string)
-					}
-
-				});
+			else{
+				res.render('/error');
 			}
 		}
-
 	});
-
-
 })
+
 
 app.get('/stud_edit', (req, res) => {
 
@@ -639,11 +653,11 @@ app.get('/stud_edit', (req, res) => {
 		{
 			if (results.length==0)
 			{
-				res.render('stud_profile',{roll_no : '', name : '', dob : '', mobile : '', k:'0', Age:'' , City:'' , State : '', sem : 'Select', dept : 'Select', message : req.flash('message')});
+				res.render('stud_profile',{roll_no : '', name : '', dob : '', mobile : '', k:'0', Age:'' , City:'' , State : '', sem : 'Select', dept : 'Select', message : req.flash('message'), mailid : req.session.mail});
 			}
 			else if(results[0].edit_profile==0)
 			{
-				res.render('stud_profile',{roll_no : '', name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', sem : 'Select', dept : 'Select', message : req.flash('message')});
+				res.render('stud_profile',{roll_no : '', name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', sem : 'Select', dept : 'Select', message : req.flash('message'), mailid : req.session.mail});
 			}
 			else
 			{
@@ -691,7 +705,7 @@ app.get('/stud_edit', (req, res) => {
 						{
 							k='3';
 						}
-						res.render('stud_profile',{roll_no : roll_no, name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, sem : sem, dept : dept, message : req.flash('message')});
+						res.render('stud_profile',{roll_no : roll_no, name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, sem : sem, dept : dept, message : req.flash('message'), mailid : req.session.mail});
 					}
 
 				});
@@ -702,6 +716,7 @@ app.get('/stud_edit', (req, res) => {
 })
 
 app.post('/stud_save', (req, res) => {
+	var mailid = req.body.mailid;
 	var name = req.body.name;
 	var dob = req.body.dob;
 	var mobile = req.body.mobile;
@@ -709,7 +724,7 @@ app.post('/stud_save', (req, res) => {
 	var Age = req.body.Age;
 	var City = req.body.City;
 	var State = req.body.State;
-	var mail = req.session.mail;
+	var mail = mailid;
 	var gender;
 	var edit_profile=1
 	var sem = req.body.sem;
@@ -717,21 +732,8 @@ app.post('/stud_save', (req, res) => {
 	var roll_no = req.body.rollno;
 	var preference_given = 0;
 	var feedback_given = 0;
-
-	if(k == '1')
-	{
-		gender = 'Male';
-	}
-	else if (k == '2')
-	{
-		gender = 'Female';
-	}
-	else
-	{
-		gender = 'Others';
-	}
-
-	var sql="Select * from student where student_email='"+req.session.mail+"';";
+	
+	var sql="Select * from student_login where student_email='"+ mailid +"';" ;
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -740,10 +742,21 @@ app.post('/stud_save', (req, res) => {
 		}
 		else
 		{
-			if(results.length > 0)
-			{
-				console.log('update');
-				var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +"' where student_email='"+req.session.mail+"';" ;
+			if(results.length > 0){
+				if(k == '1')
+				{
+					gender = 'Male';
+				}
+				else if (k == '2')
+				{
+					gender = 'Female';
+				}
+				else
+				{
+					gender = 'Others';
+				}
+				console.log(mail);
+				var sql="Select * from student where student_email='"+ mailid +"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -752,38 +765,52 @@ app.post('/stud_save', (req, res) => {
 					}
 					else
 					{
-						console.log('Student details updated successfully');
-						req.flash('message', 'Profile Details Updated Successfully');
-						res.redirect('/stud_edit');
+						if(results.length > 0)
+						{
+							console.log('update');
+							var sql="update student set roll_no = '" + roll_no + "'," + "student_name = '"+ name +"',"+"student_dob = '"+ dob + "'," + "student_age = '" + Age + "', student_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "student_city ='"+ City + "'," + "student_state ='"+ State +"' where student_email='"+req.session.mail+"';" ;
+							db.query(sql, (err, results, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									console.log('Student details updated successfully');
+									req.flash('message', 'Profile Details Updated Successfully');
+									res.redirect('/stud_edit');
+								}
+			
+							});
+						}
+						else
+						{
+							var sql="insert into student values('"+ roll_no + "','" + name +"','"+ dob +"',"+ Age +",'"+ mail +"','" + dept + "'," + sem + ",'" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + preference_given + "," + edit_profile +  "," + feedback_given + ");";
+							db.query(sql, (err, results, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									console.log('Inserted Successfully');
+									req.flash('message', 'Profile Details Saved Successfully');
+									res.redirect('/stud_edit');
+								}
+			
+							});
+						}
 					}
-
+			
 				});
 			}
-			else
-			{
-				var sql="insert into student values('"+ roll_no + "','" + name +"','"+ dob +"',"+ Age +",'"+ mail +"','" + dept + "'," + sem + ",'" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + preference_given + "," + edit_profile +  "," + feedback_given + ");";
-				db.query(sql, (err, results, field) => {
-					if (err)
-					{
-						console.log(err);
-						return;
-					}
-					else
-					{
-						console.log('Inserted Successfully');
-						//req.flash('name', name);
-						req.flash('message', 'Profile Details Saved Successfully');
-						res.redirect('/stud_edit');
-						//res.redirect('/?valid=' + string)
-					}
-
-				});
+			else{
+				res.render('/error');				
 			}
 		}
-
 	});
-
-
 })
 
 
@@ -801,11 +828,11 @@ app.get('/faculty_edit', (req, res) => {
 			console.log(results.length);
 			if (results.length==0)
 			{
-				res.render('faculty_profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', dept : 'Select', message : req.flash('message')});
+				res.render('faculty_profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', dept : 'Select', message : req.flash('message'), mailid : req.session.mail});
 			}
 			else if(results[0].edit_profile==0)
 			{
-				res.render('faculty_profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', dept : 'Select', message : req.flash('message')});
+				res.render('faculty_profile',{name :'', dob :'', mobile :'', k:'0', Age:' ' , City:' ' , State :'', dept : 'Select', message : req.flash('message'), mailid : req.session.mail});
 			}
 			else
 			{
@@ -843,7 +870,7 @@ app.get('/faculty_edit', (req, res) => {
 						{
 							k='3';
 						}
-						res.render('faculty_profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, dept : dept, message : req.flash('message')});
+						res.render('faculty_profile',{name : name, dob : dob, mobile : mobile, k : k, Age : Age, City : City , State : State, dept : dept, message : req.flash('message'), mailid : req.session.mail});
 					}
 
 				});
@@ -854,6 +881,7 @@ app.get('/faculty_edit', (req, res) => {
 })
 
 app.post('/faculty_save', (req, res) => {
+	var mailid = req.body.mailid;
 	var name = req.body.name;
 	var dob = req.body.dob;
 	var mobile = req.body.mobile;
@@ -865,22 +893,8 @@ app.post('/faculty_save', (req, res) => {
 	var gender;
 	var edit_profile=1
 	var dept = req.body.dept;
-	// var preference_given = 0;
 
-	if(k == '1')
-	{
-		gender = 'Male';
-	}
-	else if (k == '2')
-	{
-		gender = 'Female';
-	}
-	else
-	{
-		gender = 'Others';
-	}
-
-	var sql="Select * from faculty where faculty_email='"+req.session.mail+"';";
+	var sql="Select * from faculty_login where faculty_email='"+ mailid +"';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -889,10 +903,22 @@ app.post('/faculty_save', (req, res) => {
 		}
 		else
 		{
-			if(results.length > 0)
-			{
-				console.log('update');
-				var sql="update faculty set faculty_name = '"+ name +"',"+"faculty_dob = '"+ dob + "'," + "faculty_age = '" + Age + "', faculty_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "faculty_city ='"+ City + "'," + "faculty_state ='"+ State +"' where faculty_email='" + req.session.mail + "';";
+			if(results.length>0){
+
+				if(k == '1')
+				{
+					gender = 'Male';
+				}
+				else if (k == '2')
+				{
+					gender = 'Female';
+				}
+				else
+				{
+					gender = 'Others';
+				}
+			
+				var sql="Select * from faculty where faculty_email='"+req.session.mail+"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
 					{
@@ -901,35 +927,52 @@ app.post('/faculty_save', (req, res) => {
 					}
 					else
 					{
-						console.log('Faculty Details updated successfully');
-						req.flash('message', 'Profile Details Updated Successfully');
-						res.redirect('/faculty_edit');
+						if(results.length > 0)
+						{
+							console.log('update');
+							var sql="update faculty set faculty_name = '"+ name +"',"+"faculty_dob = '"+ dob + "'," + "faculty_age = '" + Age + "', faculty_mobileno = '" + mobile + "'," + "gender = '" + gender + "'," + "faculty_city ='"+ City + "'," + "faculty_state ='"+ State +"' where faculty_email='" + req.session.mail + "';";
+							db.query(sql, (err, results, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									console.log('Faculty Details updated successfully');
+									req.flash('message', 'Profile Details Updated Successfully');
+									res.redirect('/faculty_edit');
+								}
+			
+							});
+						}
+						else
+						{
+							console.log('INSERT');
+							var sql="insert into faculty (faculty_name,faculty_dob,faculty_age,faculty_email,faculty_dept,faculty_mobileno,gender,faculty_city,faculty_state, edit_profile) values('" + name +"','"+ dob +"',"+ Age +",'"+ mail + "','" + dept + "','" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + edit_profile + ");";
+							db.query(sql, (err, results, field) => {
+								if (err)
+								{
+									console.log(err);
+									return;
+								}
+								else
+								{
+									console.log('Inserted Successfully');
+									req.flash('message', 'Profile Details Saved Successfully');
+									res.redirect('/faculty_edit');
+								}
+							});
+						}
 					}
-
 				});
 			}
-			else
-			{
-				console.log('INSERT');
-				var sql="insert into faculty (faculty_name,faculty_dob,faculty_age,faculty_email,faculty_dept,faculty_mobileno,gender,faculty_city,faculty_state, edit_profile) values('" + name +"','"+ dob +"',"+ Age +",'"+ mail + "','" + dept + "','" + mobile +"','"+ gender +"','"+ City +"','"+ State +"'," + edit_profile + ");";
-				db.query(sql, (err, results, field) => {
-					if (err)
-					{
-						console.log(err);
-						return;
-					}
-					else
-					{
-						console.log('Inserted Successfully');
-						//req.flash('name', name);
-						req.flash('message', 'Profile Details Saved Successfully');
-						res.redirect('/faculty_edit');
-						//res.redirect('/?valid=' + string)
-					}
-				});
+			else{
+				res.render('/error');
 			}
 		}
-	});
+
+	});	
 })
 
 
@@ -1595,73 +1638,95 @@ app.post('/filter_student',(req, res) => {
 app.post('/filter_faculty',(req, res) => {
 	var sem = req.body.filter_sem;
 	var dept = req.body.filter_dept;
+	var mailid = req.body.mailid;
 
-	if(sem == 'ALL' &&  dept != 'ALL')
-	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";
-		db.query(sql, (err, results, field) => {
-			if (err)
+	var sql = "select * from coord_login where coord_email = '" + mailid + "';";
+	db.query(sql, (err, results, field) => {
+		if (err)
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+			if(results.length > 0)
 			{
-				console.log(err);
-				return;
+				if(sem == 'ALL' &&  dept != 'ALL')
+				{
+					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept, mailid : mailid});
+						}
+			
+					});
+				}
+				else if(dept == 'ALL' && sem != 'ALL')
+				{
+					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + ";";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept, mailid : mailid});
+						}
+			
+					});
+				}
+			
+				else if(dept == 'ALL' && sem == 'ALL')
+				{
+					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept, mailid : mailid});
+						}
+			
+					});
+				}
+			
+				else
+				{
+					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + " and exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";
+					db.query(sql, (err, results, field) => {
+						if (err)
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept, mailid : mailid});
+						}
+			
+					});
+				}
 			}
 			else
 			{
-				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
+				res.render('404_ejs');
 			}
+		}
 
-		});
-	}
-	else if(dept == 'ALL' && sem != 'ALL')
-	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + ";";
-		db.query(sql, (err, results, field) => {
-			if (err)
-			{
-				console.log(err);
-				return;
-			}
-			else
-			{
-				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
-			}
+	});
 
-		});
-	}
-
-	else if(dept == 'ALL' && sem == 'ALL')
-	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";
-		db.query(sql, (err, results, field) => {
-			if (err)
-			{
-				console.log(err);
-				return;
-			}
-			else
-			{
-				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
-			}
-
-		});
-	}
-
-	else
-	{
-		var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + " and exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";
-		db.query(sql, (err, results, field) => {
-			if (err)
-			{
-				console.log(err);
-				return;
-			}
-			else
-			{
-				res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept});
-			}
-
-		});
-	}
+	
 
 
 
@@ -1779,7 +1844,7 @@ app.get('/coord_assign',(req,res) =>{
 		}
 		else
 		{
-			res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : [], sem : sem, dept : dept, message : req.flash('message'), table_flag : 0, columns : columns, flag : 1});
+			res.render("coord_assign.ejs",{results : JSON.stringify(results), mailid : req.session.mail, results_table : [], sem : sem, dept : dept, message : req.flash('message'), table_flag : 0, columns : columns, flag : 1});
 		}
 
 	});
@@ -1864,11 +1929,10 @@ app.post('/coord_view_pref', (req, res) => {
 	var columns = []
 	var sem = req.body.elective_sem;
 	var dept = req.body.elective_dept;
+	var mailid = req.body.mailid;
 
-
-	//var sql = "select count(elective_id) as count from elective where elective_sem = (select student_sem from student where roll_no = (select roll_no from student where student_email = '" + req.session.mail + "')) and elective_dept = (select student_dept from student where roll_no = (select roll_no from student where student_email = '" + req.session.mail + "'));";
-	var sql = "select count(elective_id) as count from elective where elective_sem = " + sem + " and elective_dept = '" + dept + "';";
-	db.query(sql, (err, results, field) => {
+	var sql = "select * from coord_login where coord_email = '" + mailid + "';";
+	db.query(sql, (err,results,field) => {
 		if (err)
 		{
 			console.log(err);
@@ -1876,74 +1940,97 @@ app.post('/coord_view_pref', (req, res) => {
 		}
 		else
 		{
-			var sql = '';
-			var count = 0;
-			if (results.length > 0)
+			if (results.length>0)
 			{
-				count = results[0].count;
-			}
-
-			var columns = []
-			console.log(count);
-
-			for(var i = 1; i <= count; i++)
-			{
-				sql = sql + '(select count(B.pref) from elec_pref B where assigned = 0 and B.pref = ' + i +' and A.elective_id = B.elective_id) as Preference_' + i;
-				if (i != count)
-				{
-
-					sql = sql + ', ';
-				}
-				columns.push('Preference_' + i);
-			}
-
-			console.log(columns);
-			if(results.length > 0)
-			{
-				sql = "select A.elective_id, (select B.elective_sem from elective B where A.elective_id = B.elective_id) as elective_sem, (select B.elective_dept from elective B where A.elective_id = B.elective_id) as elective_dept,  (select B.elective_name from elective B where A.elective_id = B.elective_id) as elective_name," + sql + " from elec_pref A  where assigned = 0 and exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
-			}
-			else
-			{
-				sql = "select A.elective_id, (select B.elective_sem from elective B where A.elective_id = B.elective_id) as elective_sem, (select B.elective_dept from elective B where A.elective_id = B.elective_id) as elective_dept,  (select B.elective_name from elective B where A.elective_id = B.elective_id) as elective_name" + sql + " from elec_pref A  where assigned = 0 and exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
-			}
-			console.log(sql);
-			db.query(sql, (err, results, field) => {
-				if (err)
-				{
-					console.log(err);
-					return;
-				}
-				else
-				{
-					var sql1 = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A ;";
-					db.query(sql1, (err, results1, field) => {
-						if (err)
+				//var sql = "select count(elective_id) as count from elective where elective_sem = (select student_sem from student where roll_no = (select roll_no from student where student_email = '" + req.session.mail + "')) and elective_dept = (select student_dept from student where roll_no = (select roll_no from student where student_email = '" + req.session.mail + "'));";
+				var sql = "select count(elective_id) as count from elective where elective_sem = " + sem + " and elective_dept = '" + dept + "';";
+				db.query(sql, (err, results, field) => {
+					if (err)
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var sql = '';
+						var count = 0;
+						if (results.length > 0)
 						{
-							console.log(err);
-							return;
+							count = results[0].count;
+						}
+
+						var columns = []
+						console.log(count);
+
+						for(var i = 1; i <= count; i++)
+						{
+							sql = sql + '(select count(B.pref) from elec_pref B where assigned = 0 and B.pref = ' + i +' and A.elective_id = B.elective_id) as Preference_' + i;
+							if (i != count)
+							{
+
+								sql = sql + ', ';
+							}
+							columns.push('Preference_' + i);
+						}
+
+						console.log(columns);
+						console.log("sq=l"+sql);
+						if(count > 0)
+						{
+							sql = "select A.elective_id, (select B.elective_sem from elective B where A.elective_id = B.elective_id) as elective_sem, (select B.elective_dept from elective B where A.elective_id = B.elective_id) as elective_dept,  (select B.elective_name from elective B where A.elective_id = B.elective_id) as elective_name," + sql + " from elec_pref A  where assigned = 0 and exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
 						}
 						else
 						{
-							res.render("coord_assign.ejs",{results : JSON.stringify(results1), results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns, flag : 1});
+							sql = "select A.elective_id, (select B.elective_sem from elective B where A.elective_id = B.elective_id) as elective_sem, (select B.elective_dept from elective B where A.elective_id = B.elective_id) as elective_dept,  (select B.elective_name from elective B where A.elective_id = B.elective_id) as elective_name" + sql + " from elec_pref A  where assigned = 0 and exists(select B.elective_dept from elective B where B.elective_id = A.elective_id and B.elective_dept = '" + dept +"' and B.elective_sem = " + sem + ") group by elective_id;";
 						}
+						console.log(sql);
+						db.query(sql, (err, results, field) => {
+							if (err)
+							{
+								console.log(err);
+								return;
+							}
+							else
+							{
+								var sql1 = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A ;";
+								db.query(sql1, (err, results1, field) => {
+									if (err)
+									{
+										console.log(err);
+										return;
+									}
+									else
+									{
+										res.render("coord_assign.ejs",{results : JSON.stringify(results1), mailid : mailid ,results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns, flag : 1});
+									}
 
-					});
-					//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns});
-				}
+								});
+								//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns});
+							}
 
-			});
+						});
+					}
+
+				});
+			}
+			else
+			{
+				res.render("404_ejs");
+			}
 		}
 
 	});
+
 })
 
 app.post('/coord_check_availability', (req, res) => {
 	var columns = []
 	var sem = req.body.elective_sem;
 	var dept = req.body.elective_dept;
+	var mailid = req.body.mailid;
 
-	var sql = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A where exists(select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id and B.faculty_dept ='"+ dept + "') and sem = " + sem + ";";
-	db.query(sql, (err, results, field) => {
+	var sql = "select * from coord_login where coord_email = '" + mailid + "';";
+	db.query(sql, (err,results,field) =>{
 		if (err)
 		{
 			console.log(err);
@@ -1951,22 +2038,40 @@ app.post('/coord_check_availability', (req, res) => {
 		}
 		else
 		{
-			var sql1 = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A ;";
-			db.query(sql1, (err, results1, field) => {
-				if (err)
-				{
-					console.log(err);
-					return;
-				}
-				else
-				{
-					res.render("coord_assign.ejs",{results : JSON.stringify(results1), results_table : results, sem : sem, dept : dept, message : req.flash('message') ,table_flag : 0, columns : columns, flag : 1});
-				}
+			if(results.length > 0)
+			{
+				var sql = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A where exists(select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id and B.faculty_dept ='"+ dept + "') and sem = " + sem + ";";
+				db.query(sql, (err, results, field) => {
+					if (err)
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var sql1 = "select A.sem, (select B.faculty_dept from faculty B where A.faculty_id = B.faculty_id) as dept_name, A.elective_id, (select B.elective_name from elective B where B.elective_id = A.elective_id) as elective_name, A.faculty_id, (select B.faculty_name from faculty B where A.faculty_id = B.faculty_id) as faculty_name, A.strength  from facelec_pref A ;";
+						db.query(sql1, (err, results1, field) => {
+							if (err)
+							{
+								console.log(err);
+								return;
+							}
+							else
+							{
+								res.render("coord_assign.ejs",{results : JSON.stringify(results1), mailid : mailid, results_table : results, sem : sem, dept : dept, message : req.flash('message') ,table_flag : 0, columns : columns, flag : 1});
+							}
 
-			});
-			//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message') ,table_flag : 0, columns : columns});
+						});
+						//res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message') ,table_flag : 0, columns : columns});
+					}
+
+				});
+			}
+			else
+			{
+				res.render("404_ejs");
+			}
 		}
-
 	});
 })
 
@@ -1974,7 +2079,7 @@ app.post('/coord_final_assign', (req, res) =>{
 	var columns = []
 	var sem = req.body.elective_sem;
 	var dept = req.body.elective_dept;
-
+	var mailid = req.body.mailid;
 	var elective_id = req.body.elective_id;
 	var preference = req.body.preference;
 	var strength = req.body.strength;
@@ -2059,7 +2164,7 @@ app.post('/coord_final_assign', (req, res) =>{
 				}
 				else
 				{
-					res.render("coord_assign.ejs",{results : JSON.stringify(results), results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns, flag : 0});
+					res.render("coord_assign.ejs",{results : JSON.stringify(results), mailid : mailid ,results_table : results, sem : sem, dept : dept, message : req.flash('message'), table_flag : 1, columns : columns, flag : 0});
 				}
 
 			});
@@ -2655,7 +2760,7 @@ app.get('/coord_group', (req, res) => {
 		{
 			if(results.length == 0)
 			{
-				res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
+				res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0, mailid : req.session.mail});
 			}
 			else
 			{
@@ -2693,7 +2798,7 @@ app.get('/coord_group', (req, res) => {
 						}
 						else
 						{
-							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : 'ALL', filter_dept : 'ALL'});
+							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : 'ALL', filter_dept : 'ALL', mailid : req.session.mail});
 						}
 
 					});
@@ -2719,7 +2824,7 @@ app.get('/coord_group', (req, res) => {
 					var rem_time = "" + day + " days" + hours + " hours" + mins + " mins left" ;
 					console.log(rem_time);
 
-					res.render("coord_group.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins});
+					res.render("coord_group.ejs",{message : req.flash('message'), flag : 1, currentTime : currentTime, rem_time : rem_time, days : day, hours: hours, mins : mins, mailid : req.session.mail});
 
 				}
 
@@ -2736,8 +2841,9 @@ app.post('/groupelective', (req, res) => {
 
 	var sem=req.body.sem;
 	var dept=req.body.dept;
+	var mailid=req.body.mailid;
 
-	var sql = "SELECT * FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+	var sql = "select * from coord_login where coord_email = '" + mailid + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -2746,25 +2852,43 @@ app.post('/groupelective', (req, res) => {
 		}
 		else
 		{
-			res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0});
+			if(results.length > 0)
+			{
+				var sql = "SELECT * FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+				db.query(sql, (err, results, field) => {
+					if (err)
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0, mailid : mailid});
+					}
+			
+				});				
+			}
+			else
+			{
+				res.render('404_ejs');
+			}
 		}
 
 	});
+
+	
 })
 
 app.post('/faculty_setTime', (req, res) => {
 
+	var mailid = req.body.mailid;
 	var day = req.body.day;
 	var hours = req.body.hours;
 	var mins = req.body.mins;
 	var arr = day.split("-");
 	var role = 'faculty';
 
-	console.log(arr);
-	console.log(hours);
-	console.log(mins);
-
-	var sql = "Delete from timer where role = 'faculty';";
+	var sql = "select * from coord_login where coord_email = '" + mailid + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -2773,26 +2897,47 @@ app.post('/faculty_setTime', (req, res) => {
 		}
 		else
 		{
-			var sql = "Insert into timer values(" + arr[2] + "," + arr[1] + "," + arr[0] + "," + hours + "," + mins + ",'" + role + "');";
-			db.query(sql, (err, results, field) => {
-				if (err)
-				{
-					console.log(err);
-					return;
-				}
-				else
-				{
-					req.flash('message', 'Timer has been set and once it is over, you can send the electives to the students');
-					res.redirect('/coord_group');
-				}
-
-			});
-
+			if(results.length > 0)
+			{
+				console.log(arr);
+				console.log(hours);
+				console.log(mins);
+			
+				var sql = "Delete from timer where role = 'faculty';";
+				db.query(sql, (err, results, field) => {
+					if (err)
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var sql = "Insert into timer values(" + arr[2] + "," + arr[1] + "," + arr[0] + "," + hours + "," + mins + ",'" + role + "');";
+						db.query(sql, (err, results, field) => {
+							if (err)
+							{
+								console.log(err);
+								return;
+							}
+							else
+							{
+								req.flash('message', 'Timer has been set and once it is over, you can send the electives to the students');
+								res.redirect('/coord_group');
+							}
+			
+						});
+			
+					}
+			
+				});
+			}
+			else
+			{
+				res.render('404_ejs');
+			}
 		}
 
 	});
-
-
 
 })
 
@@ -2856,8 +3001,9 @@ app.post('/sendfaculties' , (req, res) => {
 
 	var sem=req.body.sem;
 	var dept=req.body.dept;
+	var mailid=req.body.mailid;
 
-	var sql = "SELECT sent_faculties FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+	var sql = "select * from coord_login where coord_email = '" + mailid + "';";
 	db.query(sql, (err, results, field) => {
 		if (err)
 		{
@@ -2866,41 +3012,62 @@ app.post('/sendfaculties' , (req, res) => {
 		}
 		else
 		{
-			var i;
-			for (i = 0; i < results.length; i++)
+			if(results.length > 0)
 			{
-			  	if (results[i].sent_faculties==0)
-			  	{
-					var sql = "UPDATE elective SET sent_faculties = 1 WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
-					db.query(sql, (err, results, field) => {
-						if (err)
+				var sql = "SELECT sent_faculties FROM elective WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+				db.query(sql, (err, results, field) => {
+					if (err)
+					{
+						console.log(err);
+						return;
+					}
+					else
+					{
+						var i;
+						for (i = 0; i < results.length; i++)
 						{
-							console.log(err);
-							return;
+							  if (results[i].sent_faculties==0)
+							  {
+								var sql = "UPDATE elective SET sent_faculties = 1 WHERE elective_sem = " + sem + " AND elective_dept='" + dept + "';";
+								db.query(sql, (err, results, field) => {
+									if (err)
+									{
+										console.log(err);
+										return;
+									}
+									else
+									{
+										console.log('Updated Successfully');
+										req.flash('message', 'Electives are displayed in Faculty Portal');
+										req.flash('sem', sem)
+										req.flash('dept', dept)
+										res.redirect(307, '/groupelective');
+									}
+			
+								});
+								break;
+							  }
 						}
-						else
+						if (i==results.length)
 						{
-							console.log('Updated Successfully');
-							req.flash('message', 'Electives are displayed in Faculty Portal');
+							req.flash('message', 'Electives are already displayed in Faculty Portal');
 							req.flash('sem', sem)
 							req.flash('dept', dept)
 							res.redirect(307, '/groupelective');
 						}
-
-					});
-					break;
-			  	}
+					}
+			
+				});
 			}
-			if (i==results.length)
+			else
 			{
-				req.flash('message', 'Electives are already displayed in Faculty Portal');
-				req.flash('sem', sem)
-				req.flash('dept', dept)
-				res.redirect(307, '/groupelective');
+				res.render('404_ejs');
 			}
 		}
 
 	});
+
+	
 
 })
 
