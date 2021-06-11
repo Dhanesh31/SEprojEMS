@@ -17,53 +17,53 @@
         text-decoration: none;
         transition: all 0.3s;
       }
-  
+
       .navbar {
         margin-bottom: 0px;
-  
+
       }
-  
+
       .btn-info {
         color: #fff;
         background-color: #212431;
         border-color: #212431;
       }
-  
+
       .btn-info:hover {
         color: #fff;
         background-color: #2e3346;
         border-color: #2e3346;
       }
-  
+
       .navbar-brand {
         padding: 0px;
       }
-  
-  
+
+
       #customers th {
-  
-      background-color: #2e3346;
-  
+
+      background-color: #6d7fcc;
+
       }
-  
+
       @media (min-width: 1200px) {
         .container {
           width: 1471px;
         }
-  
+
         .col-md-4 {
           width: 22.33333333%;
         }
-  
+
       }
-  
+
       @media (max-width: 1200px) {
-  
+
         .col-md-4 {
           width: 100%;
         }
       }
-  
+
       th, td {
           width: 14%;
           padding: 10px 0;
@@ -89,8 +89,8 @@
           table{
               width:100%;
           }
-  
-  
+
+
     </style>
 
 </head>
@@ -215,12 +215,12 @@
 
       <% if (flag == 1) { %>
         <% if(message == "Timer has been set and once it is over, you can view the preferences given by the students.".trim() ) { %>
-          
+
           <div class="alert alert-success">
             <%= message%>
           </div>
         <% } %>
-          
+
         <form method="GET">
           <input class="combo form-control input-sm select-hidden-accessible"value="<%= rem_time %>" name = "rem_time" type="text" style = "display:None">
           <button type="submit" id='refresh' class="btn btn-primary" formaction="/coord_stuents_send">Refresh Timer</button>

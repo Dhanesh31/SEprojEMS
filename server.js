@@ -52,7 +52,7 @@ app.use(flush());
 var transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-		user: 'noreplyems3@gmail.com',
+		user: 'noreplyems5@gmail.com',
 		pass: 'i@am&groot'
 	}
 });
@@ -67,6 +67,15 @@ const db = mysql.createConnection({
 	database: 'mydb',
 	multipleStatements: true
 })
+
+// const db = mysql.createConnection({
+// 	host: 'se-database.cxhblp2ifoeq.us-east-1.rds.amazonaws.com',
+// 	user: 'admin',
+// 	password: 'noreply123',
+// 	insecureAuth: true,
+// 	database: 'mydb',
+// 	multipleStatements: true
+// })
 
 
 db.connect(err => {
@@ -95,7 +104,7 @@ app.post('/otp', (req, res) => {
 				}
 				console.log('User inserted successfully');
 				var mailOptions = {
-					from: 'noreplyems1@gmail.com',
+					from: 'noreplyems5@gmail.com',
 					to: mail + '',
 					subject: 'Account Creation Status',
 					text: "Student account created successfully.You can now access your portal"
@@ -123,7 +132,7 @@ app.post('/otp', (req, res) => {
 				console.log('User inserted successfully');
 
 				var mailOptions = {
-					from: 'noreplyems1@gmail.com',
+					from: 'noreplyems5@gmail.com',
 					to: mail + '',
 					subject: 'Account Creation Status',
 					text: "Faculty account created successfully.You can now access your portal"
@@ -150,7 +159,7 @@ app.post('/otp', (req, res) => {
 				console.log('User inserted successfully');
 
 				var mailOptions = {
-					from: 'noreplyems1@gmail.com',
+					from: 'noreplyems5@gmail.com',
 					to: mail + '',
 					subject: 'Account Creation Status',
 					text: "Coordinator account created successfully.You can now access your portal"
@@ -211,7 +220,7 @@ app.post('/fpwd', (request, response) => {
 	num = num.toString();
 
 	var mailOptions = {
-		from: 'noreplyems1@gmail.com',
+		from: 'noreplyems5@gmail.com',
 		to: mail + '',
 		subject: 'OTP for Password change',
 		text: num + ''
@@ -582,7 +591,7 @@ app.post('/coord_save', (req, res) => {
 				{
 					gender = 'Others';
 				}
-			
+
 				var sql="Select * from coord where coord_email='"+mailid+"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
@@ -607,7 +616,7 @@ app.post('/coord_save', (req, res) => {
 									req.flash('message', 'Profile Details Updated Successfully');
 									res.redirect('/coord_edit');
 								}
-			
+
 							});
 						}
 						else
@@ -625,11 +634,11 @@ app.post('/coord_save', (req, res) => {
 									req.flash('message', 'Profile Details Saved Successfully');
 									res.redirect('/coord_edit');
 								}
-			
+
 							});
 						}
 					}
-			
+
 				});
 			}
 			else{
@@ -732,7 +741,7 @@ app.post('/stud_save', (req, res) => {
 	var roll_no = req.body.rollno;
 	var preference_given = 0;
 	var feedback_given = 0;
-	
+
 	var sql="Select * from student_login where student_email='"+ mailid +"';" ;
 	db.query(sql, (err, results, field) => {
 		if (err)
@@ -781,7 +790,7 @@ app.post('/stud_save', (req, res) => {
 									req.flash('message', 'Profile Details Updated Successfully');
 									res.redirect('/stud_edit');
 								}
-			
+
 							});
 						}
 						else
@@ -799,15 +808,15 @@ app.post('/stud_save', (req, res) => {
 									req.flash('message', 'Profile Details Saved Successfully');
 									res.redirect('/stud_edit');
 								}
-			
+
 							});
 						}
 					}
-			
+
 				});
 			}
 			else{
-				res.render('/error');				
+				res.render('/error');
 			}
 		}
 	});
@@ -917,7 +926,7 @@ app.post('/faculty_save', (req, res) => {
 				{
 					gender = 'Others';
 				}
-			
+
 				var sql="Select * from faculty where faculty_email='"+req.session.mail+"';";
 				db.query(sql, (err, results, field) => {
 					if (err)
@@ -943,7 +952,7 @@ app.post('/faculty_save', (req, res) => {
 									req.flash('message', 'Profile Details Updated Successfully');
 									res.redirect('/faculty_edit');
 								}
-			
+
 							});
 						}
 						else
@@ -972,7 +981,7 @@ app.post('/faculty_save', (req, res) => {
 			}
 		}
 
-	});	
+	});
 })
 
 
@@ -1149,7 +1158,7 @@ app.post('/fac_chooseelective', (req, res) => {
 						else
 						{
 							if(results.length == 0){
-								
+
 								fac_limit=results[0].fac_limit;
 								if(fac_limit>0)
 								{
@@ -1264,7 +1273,7 @@ app.post('/addelective', (request, response) => {
 		}
 	});
 
-	
+
 
 
 })
@@ -1333,9 +1342,9 @@ app.post('/remelective', (request, response) => {
 										response.redirect('/coord_remove');
 									});
 								}
-			
+
 							});
-			
+
 						}
 					}
 				});
@@ -1345,12 +1354,12 @@ app.post('/remelective', (request, response) => {
 				response.render('404_ejs');
 			}
 		}
-		
+
 	});
 
 
 
-	
+
 
 
 });
@@ -1684,7 +1693,7 @@ app.post('/filter_faculty',(req, res) => {
 						{
 							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept, mailid : mailid});
 						}
-			
+
 					});
 				}
 				else if(dept == 'ALL' && sem != 'ALL')
@@ -1700,10 +1709,10 @@ app.post('/filter_faculty',(req, res) => {
 						{
 							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept, mailid : mailid});
 						}
-			
+
 					});
 				}
-			
+
 				else if(dept == 'ALL' && sem == 'ALL')
 				{
 					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A;";
@@ -1717,10 +1726,10 @@ app.post('/filter_faculty',(req, res) => {
 						{
 							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept, mailid : mailid});
 						}
-			
+
 					});
 				}
-			
+
 				else
 				{
 					var sql = "Select A.elective_id, (select B.elective_name from elective B where A.elective_id = B.elective_id ) as elective_name, A.faculty_id, (select D.faculty_name from faculty D where A.faculty_id = D.faculty_id ) as faculty_name, (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id) as faculty_dept, sem from facelec_pref A where A.sem =" + sem + " and exists (select C.faculty_dept from faculty C where A.faculty_id = C.faculty_id  and C.faculty_dept = '" + dept +"');";
@@ -1734,7 +1743,7 @@ app.post('/filter_faculty',(req, res) => {
 						{
 							res.render("coord_group.ejs",{flag : 2, results : results, filter_sem : sem, filter_dept : dept, mailid : mailid});
 						}
-			
+
 					});
 				}
 			}
@@ -1746,7 +1755,7 @@ app.post('/filter_faculty',(req, res) => {
 
 	});
 
-	
+
 
 
 
@@ -1922,7 +1931,7 @@ app.post('/coord_assign_mail',(req,res)=>{
 			for(var i = 0; i<results.length; i++)
 			{
 				var mailOptions = {
-					from: 'noreplyems1@gmail.com',
+					from: 'noreplyems5@gmail.com',
 					to: results[i].student_email + '',
 					subject: 'Check your portal',
 					text: 'Elective has been assigned to you for this semester and timer for changing elective has beeen set.  Please check your portal for finding the details'
@@ -2885,8 +2894,8 @@ app.post('/groupelective', (req, res) => {
 					{
 						res.render("coord_group.ejs",{results : results, sem : sem, dept : dept, message : req.flash('message'), flag : 0, mailid : mailid});
 					}
-			
-				});				
+
+				});
 			}
 			else
 			{
@@ -2896,7 +2905,7 @@ app.post('/groupelective', (req, res) => {
 
 	});
 
-	
+
 })
 
 app.post('/faculty_setTime', (req, res) => {
@@ -2922,7 +2931,7 @@ app.post('/faculty_setTime', (req, res) => {
 				console.log(arr);
 				console.log(hours);
 				console.log(mins);
-			
+
 				var sql = "Delete from timer where role = 'faculty';";
 				db.query(sql, (err, results, field) => {
 					if (err)
@@ -2944,11 +2953,11 @@ app.post('/faculty_setTime', (req, res) => {
 								req.flash('message', 'Timer has been set and once it is over, you can send the electives to the students');
 								res.redirect('/coord_group');
 							}
-			
+
 						});
-			
+
 					}
-			
+
 				});
 			}
 			else
@@ -3063,7 +3072,7 @@ app.post('/sendfaculties' , (req, res) => {
 										req.flash('dept', dept)
 										res.redirect(307, '/groupelective');
 									}
-			
+
 								});
 								break;
 							  }
@@ -3076,7 +3085,7 @@ app.post('/sendfaculties' , (req, res) => {
 							res.redirect(307, '/groupelective');
 						}
 					}
-			
+
 				});
 			}
 			else
@@ -3087,7 +3096,7 @@ app.post('/sendfaculties' , (req, res) => {
 
 	});
 
-	
+
 
 })
 
@@ -3455,7 +3464,7 @@ app.post('/signup', (request, response) => {
 	var num = num.toString();
 
 	var mailOptions = {
-		from: 'noreplyems1@gmail.com',
+		from: 'noreplyems5@gmail.com',
 		to: mail + '',
 		subject: 'OTP for Signup',
 		text: num + ''
