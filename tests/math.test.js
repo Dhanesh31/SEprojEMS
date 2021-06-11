@@ -159,3 +159,18 @@ describe('Testing /logout Get function', () => {
             });
     },30000);
 });
+
+describe('Testing /logout Get function', () => {
+    it('Has returned 200 OK', function(done){
+        chai
+            .request('http://localhost:5050')
+            .get('/logout')
+            .then(function(res){
+                expect(res).to.have.status(200);
+                done();
+            })
+            .catch(function(err){
+                throw(err);
+            });
+    },30000);
+});
