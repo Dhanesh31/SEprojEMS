@@ -1140,7 +1140,7 @@ app.post('/fac_chooseelective', (req, res) => {
 })
 
 app.get('/coord_add', (req, res) => {
-	res.render('coord_add', {message : req.flash('message'), results : JSON.stringify(excel_results)});
+	res.render('coord_add',  {mailid : req.session.mail ,message : req.flash('message'), results : JSON.stringify(excel_results)});
 })
 
 app.post('/addelective', (request, response) => {
@@ -1154,34 +1154,54 @@ app.post('/addelective', (request, response) => {
 	var sent_faculties=0;
 	var faculty_limit = capacity/40;
 	var feedback_enabled = 0;
+	var mailid =request.body.mailid;
 
-	var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
-	db.query(sql, (err, result, field) => {
+	var sql = "Select * from coord_login where coord_email = '" + mailid + "';";
+	db.query(sql, (err, results, field) => {
 		if (err) {
 			console.log(err);
 			return;
 		}
-		else {
-			if (result.length != 0) {
-				console.log('Elective already inserted cannot insert');
-				request.flash('message', 'Elective already inserted, try adding a new one');
-				response.redirect('/coord_add');
-			}
-			else {
-				var sql = "INSERT INTO elective VALUES ('" + elective_id + "', '" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + "," + faculty_limit + "," + sent_students + "," + sent_faculties + "," + feedback_enabled + ")";
+		else
+		{
+			if(results.length > 0)
+			{
+				var sql = "SELECT elective_id FROM elective WHERE elective_name='" + elective_name + "' AND elective_sem=" + elective_sem + " AND elective_dept='" + elective_dept + "';";
 				db.query(sql, (err, result, field) => {
 					if (err) {
 						console.log(err);
 						return;
 					}
-					console.log('Elective added successfully');
-					request.flash('message', 'Saved succesfully');
-					response.redirect('/coord_add');
-				});
+					else {
+						if (result.length != 0) {
+							console.log('Elective already inserted cannot insert');
+							request.flash('message', 'Elective already inserted, try adding a new one');
+							response.redirect('/coord_add');
+						}
+						else {
+							var sql = "INSERT INTO elective VALUES ('" + elective_id + "', '" + elective_name + "'," + elective_sem + ",'" + elective_dept + "'," + credits + "," + capacity + "," + faculty_limit + "," + sent_students + "," + sent_faculties + "," + feedback_enabled + ")";
+							db.query(sql, (err, result, field) => {
+								if (err) {
+									console.log(err);
+									return;
+								}
+								console.log('Elective added successfully');
+								request.flash('message', 'Saved succesfully');
+								response.redirect('/coord_add');
+							});
 
+						}
+					}
+				});
+			}
+			else
+			{
+				response.render('404_ejs');
 			}
 		}
 	});
+
+	
 
 
 })
