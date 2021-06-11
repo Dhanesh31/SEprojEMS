@@ -59,17 +59,8 @@ var transporter = nodemailer.createTransport({
 
 
 //connecting to database
-const db = mysql.createConnection({
-	host: 'test-database.cxhblp2ifoeq.us-east-1.rds.amazonaws.com',
-	user: 'admin',
-	password: 'noreply123',
-	insecureAuth: true,
-	database: 'mydb',
-	multipleStatements: true
-})
-
 // const db = mysql.createConnection({
-// 	host: 'se-database.cxhblp2ifoeq.us-east-1.rds.amazonaws.com',
+// 	host: 'test-database.cxhblp2ifoeq.us-east-1.rds.amazonaws.com',
 // 	user: 'admin',
 // 	password: 'noreply123',
 // 	insecureAuth: true,
@@ -77,6 +68,14 @@ const db = mysql.createConnection({
 // 	multipleStatements: true
 // })
 
+const db = mysql.createConnection({
+	host: 'se-database.cxhblp2ifoeq.us-east-1.rds.amazonaws.com',
+	user: 'admin',
+	password: 'noreply123',
+	insecureAuth: true,
+	database: 'mydb',
+	multipleStatements: true
+})
 
 db.connect(err => {
 	if (err) {
@@ -1148,6 +1147,7 @@ app.post('/fac_chooseelective', (req, res) => {
 				}
 				else
 				{
+					fac_limit=results[0].fac_limit;
 					var sql = "SELECT * FROM facelec_pref WHERE faculty_id='" + f_id +"' AND sem=" + sem +";";
 					db.query(sql, (err, results, field) => {
 						if (err)
@@ -1159,7 +1159,7 @@ app.post('/fac_chooseelective', (req, res) => {
 						{
 							if(results.length == 0){
 
-								fac_limit=results[0].fac_limit;
+								
 								if(fac_limit>0)
 								{
 									var sql = "INSERT INTO facelec_pref VALUES(" + f_id + ",'" + elective_id + "'," + sem + "," +  strength +");";
@@ -2368,7 +2368,7 @@ app.post('/coord_reassign',(req,res) =>{
 							});
 						}
 					}
-					res.render("choosepref_done.ejs", {flag : 0});
+					res.render("coord_done.ejs", {flag : 0});
 				}
 			});
 		}
