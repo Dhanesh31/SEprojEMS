@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+  </style>
+
+  </head>
+
+
+  <body>
+
+    <form class="modal1" action="/otp" method="post">
+      <input type="text" name="mail" value="<%= mail %>" style="display:None">
+      <input type="password" name="pwd" value="<%= pwd %>" style="display:None">
+      <input type="text" name="role" value="<%= role %>" style="display:None">
+      <input type="text" name="otp" value="<%= otp %>" style="display:None">
+      <input type="text" name="phone" value="<%= phone %>" style="display:None">
+      <div  >
+        <div id="wrapper" style="font-family: 'Montserrat', sans-serif;">
+          <div  class="container2" id="container2" >
+            <h2 >Check your mail!</h2>
+            <p>(Enter it below to confirm your email address.)</p>
+
+            <div>
+              <input type="text" name="inotp" value="" style="width: 100px;font-size: 20px;
+              font-weight: bold;">
+              <br>
+              <button style="width: 150px">Verify</button>
+            </div>
+            <br>
+            <div style="font-family:'Arial', sans-serif;">
+              Didn't receive the OTP?<br/>
+              <a href="#" style="color: rgb(22, 89, 189);">Resend OTP</a><br/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </body>
+</html>

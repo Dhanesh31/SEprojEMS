@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="main.css">
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <style type="text/css">
+      a,
+      a:hover,
+      a:focus {
+        color: inherit;
+        text-decoration: none;
+        transition: all 0.3s;
+      }
+
+      .navbar {
+        margin-bottom: 0px;
+
+      }
+
+      .btn-info {
+        color: #fff;
+        background-color: #212431;
+        border-color: #212431;
+      }
+
+      .btn-info:hover {
+        color: #fff;
+        background-color: #2e3346;
+        border-color: #2e3346;
+      }
+
+      .navbar-brand {
+        padding: 0px;
+      }
+
+
+      #customers th {
+
+      background-color: #6d7fcc;
+
+      }
+
+      @media (min-width: 1200px) {
+        .container {
+          width: 1471px;
+        }
+
+        .col-md-4 {
+          width: 22.33333333%;
+        }
+
+      }
+
+      @media (max-width: 1200px) {
+
+        .col-md-4 {
+          width: 100%;
+        }
+      }
+
+      th, td {
+          width: 14%;
+          padding: 10px 0;
+          border-bottom: 1px solid #ccc;
+          text-align: center;
+          vertical-align: unset;
+          line-height: 18px;
+          font-weight: 400;
+          word-break: break-all;
+          }
+          .first-col {
+          width: 30%;
+          text-align: left;
+          }
+          small {
+          display: block;
+          line-height: 18px;
+          opacity: 0.5;
+          }
+          .btn-block {
+          text-align: center;
+          }
+          table{
+              width:100%;
+          }
+
+    </style>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+
+      <a class="navbar-brand" href="student page.html">
+        <img src="24.jfif" alt="logo" style="width:180px;">
+      </a>
+
+      <div class="container">
+        <!-- <button class='btn btn-info pull-right' onclick="logout">
+          Logout
+        </button> -->
+        <form action="/logout">
+          <button class='btn btn-info pull-right'>Logout</button>
+        </form>
+
+      </div>
+
+
+    </div>
+
+  </nav>
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <button type="button" id="sidebarCollapse" class="btn btn-info">
+          <i class="fas fa-align-left"></i>
+          <span></span>
+        </button>
+      </div>
+
+      <ul class="list-unstyled components">
+        <li>
+
+          <a href="cust_check_in">
+            <i class="fas fa-user"></i>
+            Check In
+          </a>
+
+        </li>
+        <li>
+          <a href="cust_view_requests">
+            <i class="fas fa-pencil-alt"></i>
+            View my Requests
+          </a>
+
+        </li>
+        <li>
+          <a href="cust_bill">
+            <i class="fas fa-pencil-alt"></i>
+            Bill Payment
+          </a>
+        </li>
+        
+
+      </ul>
+
+
+    </nav>
+
+    <!-- Page Content  -->
+
+
+    <div id="content">
+      <div id = 'center'>
+
+
+      <h2><b>Bill Payment</b></h2>
+      <form method='POST'>
+
+        <% if(message == "Payment Successful".trim() ) { %>
+          <div class="alert alert-success">
+            <%= message%>
+          </div>
+        <% } %>
+
+
+        <div class="center">
+          <center>
+
+            <label class="col-md-4 control-label h5 required"> Check-in id:</label>
+              <div class="col-md-4">
+                <div >
+                  <input class="combo form-control input-sm select-hidden-accessible" value="" name = "check_in_id" type="text">
+                </div>
+              </div>
+              <br><br>
+
+            <button type="submit" id='check_in' class="btn btn-primary" formaction="/cust_view_bill">View Slots</button>
+            <button type="submit" id='bill' class="btn btn-primary" formaction="/cust_pay_bill">Pay and Check out</button>
+            <% if(results.length> 0) { %>
+
+                <table id="customers" style="margin-top:20px">
+    
+                  <tr>
+                    <th>Check in id</th>
+                    <th>Vehicle No.</th>
+                    <th>Vehicle Model</th>
+                    <th>Vehicle Type</th>
+                    <th>Check in Day</th>
+                    <th>Request status</th>
+                  </tr>
+                  <% results.forEach(function(k){ %>
+    
+                    <tr>
+                      <td>
+                        <%= k.check_in_id %>
+                      </td>
+                      <td>
+                        <%= k.vehicle_no %>
+                      </td>
+                      <td>
+                        <%= k.vehicle_model %>
+                      </td>
+                      <td>
+                        <%= k.vehicle_type %>
+                      </td>
+                      <td>
+                        <%= k.vehicle_day %>
+                      </td>
+                      <td>
+                        <%= k.vehicle_status %>
+                      </td>
+                    </tr>
+    
+                    <% }) %>
+                </table>
+                  <% } %>
+
+            <br><br>
+            <input value="<%= mailid %>" name = "mailid" type="text" style = "display:None">
+
+            
+                </center>
+              </div>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+
+
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <!-- Popper.JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+    integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    crossorigin="anonymous"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+    integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+      });
+    });
+  </script>
+
+  <script>
+    function exportTableToExcel(tableID, filename = '') {
+      var downloadLink;
+      var dataType = 'application/vnd.ms-excel';
+      var tableSelect = document.getElementById(tableID);
+      var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+      // Specify file name
+      filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+      // Create download link element
+      downloadLink = document.createElement("a");
+
+      document.body.appendChild(downloadLink);
+
+      if (navigator.msSaveOrOpenBlob) {
+        var blob = new Blob(['\ufeff', tableHTML], {
+          type: dataType
+        });
+        navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+        // Setting the file name
+        downloadLink.download = filename;
+
+        //triggering the function
+        downloadLink.click();
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -71,9 +71,9 @@ var transporter = nodemailer.createTransport({
 // })
 
 const db = mysql.createConnection({
-	host: 'se-database.cxhblp2ifoeq.us-east-1.rds.amazonaws.com',
-	user: 'admin',
-	password: 'noreply123',
+	host: '127.0.0.1',
+	user: 'root',
+	password: 'root',
 	insecureAuth: true,
 	database: 'mydb',
 	multipleStatements: true
